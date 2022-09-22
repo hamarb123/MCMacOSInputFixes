@@ -33,7 +33,7 @@ public class MinecraftMixin
 				//register the native callback for scrolling
 				long glfwWindow = window.getHandle();
 				long cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(glfwWindow);
-				MacOSInputFixesMod.registerCallbacks((a, b) -> scrollCallback(a, b), cocoaWindow);
+				MacOSInputFixesMod.registerCallbacks(this::scrollCallback, cocoaWindow);
 				runOnce = true;
 			}
 		}

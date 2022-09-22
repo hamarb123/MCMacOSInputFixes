@@ -10,7 +10,8 @@
 	[
 		"MouseMixin",
 		"MinecraftMixin",
-		"MouseInvokerMixin"
+		"MouseInvokerMixin",
+		"PlayerInventoryMixin"
 	],
 	"injectors":
 	{
