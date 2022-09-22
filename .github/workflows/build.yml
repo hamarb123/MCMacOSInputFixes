@@ -42,22 +42,11 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/libs/
-          asset_name: mything
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: "This is my release text"
       - name: upload
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            build/libs/macos-input-fixes-1.0.0.jar
-            build/libs/macos-input-fixes-1.0.0-sources.jar
+          files: build/libs/*.jar
           draft: true
           prerelease: false
         env:
