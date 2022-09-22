@@ -15,7 +15,7 @@
 		"sources": "https://github.com/hamarb123/MCMacOSInputFixes"
 	},
 
-	"license": "MIT",
+	"license": "BSD-3-Clause",
 	"icon": "assets/macos_input_fixes/icon.png",
 
 	"environment": "*",

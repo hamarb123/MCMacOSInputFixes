@@ -29,8 +29,8 @@ To build this, you also need to build the native file before building the mod it
 
 ## License
 
-This project is available under the MIT license.
+This project is available under the BSD-3-Clause license.
 
 Some files and/or folders may be under different license(s), please check any relevant files and folders to see if they are under a different license.
 
-If you are Mojang, feel free to contact about licensing to possibly license the project under a different license if MIT doesn't work for you.
+If you are Mojang, feel free to contact about licensing to possibly license the project under a different license if BSD-3-Clause doesn't work for you.
