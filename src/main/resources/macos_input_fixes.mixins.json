@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.hamarb123.macos_input_fixes.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins":
+	[
+	],
+	"client":
+	[
+		"MouseMixin",
+		"MinecraftMixin",
+		"MouseInvokerMixin"
+	],
+	"injectors":
+	{
+		"defaultRequire": 1
+	}
+}

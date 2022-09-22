@@ -1,0 +1,4 @@
+Note: the contents of this folder is copied from an OpenJDK 8 installation from homebrew on macOS.
+Please review the file's license and OpenJDK's license for these files before using them.
+They are only used for linking, and you can use your own copy instead if you have it, just modify the makefile (JNIINCLUDEFOLDER).
+Mine was copied from /usr/local/opt/openjdk@8/libexec/openjdk.jdk/Contents/Home/include

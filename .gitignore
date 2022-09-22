@@ -31,3 +31,7 @@ bin/
 # fabric
 
 run/
+
+# objective c++
+*.o
+*.dylib

@@ -1,6 +1,9 @@
-pluginManagement {
-    repositories {
-        maven {
+pluginManagement
+{
+    repositories
+    {
+        maven
+        {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
