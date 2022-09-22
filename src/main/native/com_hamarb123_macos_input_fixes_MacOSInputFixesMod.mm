@@ -97,11 +97,13 @@ void processScroll(NSEvent* event, double& x, double& y)
 			{
 				x = sgn(scrollX) * (int)(std::abs(scrollX) / sensitivity);
 				scrollX = sgn(scrollX) * (std::fmod(std::abs(scrollX), sensitivity));
+				scrollY = 0; //reset y partial scroll since it was probably not intended
 			}
 			if (std::abs(scrollY) >= sensitivity)
 			{
 				y = sgn(scrollY) * (int)(std::abs(scrollY) / sensitivity);
 				scrollY = sgn(scrollY) * (std::fmod(std::abs(scrollY), sensitivity));
+				scrollX = 0; //reset x partial scroll since it was probably not intended
 			}
 		}
 	}
