@@ -4,7 +4,7 @@
 
 Fixes [MC-121772](https://bugs.mojang.com/browse/MC-121772)
 
-Fixes [MC-255800](https://bugs.mojang.com/browse/MC-255800)
+Fixes [MC-59810](https://bugs.mojang.com/browse/MC-59810)
 
 Specific fixes:
 - Correctly detects left click while control is pressed
