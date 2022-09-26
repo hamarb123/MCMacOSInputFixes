@@ -8,7 +8,7 @@ Fixes [MC-59810](https://bugs.mojang.com/browse/MC-59810)
 
 Specific fixes:
 - Correctly detects left click while control is pressed
-- Make trackpad scrolling not scroll a rediculous number of items at once
+- Make trackpad scrolling not scroll a ridiculous number of items at once
 - It also fixes momentum scrolling (which changes the number of scroll events based on how quickly you did it, even by like x5-10, meaning you couldn't easily scroll to the correct item)
 - On the trackpad it also only considers scrolling while fingers are on the trackpad (and the same for any fancy mice that support the relevant api e.g. probably apple's fancy mice/trackpad thing)
 - It also fixes (almost perfectly) scrolling being broken when shift is down, this issue only affects mice that use older input APIs and doesn't change anything on the trackpad. It converts scrolling with shift down which shows as horizontal scrolling to the correct vertical scroll, the only issue when you actually scroll horizontally and hold shift, this will show as vertical scrolling (which is imo acceptable since very few people would be scrolling Minecraft items with horizantal scrolling on a non-apple input device compared to people scrolling vertical on any mice; and they could, if they need, use vertical scrolling instead which would be completely consistent - and this also isn't an issue if the Minecraft item scroll direction for + vertical scrolling is treated the same as + horizontal scrolling). TL;DR - this project will work properly for both vertical and horizontal scrolling including when pressing shift.
