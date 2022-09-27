@@ -24,6 +24,10 @@
 		"main":
 		[
 			"com.hamarb123.macos_input_fixes.MacOSInputFixesMod"
+		],
+		"client":
+		[
+			"com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod"
 		]
 	},
 	"mixins":

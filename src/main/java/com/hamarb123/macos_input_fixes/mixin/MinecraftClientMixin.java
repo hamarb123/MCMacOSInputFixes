@@ -9,10 +9,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.hamarb123.macos_input_fixes.MacOSInputFixesMod;
+import com.hamarb123.macos_input_fixes.Common;
+import com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftMixin
+public class MinecraftClientMixin
 {
 	@Shadow
 	private Window window;
@@ -33,7 +34,7 @@ public class MinecraftMixin
 				//register the native callback for scrolling
 				long glfwWindow = window.getHandle();
 				long cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(glfwWindow);
-				MacOSInputFixesMod.registerCallbacks(this::scrollCallback, cocoaWindow);
+				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, cocoaWindow);
 				runOnce = true;
 			}
 		}
@@ -45,13 +46,35 @@ public class MinecraftMixin
 		//recieve the native scrolling callback & convert it into a scroll event
 
 		//enable onMouseScroll
-		MacOSInputFixesMod.setAllowedInputOSX(true);
+		Common.setAllowedInputOSX(true);
 
 		//on 1.19 (and possibly earlier), it's getWindow(), but the window field still exists so it works
 		//combine vertical & horizontal here since it's harder to do in the actual method
 		((MouseInvokerMixin)mouse).callOnMouseScroll(MinecraftClient.getInstance().window.getHandle(), 0, vertical + horizontal);
 
 		//disable onMouseScroll
-		MacOSInputFixesMod.setAllowedInputOSX(false);
+		Common.setAllowedInputOSX(false);
 	}
+
+	//dropping stack in game
+	@Inject(method = "handleInputEvents()V", at = @At("HEAD"))
+	private void keyPressed_hasControlDownBegin(CallbackInfo info)
+	{
+		Common.setInjectHasControlDown(true);
+	}
+	@Inject(method = "handleInputEvents()V", at = @At("RETURN"))
+	private void keyPressed_hasControlDownEnd(CallbackInfo info)
+	{
+		Common.setInjectHasControlDown(false);
+	}
+
+	//the following doesn't work for some unknown reason on newer versions
+	/*
+	@Redirect(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Screen;hasControlDown()Z"))
+	private boolean handleInputEvents_hasControlDown()
+	{
+		//dropping stack in game
+		return Common.hasControlDownInjector();
+	}
+	*/
 }

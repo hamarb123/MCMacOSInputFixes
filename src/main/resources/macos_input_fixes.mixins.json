@@ -8,10 +8,14 @@
 	],
 	"client":
 	[
-		"MouseMixin",
-		"MinecraftMixin",
+		"ButtonListWidgetMixin",
+		"ContainerScreenMixin",
+		"MinecraftClientMixin",
 		"MouseInvokerMixin",
-		"PlayerInventoryMixin"
+		"MouseMixin",
+		"MouseOptionsScreenMixin",
+		"PlayerInventoryMixin",
+		"ScreenMixin"
 	],
 	"injectors":
 	{

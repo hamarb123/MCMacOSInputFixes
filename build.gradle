@@ -39,7 +39,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	// Java 8 for compatiblity with all versions.
 	it.options.release = 8
 }
 

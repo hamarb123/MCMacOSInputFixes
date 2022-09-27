@@ -6,7 +6,7 @@
 #include <cmath>
 
 #include <jni.h>
-#include "com_hamarb123_macos_input_fixes_MacOSInputFixesMod.h"
+#include "com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod.h"
 
 #import <Cocoa/Cocoa.h>
 
@@ -22,6 +22,7 @@ jmethodID _IntegerCtor = NULL;
 jclass _Boolean = NULL;
 jmethodID _BooleanCtor = NULL;
 JavaVM* jvm = NULL;
+double trackpadSensitivity = 20.0;
 
 //gets a jenv from the currently cached jvm
 JNIEnv* get_jenv()
@@ -64,21 +65,15 @@ void processScroll(NSEvent* event, double& x, double& y)
 		x = 0.0;
 	}
 
-	//enable the following block if you want to ensure scrolling direction is the same regardless of user preferences:
-	/*
-	if (!event.directionInvertedFromDevice)
-	{
-		x = -x;
-		y = -y;
-	}
-	*/
-
 	//if it is a non-legacy scrolling event (meaning it has a beginning and an end), and it is on the trackpad or other high precision scroll,
 	//then we don't want to interpret it as a million scroll events for a very small movement.
 	if (event.phase != NSEventPhaseNone && event.hasPreciseScrollingDeltas)
 	{
-		const double sensitivity = 20.0;
-		if (event.phase == NSEventPhaseBegan)
+		if (trackpadSensitivity == 0.0)
+		{
+			//if the user sets it to 0.0, disable custom trackpad handling
+		}
+		else if (event.phase == NSEventPhaseBegan)
 		{
 			//reset scroll counter, and ensure that the first event generates a scroll
 			scrollX = sgn(x) * std::max(std::abs(x) - 1, 0.0);
@@ -88,21 +83,21 @@ void processScroll(NSEvent* event, double& x, double& y)
 		}
 		else
 		{
-			//group scrolls together up to a magnitude of the sensitivity
+			//group scrolls together up to a magnitude of the trackpadSensitivity
 			scrollX += x;
 			scrollY += y;
 			x = 0.0;
 			y = 0.0;
-			if (std::abs(scrollX) >= sensitivity)
+			if (std::abs(scrollX) >= trackpadSensitivity)
 			{
-				x = sgn(scrollX) * (int)(std::abs(scrollX) / sensitivity);
-				scrollX = sgn(scrollX) * (std::fmod(std::abs(scrollX), sensitivity));
+				x = sgn(scrollX) * (int)(std::abs(scrollX) / trackpadSensitivity);
+				scrollX = sgn(scrollX) * (std::fmod(std::abs(scrollX), trackpadSensitivity));
 				scrollY = 0; //reset y partial scroll since it was probably not intended
 			}
-			if (std::abs(scrollY) >= sensitivity)
+			if (std::abs(scrollY) >= trackpadSensitivity)
 			{
-				y = sgn(scrollY) * (int)(std::abs(scrollY) / sensitivity);
-				scrollY = sgn(scrollY) * (std::fmod(std::abs(scrollY), sensitivity));
+				y = sgn(scrollY) * (int)(std::abs(scrollY) / trackpadSensitivity);
+				scrollY = sgn(scrollY) * (std::fmod(std::abs(scrollY), trackpadSensitivity));
 				scrollX = 0; //reset x partial scroll since it was probably not intended
 			}
 		}
@@ -149,14 +144,14 @@ void UpdateGlobalRef(JNIEnv* old_jenv, JNIEnv* new_jenv, T& storage, T value)
 }
 
 /*
- * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesMod
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
  * Method:    registerCallbacks
  * Signature: (Ljava/util/function/BiConsumer;J)V
  */
-JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesMod_registerCallbacks
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_registerCallbacks
   (JNIEnv* jenv, jclass, jobject scrollCallback, jlong window)
 {
-	//this is the function that is called from java
+	//this a function that is called from java
 	//we only store 1 state at once, if the function is called more than once then we replace old state
 
 	JNIEnv* oldJenv;
@@ -202,4 +197,19 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesMod
 			return event;
 		}];
 	}
+}
+
+/*
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
+ * Method:    setTrackpadSensitivity
+ * Signature: (D)V
+ */
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setTrackpadSensitivity
+  (JNIEnv *, jclass, jdouble value)
+{
+	//this a function that is called from java
+	//it updates the trackpad sensitivity option
+	trackpadSensitivity = value;
+	scrollX = 0.0;
+	scrollY = 0.0;
 }
