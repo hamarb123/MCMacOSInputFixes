@@ -3,7 +3,7 @@ package com.hamarb123.macos_input_fixes;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 
 public class MacOSInputFixesClientMod implements ClientModInitializer
 {
@@ -19,7 +19,7 @@ public class MacOSInputFixesClientMod implements ClientModInitializer
 
 	static
 	{
-		if (SystemUtil.getOperatingSystem() == SystemUtil.OperatingSystem.MAC)
+		if (Util.getOperatingSystem() == Util.OperatingSystem.OSX)
 		{
 			try
 			{

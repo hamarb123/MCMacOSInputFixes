@@ -1,6 +1,7 @@
 {
 	"required": true,
 	"minVersion": "0.8",
+	"plugin": "com.hamarb123.macos_input_fixes.MixinPlugin",
 	"package": "com.hamarb123.macos_input_fixes.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins":
@@ -8,12 +9,12 @@
 	],
 	"client":
 	[
-		"ButtonListWidgetMixin",
-		"ContainerScreenMixin",
+		"gui.GameOptionsAccessor",
+		"HandledScreenMixin",
+		"MinecraftClientAccessor",
 		"MinecraftClientMixin",
 		"MouseInvokerMixin",
 		"MouseMixin",
-		"MouseOptionsScreenMixin",
 		"PlayerInventoryMixin",
 		"ScreenMixin"
 	],

@@ -1,9 +1,9 @@
 package com.hamarb123.macos_input_fixes;
 
+import com.hamarb123.macos_input_fixes.mixin.MinecraftClientAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
 import net.minecraft.client.util.InputUtil;
 
 @Environment(EnvType.CLIENT)
@@ -19,14 +19,15 @@ public class Common
 		//if not on macOS, use normal implementation
 		if (!MinecraftClient.IS_SYSTEM_MAC)
 		{
-			returnValue = Screen.hasControlDown();
+			returnValue = ScreenHelper.hasControlDown();
 		}
 		else
 		{
 			//replace hasControlDown() on macOS with hasControlDown() (which tests command) or 'actual control down' for this function only
-			returnValue = Screen.hasControlDown() ||
+			returnValue = ScreenHelper.hasControlDown() ||
 				//ctrl key check
-				InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), 341) || InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), 345);
+				InputUtil.isKeyPressed(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 341) ||
+				InputUtil.isKeyPressed(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 345);
 		}
 
 		//restore injector and return
@@ -68,5 +69,17 @@ public class Common
 	public static void setInjectHasControlDown(boolean value)
 	{
 		_injectHasControlDown.set(value);
+	}
+
+	//enable and disable the CyclingButtonWidgetMixin3 builder mixin
+	private static ThreadLocal<Boolean> _omitBuilderKeyText = new ThreadLocal<Boolean>();
+	public static boolean omitBuilderKeyText()
+	{
+		Boolean value = _omitBuilderKeyText.get();
+		return value != null && value;
+	}
+	public static void setOmitBuilderKeyText(boolean value)
+	{
+		_omitBuilderKeyText.set(value);
 	}
 }

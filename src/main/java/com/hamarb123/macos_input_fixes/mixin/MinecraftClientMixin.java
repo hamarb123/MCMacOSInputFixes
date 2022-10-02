@@ -40,7 +40,6 @@ public class MinecraftClientMixin
 		}
 	}
 
-	@SuppressWarnings("resource")
 	private void scrollCallback(Double horizontal, Double vertical)
 	{
 		//recieve the native scrolling callback & convert it into a scroll event
@@ -48,9 +47,9 @@ public class MinecraftClientMixin
 		//enable onMouseScroll
 		Common.setAllowedInputOSX(true);
 
-		//on 1.19 (and possibly earlier), it's getWindow(), but the window field still exists so it works
+		//on 1.14 we need to use the window field, on 1.19 the field still exists
 		//combine vertical & horizontal here since it's harder to do in the actual method
-		((MouseInvokerMixin)mouse).callOnMouseScroll(MinecraftClient.getInstance().window.getHandle(), 0, vertical + horizontal);
+		((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 0, vertical + horizontal);
 
 		//disable onMouseScroll
 		Common.setAllowedInputOSX(false);
@@ -60,21 +59,13 @@ public class MinecraftClientMixin
 	@Inject(method = "handleInputEvents()V", at = @At("HEAD"))
 	private void keyPressed_hasControlDownBegin(CallbackInfo info)
 	{
+		//enable hasControlDown() injector
 		Common.setInjectHasControlDown(true);
 	}
 	@Inject(method = "handleInputEvents()V", at = @At("RETURN"))
 	private void keyPressed_hasControlDownEnd(CallbackInfo info)
 	{
+		//disable hasControlDown() injector
 		Common.setInjectHasControlDown(false);
 	}
-
-	//the following doesn't work for some unknown reason on newer versions
-	/*
-	@Redirect(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Screen;hasControlDown()Z"))
-	private boolean handleInputEvents_hasControlDown()
-	{
-		//dropping stack in game
-		return Common.hasControlDownInjector();
-	}
-	*/
 }

@@ -7,6 +7,7 @@ import net.minecraft.client.Mouse;
 @Mixin(Mouse.class)
 public interface MouseInvokerMixin
 {
+	//allows the onMouseScroll method to be invoked since with these mappings it is private
 	@Invoker
 	public void callOnMouseScroll(long window, double horizontal, double vertical);
 }
