@@ -189,15 +189,45 @@ public class ModOptions
 			{
 				//1.19+
 				String SimpleOption_TooltipFactoryGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7307");
-				Class<?> SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
+				Class<?> SimpleOption_TooltipFactoryGetter_Class = null;
+				try
+				{
+					SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
+				}
+				catch (Throwable e2)
+				{
+				}
+				Class<?> SimpleOption_TooltipParameter_Class;
+
 				String SimpleOption_ValueTextGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7303");
 				Class<?> SimpleOption_ValueTextGetter_Class = Class.forName(SimpleOption_ValueTextGetter_ClassName);
 				Class<?> SimpleOption_Callbacks_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7178"));
-
-				String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7307;");
 				Class<?> SimpleOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172"));
-				MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class));
-				Object tooltipFactoryGetter = emptyTooltipMethod.invoke();
+
+				Object tooltipParameter;
+
+				if (SimpleOption_TooltipFactoryGetter_Class != null)
+				{
+					//1.19-1.19.2
+					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactoryGetter_Class;
+
+					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7307;");
+					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class));
+					Object tooltipFactoryGetter = emptyTooltipMethod.invoke();
+					tooltipParameter = tooltipFactoryGetter;
+				}
+				else
+				{
+					//1.19.3+
+					String SimpleOption_TooltipFactory_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7277");
+					Class<?> SimpleOption_TooltipFactory_Class = Class.forName(SimpleOption_TooltipFactory_ClassName);
+					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactory_Class;
+
+					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7277;");
+					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactory_Class));
+					Object tooltipFactory = emptyTooltipMethod.invoke();
+					tooltipParameter = tooltipFactory;
+				}
 
 				double step2 = (max - min) / step;
 				ValueTextGetterHelper<Double> valueTextGetterImpl = (optionText, value) ->
@@ -229,8 +259,8 @@ public class ModOptions
 					setter.accept(result);
 					saveOptions();
 				};
-				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipFactoryGetter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
-				return mh.invoke(key, tooltipFactoryGetter, valueTextGetter, callbacks, defaultValue, changeCallback);
+				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipParameter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
+				return mh.invoke(key, tooltipParameter, valueTextGetter, callbacks, defaultValue, changeCallback);
 			}
 		}
 		catch (Throwable t)
@@ -330,15 +360,45 @@ public class ModOptions
 			{
 				//1.19+
 				String SimpleOption_TooltipFactoryGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7307");
-				Class<?> SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
+				Class<?> SimpleOption_TooltipFactoryGetter_Class = null;
+				try
+				{
+					SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
+				}
+				catch (Throwable e2)
+				{
+				}
+				Class<?> SimpleOption_TooltipParameter_Class;
+
 				String SimpleOption_ValueTextGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7303");
 				Class<?> SimpleOption_ValueTextGetter_Class = Class.forName(SimpleOption_ValueTextGetter_ClassName);
 				Class<?> SimpleOption_Callbacks_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7178"));
-
-				String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7307;");
 				Class<?> SimpleOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172"));
-				MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class));
-				Object tooltipFactoryGetter = emptyTooltipMethod.invoke();
+
+				Object tooltipParameter;
+
+				if (SimpleOption_TooltipFactoryGetter_Class != null)
+				{
+					//1.19-1.19.2
+					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactoryGetter_Class;
+
+					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7307;");
+					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class));
+					Object tooltipFactoryGetter = emptyTooltipMethod.invoke();
+					tooltipParameter = tooltipFactoryGetter;
+				}
+				else
+				{
+					//1.19.3+
+					String SimpleOption_TooltipFactory_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7277");
+					Class<?> SimpleOption_TooltipFactory_Class = Class.forName(SimpleOption_TooltipFactory_ClassName);
+					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactory_Class;
+
+					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7277;");
+					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactory_Class));
+					Object tooltipFactory = emptyTooltipMethod.invoke();
+					tooltipParameter = tooltipFactory;
+				}
 
 				ValueTextGetterHelper<Boolean> valueTextGetterImpl = (optionText, value) ->
 				{
@@ -364,8 +424,8 @@ public class ModOptions
 					setter.accept(value);
 					saveOptions();
 				};
-				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipFactoryGetter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
-				Object returnValue = mh.invoke(key, tooltipFactoryGetter, valueTextGetter, callbacks, getter.get(), changeCallback);
+				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipParameter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
+				Object returnValue = mh.invoke(key, tooltipParameter, valueTextGetter, callbacks, getter.get(), changeCallback);
 				((OptionMixinHelper)returnValue).setOmitBuilderKeyText();
 				return returnValue;
 			}

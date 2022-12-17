@@ -27,7 +27,7 @@ On platforms other than macOS, the mod does nothing (except the aformentioned me
 
 ## Running
 
-This mod requires Fabric, Fabric loader >= 0.14.9, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
+This mod requires Fabric, Fabric loader >= 0.14.11, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
 
 ## Setup
 
@@ -36,6 +36,17 @@ For setup instructions please see the [fabric wiki page](https://fabricmc.net/wi
 ## Building
 
 To build this, you also need to build the native file before building the mod itself any time you modify it. This can only be done on macOS and requires Apple's XCode (or command line-tools) to be installed on the machine. To build the native library, simply run `make clean && make` in the `src/main/native` directory. This should work on both intel and arm machines, but I've only tested in on an intel machine. The resulting binary supports both x64 and arm64, so no need to worry about the architecture of the native.
+
+## Testing
+
+If you make changes, you should test everything works properly on the following versions at least:
+- 1.14
+- 1.15
+- 1.16
+- 1.17
+- 1.18
+- 1.19
+- 1.19.3
 
 ## Mixin Naming Scheme
 
