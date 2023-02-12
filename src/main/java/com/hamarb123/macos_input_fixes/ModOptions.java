@@ -445,11 +445,12 @@ public class ModOptions
 		loadInterface(); //load the elements if they are not loaded yet
 		if (MinecraftClient.IS_SYSTEM_MAC)
 		{
-			//on macOS show reverse scrolling, reverse hotbar scrolling, and trackpad sensitivity options
-			Object[] arr = new Object[3];
+			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, and momentum scrolling options
+			Object[] arr = new Object[4];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
 			arr[2] = TRACKPAD_SENSITIVITY;
+			arr[3] = MOMENTUM_SCROLLING;
 			return arr;
 		}
 		else
@@ -478,6 +479,12 @@ public class ModOptions
 					0.0, 100.0, 1.0f,
 					() -> trackpadSensitivity,
 					(value) -> setTrackpadSensitivity(value));
+
+				MOMENTUM_SCROLLING = booleanOption(
+					"options.macos_input_fixes.momentum_scrolling",
+					"Momentum Scrolling",
+					() -> momentumScrolling,
+					(value) -> setMomentumScrolling(value));
 			}
 
 			REVERSE_HOTBAR_SCROLLING = booleanOption(
@@ -517,18 +524,18 @@ public class ModOptions
 			}
 			List<String> lines = IOUtils.readLines(new FileInputStream(optionsFile), StandardCharsets.UTF_8); //split by lines
 			NbtCompound compoundTag = new NbtCompound();
-            for (String line : lines) //read the lines into a tag
+			for (String line : lines) //read the lines into a tag
 			{
-                try
+				try
 				{
-                    Iterator<String> iterator = GameOptionsAccessor.COLON_SPLITTER().omitEmptyStrings().limit(2).split(line).iterator();
-                    compoundTag.putString(iterator.next(), iterator.next());
-                }
-                catch (Exception ex1)
+					Iterator<String> iterator = GameOptionsAccessor.COLON_SPLITTER().omitEmptyStrings().limit(2).split(line).iterator();
+					compoundTag.putString(iterator.next(), iterator.next());
+				}
+				catch (Exception ex1)
 				{
-                    ex1.printStackTrace(System.err); //failed to parse
-                }
-            }
+					ex1.printStackTrace(System.err); //failed to parse
+				}
+			}
 			if (compoundTag.contains("trackpadSensitivity")) //read trackpadSensitivity option
 			{
 				double actualValue = 20.0; //default value
@@ -539,8 +546,8 @@ public class ModOptions
 				}
 				catch (Exception ex1)
 				{
-                    ex1.printStackTrace(System.err); //failed to parse
-                }
+					ex1.printStackTrace(System.err); //failed to parse
+				}
 				setTrackpadSensitivity(actualValue);
 			}
 			if (compoundTag.contains("reverseHotbarScrolling")) //read reverseHotbarScrolling option
@@ -553,8 +560,8 @@ public class ModOptions
 				}
 				catch (Exception ex1)
 				{
-                    ex1.printStackTrace(System.err); //failed to parse
-                }
+					ex1.printStackTrace(System.err); //failed to parse
+				}
 				reverseHotbarScrolling = actualValue;
 			}
 			if (compoundTag.contains("reverseScrolling")) //read reverseScrolling option
@@ -567,9 +574,23 @@ public class ModOptions
 				}
 				catch (Exception ex1)
 				{
-                    ex1.printStackTrace(System.err); //failed to parse
-                }
+					ex1.printStackTrace(System.err); //failed to parse
+				}
 				reverseScrolling = actualValue;
+			}
+			if (compoundTag.contains("momentumScrolling")) //read momentumScrolling option
+			{
+				boolean actualValue = false; //default value
+				try
+				{
+					Boolean value = Boolean.parseBoolean(compoundTag.getString("momentumScrolling"));
+					actualValue = value;
+				}
+				catch (Exception ex1)
+				{
+					ex1.printStackTrace(System.err); //failed to parse
+				}
+				setMomentumScrolling(actualValue);
 			}
 
 			loadedInterface = false;
@@ -588,6 +609,7 @@ public class ModOptions
 			printWriter.println("trackpadSensitivity:" + trackpadSensitivity);
 			printWriter.println("reverseHotbarScrolling:" + reverseHotbarScrolling);
 			printWriter.println("reverseScrolling:" + reverseScrolling);
+			printWriter.println("momentumScrolling:" + momentumScrolling);
 		}
 		catch (Exception ex2)
 		{
@@ -620,4 +642,15 @@ public class ModOptions
 
 	public static boolean reverseScrolling = false;
 	public static Object REVERSE_SCROLLING;
+
+	public static boolean momentumScrolling = false;
+	public static Object MOMENTUM_SCROLLING;
+
+	public static void setMomentumScrolling(boolean value)
+	{
+		momentumScrolling = value;
+
+		//set the value in the native library also
+		MacOSInputFixesClientMod.setMomentumScrolling(value);
+	}
 }

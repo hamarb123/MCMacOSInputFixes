@@ -40,16 +40,32 @@ public class MinecraftClientMixin
 		}
 	}
 
-	private void scrollCallback(Double horizontal, Double vertical)
+	private void scrollCallback(double horizontal, double vertical, double horizontalUngrouped, double verticalUngrouped)
 	{
 		//recieve the native scrolling callback & convert it into a scroll event
+
+		//use ungrouped values if not scrolling on hotbar
+		if (((MinecraftClient)(Object)this).getOverlay() != null || ((MinecraftClient)(Object)this).currentScreen != null || ((MinecraftClient)(Object)this).player == null)
+		{
+			horizontal = horizontalUngrouped;
+			vertical = verticalUngrouped;
+		}
+
+		//combine vertical & horizontal here since it's harder to do in the actual method (when scrolling for hotbar)
+		else
+		{
+			vertical += horizontal;
+			horizontal = 0;
+		}
+
+		//check if we actually have an event still
+		if (horizontal == 0 && vertical == 0) return;
 
 		//enable onMouseScroll
 		Common.setAllowedInputOSX(true);
 
 		//on 1.14 we need to use the window field, on 1.19 the field still exists
-		//combine vertical & horizontal here since it's harder to do in the actual method
-		((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 0, vertical + horizontal);
+		((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), horizontal, vertical);
 
 		//disable onMouseScroll
 		Common.setAllowedInputOSX(false);

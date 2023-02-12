@@ -25,9 +25,15 @@ Menu Options (under Mouse Settings Screen):
 
 On platforms other than macOS, the mod does nothing (except the aformentioned menu options), so it can be safely included in any modpack.
 
+## Links
+
+- [Modrinth](https://modrinth.com/mod/macos-input-fixes)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/macos-input-fixes)
+- [PayPal](https://www.paypal.com/donate/?hosted_button_id=9MTL4PHHPLHY4)
+
 ## Running
 
-This mod requires Fabric, Fabric loader >= 0.14.11, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
+This mod requires Fabric, Fabric loader 0.14.11+, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
 
 ## Setup
 

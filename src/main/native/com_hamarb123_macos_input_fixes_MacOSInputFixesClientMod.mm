@@ -14,23 +14,18 @@
 bool added = false;
 jobject _scrollCallback = NULL;
 jlong _window = NULL;
-jmethodID _BiConsumerAccept = NULL;
-jclass _Double = NULL;
-jmethodID _DoubleCtor = NULL;
-jclass _Integer = NULL;
-jmethodID _IntegerCtor = NULL;
-jclass _Boolean = NULL;
-jmethodID _BooleanCtor = NULL;
+jmethodID _ScrollCallbackAccept = NULL;
 JavaVM* jvm = NULL;
 double trackpadSensitivity = 20.0;
+bool momentumScrolling = false;
 
 //gets a jenv from the currently cached jvm
 JNIEnv* get_jenv()
 {
-    JNIEnv *env;
-    jint rs = jvm->AttachCurrentThread((void**)&env, NULL);
-    assert(rs == JNI_OK);
-    return env;
+	JNIEnv *env;
+	jint rs = jvm->AttachCurrentThread((void**)&env, NULL);
+	assert(rs == JNI_OK);
+	return env;
 }
 
 //sign function like in c#
@@ -45,16 +40,8 @@ double sgn(double x)
 double scrollX = 0.0;
 double scrollY = 0.0;
 
-void processScroll(NSEvent* event, double& x, double& y)
+void processScroll(NSEvent* event, double& x, double& y, double& ungroupedX, double& ungroupedY)
 {
-	//check that it wasn't caused by momentum
-	if (event.momentumPhase != NSEventPhaseNone)
-	{
-		x = 0.0;
-		y = 0.0;
-		return;
-	}
-
 	//if shift is down, macos adds vertical axis to horizontal axis and sets vertical to 0 for 'legacy scroll events' (indicated by NSEventPhaseNone)
 	if ((event.modifierFlags & NSEventModifierFlagShift) != 0 && event.phase == NSEventPhaseNone)
 	{
@@ -63,51 +50,70 @@ void processScroll(NSEvent* event, double& x, double& y)
 		//(which is currently illegal for speedrunning, and no it's not a good solution to the original bug)
 		y += x;
 		x = 0.0;
+		ungroupedX = x;
+		ungroupedY = y;
 	}
 
-	//if it is a non-legacy scrolling event (meaning it has a beginning and an end), and it is on the trackpad or other high precision scroll,
-	//then we don't want to interpret it as a million scroll events for a very small movement.
-	if (event.phase != NSEventPhaseNone && event.hasPreciseScrollingDeltas)
+	if (event.hasPreciseScrollingDeltas)
 	{
-		if (trackpadSensitivity == 0.0)
+		//calculate ungrouped scroll
+		ungroupedX = x / trackpadSensitivity;
+		ungroupedY = y / trackpadSensitivity;
+
+		//if it is a non-legacy scrolling event (meaning it has a beginning and an end), and it is on the trackpad or other high precision scroll,
+		//then we don't want to interpret it as a million scroll events for a very small movement.
+		if (event.phase != NSEventPhaseNone)
 		{
-			//if the user sets it to 0.0, disable custom trackpad handling
-		}
-		else if (event.phase == NSEventPhaseBegan)
-		{
-			//reset scroll counter, and ensure that the first event generates a scroll
-			scrollX = sgn(x) * std::max(std::abs(x) - 1, 0.0);
-			scrollY = sgn(y) * std::max(std::abs(y) - 1, 0.0);
-			x = sgn(x);
-			y = sgn(y);
-		}
-		else
-		{
-			//group scrolls together up to a magnitude of the trackpadSensitivity
-			scrollX += x;
-			scrollY += y;
-			x = 0.0;
-			y = 0.0;
-			if (std::abs(scrollX) >= trackpadSensitivity)
+			if (trackpadSensitivity == 0.0)
 			{
-				x = sgn(scrollX) * (int)(std::abs(scrollX) / trackpadSensitivity);
-				scrollX = sgn(scrollX) * (std::fmod(std::abs(scrollX), trackpadSensitivity));
-				scrollY = 0; //reset y partial scroll since it was probably not intended
+				//if the user sets it to 0.0, disable custom trackpad handling
 			}
-			if (std::abs(scrollY) >= trackpadSensitivity)
+			else if (event.phase == NSEventPhaseBegan)
 			{
-				y = sgn(scrollY) * (int)(std::abs(scrollY) / trackpadSensitivity);
-				scrollY = sgn(scrollY) * (std::fmod(std::abs(scrollY), trackpadSensitivity));
-				scrollX = 0; //reset x partial scroll since it was probably not intended
+				//reset scroll counter, and ensure that the first event generates a scroll
+				scrollX = sgn(x) * std::max(std::abs(x) - 1, 0.0);
+				scrollY = sgn(y) * std::max(std::abs(y) - 1, 0.0);
+				x = sgn(x);
+				y = sgn(y);
+			}
+			else
+			{
+				//group scrolls together up to a magnitude of the trackpadSensitivity
+				scrollX += x;
+				scrollY += y;
+				x = 0.0;
+				y = 0.0;
+				if (std::abs(scrollX) >= trackpadSensitivity)
+				{
+					x = sgn(scrollX) * (int)(std::abs(scrollX) / trackpadSensitivity);
+					scrollX = sgn(scrollX) * (std::fmod(std::abs(scrollX), trackpadSensitivity));
+					scrollY = 0; //reset y partial scroll since it was probably not intended
+				}
+				if (std::abs(scrollY) >= trackpadSensitivity)
+				{
+					y = sgn(scrollY) * (int)(std::abs(scrollY) / trackpadSensitivity);
+					scrollY = sgn(scrollY) * (std::fmod(std::abs(scrollY), trackpadSensitivity));
+					scrollX = 0; //reset x partial scroll since it was probably not intended
+				}
 			}
 		}
 	}
 
-	//if there isn't precise deltas (ie. mouse), macos often causes smooth scrolling anyway, this effectively disables it
-	if (!event.hasPreciseScrollingDeltas)
+	//if there isn't precise deltas (ie. mouse), macos often causes sketchy smooth scrolling
+	else
 	{
 		x = sgn(x);
 		y = sgn(y);
+		ungroupedX = x;
+		ungroupedY = y;
+	}
+
+	//check that it wasn't caused by momentum
+	if (!momentumScrolling && event.momentumPhase != NSEventPhaseNone)
+	{
+		x = 0.0;
+		y = 0.0;
+		return;
 	}
 }
 
@@ -120,16 +126,18 @@ void handleScroll(NSEvent* event)
 		double x = event.scrollingDeltaX;
 		double y = event.scrollingDeltaY;
 
+		//variables that don't group x and y scrolls
+		double ungroupedX = x;
+		double ungroupedY = y;
+
 		//modify x and y based on information available from the event
-		processScroll(event, x, y);
+		processScroll(event, x, y, ungroupedX, ungroupedY);
 
 		//send the event to java
-		if (x != 0 || y != 0)
+		if (x != 0 || y != 0 || ungroupedX != 0 || ungroupedY != 0)
 		{
 			JNIEnv* jenv = get_jenv();
-			jobject _x = jenv->NewObject(_Double, _DoubleCtor, (jdouble)x);
-			jobject _y = jenv->NewObject(_Double, _DoubleCtor, (jdouble)y);
-			jenv->CallVoidMethod(_scrollCallback, _BiConsumerAccept, _x, _y);
+			jenv->CallVoidMethod(_scrollCallback, _ScrollCallbackAccept, x, y, ungroupedX, ungroupedY);
 		}
 	}
 }
@@ -146,7 +154,7 @@ void UpdateGlobalRef(JNIEnv* old_jenv, JNIEnv* new_jenv, T& storage, T value)
 /*
  * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
  * Method:    registerCallbacks
- * Signature: (Ljava/util/function/BiConsumer;J)V
+ * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;J)V
  */
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_registerCallbacks
   (JNIEnv* jenv, jclass, jobject scrollCallback, jlong window)
@@ -168,13 +176,7 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 
 	//cache relevant java classes and methods
 	UpdateGlobalRef(oldJenv, jenv, _scrollCallback, scrollCallback);
-	_BiConsumerAccept = jenv->GetMethodID(jenv->FindClass("java/util/function/BiConsumer"), "accept", "(Ljava/lang/Object;Ljava/lang/Object;)V");
-	UpdateGlobalRef(oldJenv, jenv, _Double, jenv->FindClass("java/lang/Double"));
-	_DoubleCtor = jenv->GetMethodID(_Double, "<init>", "(D)V");
-	UpdateGlobalRef(oldJenv, jenv, _Integer, jenv->FindClass("java/lang/Integer"));
-	_IntegerCtor = jenv->GetMethodID(_Integer, "<init>", "(I)V");
-	UpdateGlobalRef(oldJenv, jenv, _Boolean, jenv->FindClass("java/lang/Boolean"));
-	_BooleanCtor = jenv->GetMethodID(_Boolean, "<init>", "(Z)V");
+	_ScrollCallbackAccept = jenv->GetMethodID(jenv->FindClass("com/hamarb123/macos_input_fixes/ScrollCallback"), "accept", "(DDDD)V");
 
 	//store the cocoa window id
 	_window = window;
@@ -210,6 +212,21 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 	//this a function that is called from java
 	//it updates the trackpad sensitivity option
 	trackpadSensitivity = value;
+	scrollX = 0.0;
+	scrollY = 0.0;
+}
+
+/*
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
+ * Method:    setMomentumScrolling
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setMomentumScrolling
+  (JNIEnv *, jclass, jboolean value)
+{
+	//this a function that is called from java
+	//it updates the momentum scrolling option
+	momentumScrolling = value != JNI_FALSE;
 	scrollX = 0.0;
 	scrollY = 0.0;
 }

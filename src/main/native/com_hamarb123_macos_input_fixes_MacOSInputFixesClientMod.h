@@ -10,7 +10,7 @@ extern "C" {
 /*
  * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
  * Method:    registerCallbacks
- * Signature: (Ljava/util/function/BiConsumer;J)V
+ * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;J)V
  */
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_registerCallbacks
   (JNIEnv *, jclass, jobject, jlong);
@@ -22,6 +22,14 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
  */
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setTrackpadSensitivity
   (JNIEnv *, jclass, jdouble);
+
+/*
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
+ * Method:    setMomentumScrolling
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setMomentumScrolling
+  (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
 }

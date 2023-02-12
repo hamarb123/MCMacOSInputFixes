@@ -1,7 +1,6 @@
 package com.hamarb123.macos_input_fixes;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.Util;
 
@@ -14,8 +13,9 @@ public class MacOSInputFixesClientMod implements ClientModInitializer
 	}
 
 	//these functions are defined in Objective C++
-	public static native void registerCallbacks(BiConsumer<Double, Double> scrollCallback, long window);
+	public static native void registerCallbacks(ScrollCallback scrollCallback, long window);
 	public static native void setTrackpadSensitivity(double sensitivity);
+	public static native void setMomentumScrolling(boolean option);
 
 	static
 	{
