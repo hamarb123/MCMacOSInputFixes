@@ -18,6 +18,7 @@ jmethodID _ScrollCallbackAccept = NULL;
 JavaVM* jvm = NULL;
 double trackpadSensitivity = 20.0;
 bool momentumScrolling = false;
+bool interfaceSmoothScroll = false;
 
 //gets a jenv from the currently cached jvm
 JNIEnv* get_jenv()
@@ -57,8 +58,11 @@ void processScroll(NSEvent* event, double& x, double& y, double& ungroupedX, dou
 	if (event.hasPreciseScrollingDeltas)
 	{
 		//calculate ungrouped scroll
-		ungroupedX = x / trackpadSensitivity;
-		ungroupedY = y / trackpadSensitivity;
+		if (trackpadSensitivity != 0.0)
+		{
+			ungroupedX = x / trackpadSensitivity;
+			ungroupedY = y / trackpadSensitivity;
+		}
 
 		//if it is a non-legacy scrolling event (meaning it has a beginning and an end), and it is on the trackpad or other high precision scroll,
 		//then we don't want to interpret it as a million scroll events for a very small movement.
@@ -104,8 +108,11 @@ void processScroll(NSEvent* event, double& x, double& y, double& ungroupedX, dou
 	{
 		x = sgn(x);
 		y = sgn(y);
-		ungroupedX = x;
-		ungroupedY = y;
+		if (!interfaceSmoothScroll)
+		{
+			ungroupedX = x;
+			ungroupedY = y;
+		}
 	}
 
 	//check that it wasn't caused by momentum
@@ -229,4 +236,17 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 	momentumScrolling = value != JNI_FALSE;
 	scrollX = 0.0;
 	scrollY = 0.0;
+}
+
+/*
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
+ * Method:    setInterfaceSmoothScroll
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setInterfaceSmoothScroll
+  (JNIEnv *, jclass, jboolean value)
+{
+	//this a function that is called from java
+	//it updates the momentum scrolling option
+	interfaceSmoothScroll = value != JNI_FALSE;
 }

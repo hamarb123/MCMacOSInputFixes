@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.service.MixinService;
@@ -42,6 +43,12 @@ public class MixinPlugin implements IMixinConfigPlugin
 		MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
 		boolean hasOptionClass = isClassPresent(resolver.mapClassName("intermediary", "net.minecraft.class_316"));
 		boolean hasCyclingButtonWidgetClass = isClassPresent(resolver.mapClassName("intermediary", "net.minecraft.class_5676"));
+		boolean hasGameOptionsScreen_getHoveredButtonTooltip = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_4667"),
+			resolver.mapMethodName("intermediary", "net.minecraft.class_4667", "method_31048", "(Lnet/minecraft/class_353;II)Ljava/util/List;"),
+			"(L" + resolver.mapClassName("intermediary", "net.minecraft.class_353").replace(".", "/") + ";II)Ljava/util/List;");
+		boolean hasScreen_renderTooltip = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_437"),
+			resolver.mapMethodName("intermediary", "net.minecraft.class_437", "method_25417", "(Lnet/minecraft/class_4587;Ljava/util/List;II)V"),
+			"(L" + resolver.mapClassName("intermediary", "net.minecraft.class_4587").replace(".", "/") + ";Ljava/util/List;II)V");
 		if (hasOptionClass)
 		{
 			li.add("gui.MouseOptionsScreenMixin2");
@@ -60,15 +67,47 @@ public class MixinPlugin implements IMixinConfigPlugin
 		{
 			li.add("gui.CyclingButtonWidgetBuilderMixin3");
 		}
+		if (hasGameOptionsScreen_getHoveredButtonTooltip)
+		{
+			li.add("gui.MouseOptionsScreenMixin5");
+		}
+		if (!hasGameOptionsScreen_getHoveredButtonTooltip && hasScreen_renderTooltip && hasOptionClass)
+		{
+			li.add("gui.MouseOptionsScreenMixin6");
+		}
 		return li;
 	}
 
-	private boolean isClassPresent(String className)
+	private static boolean isClassPresent(String className)
 	{
         try
 		{
             MixinService.getService().getBytecodeProvider().getClassNode(className);
             return true;
+        }
+		catch (ClassNotFoundException ignored)
+		{
+            // Class isn't present, skip this mixin.
+            return false;
+        }
+		catch (Exception e)
+		{
+            // Something else went wrong which might be more serious.
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+	private static boolean isMethodPresent(String className, String methodName, String descriptor)
+	{
+        try
+		{
+            ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode(className);
+			for (MethodNode methodNode : classNode.methods)
+			{
+				if (methodNode.name.equals(methodName) && methodNode.desc.equals(descriptor)) return true;
+			}
+            return false;
         }
 		catch (ClassNotFoundException ignored)
 		{

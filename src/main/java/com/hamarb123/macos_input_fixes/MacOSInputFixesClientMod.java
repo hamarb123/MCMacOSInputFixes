@@ -16,6 +16,7 @@ public class MacOSInputFixesClientMod implements ClientModInitializer
 	public static native void registerCallbacks(ScrollCallback scrollCallback, long window);
 	public static native void setTrackpadSensitivity(double sensitivity);
 	public static native void setMomentumScrolling(boolean option);
+	public static native void setInterfaceSmoothScroll(boolean option);
 
 	static
 	{

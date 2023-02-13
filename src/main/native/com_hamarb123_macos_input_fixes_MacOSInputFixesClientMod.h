@@ -31,6 +31,14 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setMomentumScrolling
   (JNIEnv *, jclass, jboolean);
 
+/*
+ * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
+ * Method:    setInterfaceSmoothScroll
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_setInterfaceSmoothScroll
+  (JNIEnv *, jclass, jboolean);
+
 #ifdef __cplusplus
 }
 #endif
