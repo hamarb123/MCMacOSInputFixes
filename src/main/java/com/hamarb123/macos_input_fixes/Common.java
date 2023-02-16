@@ -19,12 +19,12 @@ public class Common
 		//if not on macOS, use normal implementation
 		if (!MinecraftClient.IS_SYSTEM_MAC)
 		{
-			returnValue = ScreenHelper.hasControlDown();
+			returnValue = FabricReflectionHelper.Screen_hasControlDown();
 		}
 		else
 		{
 			//replace hasControlDown() on macOS with hasControlDown() (which tests command) or 'actual control down' for this function only
-			returnValue = ScreenHelper.hasControlDown() ||
+			returnValue = FabricReflectionHelper.Screen_hasControlDown() ||
 				//ctrl key check
 				InputUtil.isKeyPressed(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 341) ||
 				InputUtil.isKeyPressed(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 345);

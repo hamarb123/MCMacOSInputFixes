@@ -5,17 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.lang.invoke.LambdaMetafactory;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -24,18 +17,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.Nullable;
+import com.hamarb123.macos_input_fixes.FabricReflectionHelper.CyclingOptionSetterHelper;
+import com.hamarb123.macos_input_fixes.FabricReflectionHelper.ValueTextGetterHelper;
+import com.hamarb123.macos_input_fixes.mixin.MinecraftClientAccessor;
 import com.hamarb123.macos_input_fixes.mixin.gui.GameOptionsAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.MappingResolver;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
@@ -93,106 +83,45 @@ public class ModOptions
 	//1.19 4th: SimpleOption.DoubleSliderCallbacks.INSTANCE
 	//1.19 4th: SimpleOption.BOOLEAN
 
+	//todo: update above comments to reflect changes from tooltips
+
 
 	//here's the implementation for creating the different interface elements:
 
-	private static MethodHandle _createLiteralText;
-	private static MethodHandle createLiteralTextInvoker()
+	private static Text createLiteralText(String value)
 	{
-		if (_createLiteralText == null)
+		if (FabricReflectionHelper.Has_Text_literal())
 		{
-			MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
-			try
-			{
-				//1.19+
-				String textLiteralMethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_2561", "method_43470", "(Ljava/lang/String;)Lnet/minecraft/class_5250;");
-				_createLiteralText = MethodHandles.publicLookup().findStatic(Text.class, textLiteralMethodName, MethodType.methodType(MutableText.class, String.class));
-			}
-			catch (NoSuchMethodException | IllegalAccessException e1)
-			{
-				try
-				{
-					//1.14-1.18
-					String LiteralTextContentName = resolver.mapClassName("intermediary", "net.minecraft.class_2585");
-					Class<?> literalTextContentClass = Class.forName(LiteralTextContentName);
-					_createLiteralText = MethodHandles.publicLookup().findConstructor(literalTextContentClass, MethodType.methodType(void.class, String.class));
-				}
-				catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e2)
-				{
-					e2.printStackTrace();
-				}
-			}
+			//1.19+
+			return FabricReflectionHelper.Text_literal(value);
 		}
-		return _createLiteralText;
-	}
-
-	private static Object createLiteralText(String value)
-	{
-		try
+		else
 		{
-			return createLiteralTextInvoker().invoke(value);
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException("Failed to either find LiteralText constructor or call Text.literal", e);
+			//1.14-1.18
+			return FabricReflectionHelper.new_LiteralText(value);
 		}
 	}
 
-	//helper functional interface that can be converted to the correct functional interface
-	@FunctionalInterface
-	private interface ValueTextGetterHelper<T>
-	{
-		public Text toString(Text var1, T var2);
-	}
-
-	//helper functional interface that can be converted to the correct functional interface
-	@FunctionalInterface
-	private interface CyclingOptionSetterHelper<T>
-	{
-		public void accept(GameOptions gameOptions, /*Option*/ Object option, T value);	 
-	}
-
+	@SuppressWarnings("unchecked")
 	private static Object doubleOption(String key, String prefix, double min, double max, float step, Supplier<Double> getter, Consumer<Double> setter, String tooltip)
 	{
-		MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
-		String doubleOptionClassName = resolver.mapClassName("intermediary", "net.minecraft.class_4067");
-		Class<?> doubleOptionClass = null;
 		try
 		{
-			doubleOptionClass = Class.forName(doubleOptionClassName);
-		}
-		catch (Throwable e1)
-		{
-		}
-		try
-		{
-			if (doubleOptionClass != null)
+			if (FabricReflectionHelper.Try_DoubleOption() != null)
 			{
 				//1.14-1.18
-				MethodHandle ctor;
 				Constructor<?> ctorM;
 				boolean is117Plus = false;
 				int version = 1160;
-				if (tooltip == null)
+				if (tooltip == null || !FabricReflectionHelper.Has_new_DoubleOption_8())
 				{
-					ctor = MethodHandles.publicLookup().findConstructor(doubleOptionClass, MethodType.methodType(void.class, String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class));
-					ctorM = doubleOptionClass.getConstructor(String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class);
+					ctorM = FabricReflectionHelper.Info_new_DoubleOption7();
 				}
 				else
 				{
-					try
-					{
-						ctor = MethodHandles.publicLookup().findConstructor(doubleOptionClass, MethodType.methodType(void.class, String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class, Function.class));
-						ctorM = doubleOptionClass.getConstructor(String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class, Function.class);
-						is117Plus = true;
-						version = 1170;
-					}
-					catch (Throwable t)
-					{
-						ctor = MethodHandles.publicLookup().findConstructor(doubleOptionClass, MethodType.methodType(void.class, String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class));
-						ctorM = doubleOptionClass.getConstructor(String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class);
-					}
+					ctorM = FabricReflectionHelper.Info_new_DoubleOption8();
+					is117Plus = true;
+					version = 1170;
 				}
 				Function<GameOptions, Double> _getter = (gameOptions) -> getter.get();
 				BiConsumer<GameOptions, Double> _setter = (gameOptions, value) ->
@@ -214,19 +143,19 @@ public class ModOptions
 				}
 				if (tooltip == null)
 				{
-					return ctor.invoke(key, min, max, step, _getter, _setter, displayStringGetter);
+					return FabricReflectionHelper.new_DoubleOption(key, min, max, step, _getter, _setter, displayStringGetter);
 				}
 				else
 				{
-					Object tooltipObject = createTooltip(true, tooltip, version, resolver);
+					Object tooltipObject = createTooltip(true, tooltip, version);
 					if (is117Plus)
 					{
-						return ctor.invoke(key, min, max, step, _getter, _setter, displayStringGetter, tooltipObject);
+						return FabricReflectionHelper.new_DoubleOption(key, min, max, step, _getter, _setter, displayStringGetter, (Function<MinecraftClient, List<?>>)tooltipObject);
 					}
 					else
 					{
-						Object returnValue = ctor.invoke(key, min, max, step, _getter, _setter, displayStringGetter);
-						returnValue = writeTooltip(returnValue, tooltipObject, version, resolver);
+						Object returnValue = FabricReflectionHelper.new_DoubleOption(key, min, max, step, _getter, _setter, displayStringGetter);
+						returnValue = writeTooltip(returnValue, tooltipObject, version);
 						return returnValue;
 					}
 				}
@@ -234,60 +163,13 @@ public class ModOptions
 			else
 			{
 				//1.19+
-				String SimpleOption_TooltipFactoryGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7307");
-				Class<?> SimpleOption_TooltipFactoryGetter_Class = null;
-				try
-				{
-					SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
-				}
-				catch (Throwable e2)
-				{
-				}
-				Class<?> SimpleOption_TooltipParameter_Class;
-
-				String SimpleOption_ValueTextGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7303");
-				Class<?> SimpleOption_ValueTextGetter_Class = Class.forName(SimpleOption_ValueTextGetter_ClassName);
-				Class<?> SimpleOption_Callbacks_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7178"));
-				Class<?> SimpleOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172"));
-
-				Object tooltipParameter;
-
-				if (SimpleOption_TooltipFactoryGetter_Class != null)
-				{
-					//1.19-1.19.2
-					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactoryGetter_Class;
-					tooltipParameter = createTooltip(true, tooltip, 1190, resolver);
-				}
-				else
-				{
-					//1.19.3+
-					String SimpleOption_TooltipFactory_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7277");
-					Class<?> SimpleOption_TooltipFactory_Class = Class.forName(SimpleOption_TooltipFactory_ClassName);
-					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactory_Class;
-					tooltipParameter = createTooltip(true, tooltip, 1193, resolver);
-				}
-
 				double step2 = (max - min) / step;
 				ValueTextGetterHelper<Double> valueTextGetterImpl = (optionText, value) ->
 				{
 					double result = Math.round(value * step2) * step + min;
 					return (Text)createLiteralText(prefix + ": " + result);
 				};
-				String toString_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172$class_7303", "toString", "(Lnet/minecraft/class_2585)Lnet/minecraft/class_2585;");
-				Lookup lookup = MethodHandles.lookup();
-				MethodType mType = MethodType.methodType(Text.class, Text.class, Object.class);
-				Object valueTextGetter = LambdaMetafactory.metafactory(
-					lookup,
-					toString_MethodName,
-					MethodType.methodType(SimpleOption_ValueTextGetter_Class, ValueTextGetterHelper.class),
-					mType,
-					lookup.findVirtual(ValueTextGetterHelper.class, "toString", mType),
-					mType
-				).getTarget().invoke(valueTextGetterImpl);
-
-				String SimpleOption_DoubleSliderCallbacks_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7177");
-				String DoubleSliderCallbacks_INSTANCE_FieldName = resolver.mapFieldName("intermediary", "net.minecraft.class_7172$class_7177", "field_37875", "Lnet/minecraft/class_7172$class_7177;");
-				Object callbacks = Class.forName(SimpleOption_DoubleSliderCallbacks_ClassName).getField(DoubleSliderCallbacks_INSTANCE_FieldName).get(null);
+				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
 
 				Double defaultValue = (getter.get() - min) / (max - min);
 
@@ -297,8 +179,18 @@ public class ModOptions
 					setter.accept(result);
 					saveOptions();
 				};
-				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipParameter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
-				return mh.invoke(key, tooltipParameter, valueTextGetter, callbacks, defaultValue, changeCallback);
+				if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
+				{
+					//1.19-1.19.2
+					Object tooltipParameter = createTooltip(true, tooltip, 1190);
+					return FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
+				}
+				else
+				{
+					//1.19.3+
+					Object tooltipParameter = createTooltip(true, tooltip, 1193);
+					return FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
+				}
 			}
 		}
 		catch (Throwable t)
@@ -309,77 +201,33 @@ public class ModOptions
 
 	private static Object booleanOption(String key, String prefix, Supplier<Boolean> getter, Consumer<Boolean> setter, String tooltip)
 	{
-		MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
-		String cyclingOptionClassName = resolver.mapClassName("intermediary", "net.minecraft.class_4064");
-		Class<?> cyclingOptionClass = null;
 		try
 		{
-			cyclingOptionClass = Class.forName(cyclingOptionClassName);
-		}
-		catch (Throwable e1)
-		{
-		}
-		try
-		{
-			if (cyclingOptionClass != null)
+			if (FabricReflectionHelper.Try_CyclingOption() != null)
 			{
 				//1.14-1.18
-				String createMethodName = null;
-				Class<?> CyclingOption_Setter_Class = null;
-				MethodHandle createMethod = null;
-				try
-				{
-					CyclingOption_Setter_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_4064$class_5675"));
-					createMethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_4064", "method_32525",
-						"(Ljava/lang/String;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_4064$class_5675;)Lnet/minecraft/class_4064;");
-					createMethod = MethodHandles.publicLookup().findStatic(cyclingOptionClass, createMethodName, MethodType.methodType(
-						cyclingOptionClass, String.class, Text.class, Text.class, Function.class, CyclingOption_Setter_Class
-					));
-				}
-				catch (Throwable e2)
-				{
-					if (CyclingOption_Setter_Class != null)
-					{
-						throw new Exception("Failed to load CyclingOption.create, but CyclingOption.Setter was found.", e2);
-					}
-				}
-
-				if (createMethod != null)
+				if (FabricReflectionHelper.Try_CyclingOption_Setter() != null)
 				{
 					//1.17-1.18
-					String accept_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_4064$class_5675", "accept", "(Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Object;)V");
-					Lookup lookup = MethodHandles.lookup();
-					Class<?> OptionClass = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_316"));
-					MethodType mType1 = MethodType.methodType(void.class, GameOptions.class, OptionClass, Object.class);
-					MethodType mType2 = MethodType.methodType(void.class, GameOptions.class, Object.class, Object.class);
 					Function<GameOptions, Boolean> _getter = (gameOptions) -> getter.get();
 					CyclingOptionSetterHelper<Boolean> _setter = (gameOptions, option, value) ->
 					{
 						setter.accept(value);
 						saveOptions();
 					};
-					Object _setter2 = LambdaMetafactory.metafactory(
-						lookup,
-						accept_MethodName,
-						MethodType.methodType(CyclingOption_Setter_Class, CyclingOptionSetterHelper.class),
-						mType1,
-						lookup.findVirtual(CyclingOptionSetterHelper.class, "accept", mType2),
-						mType1
-					).getTarget().invoke(_setter);
-					Object returnValue = createMethod.invoke(key, createLiteralText(prefix + ": ON"), createLiteralText(prefix + ": OFF"), _getter, _setter2);
+					Object _setter2 = FabricReflectionHelper.convertToCyclingOption_Setter(_setter);
+					Object returnValue = FabricReflectionHelper.CyclingOption_create(key, createLiteralText(prefix + ": ON"), createLiteralText(prefix + ": OFF"), _getter, _setter2);
 					((OptionMixinHelper)returnValue).setOmitBuilderKeyText();
 					if (tooltip != null)
 					{
-						Object tooltipObject = createTooltip(false, tooltip, 1170, resolver);
-						returnValue = writeTooltip(returnValue, tooltipObject, 1170, resolver);
+						Object tooltipObject = createTooltip(false, tooltip, 1170);
+						returnValue = writeTooltip(returnValue, tooltipObject, 1170);
 					}
 					return returnValue;
 				}
 				else
 				{
 					//1.14-1.16
-					MethodHandle ctor = MethodHandles.publicLookup().findConstructor(cyclingOptionClass, MethodType.methodType(void.class, String.class, BiConsumer.class, BiFunction.class));
-					Constructor<?> ctorM = cyclingOptionClass.getConstructor(String.class, BiConsumer.class, BiFunction.class);
 					BiConsumer<GameOptions, Integer> _setter = (gameOptions, value) ->
 					{
 						setter.accept(!getter.get());
@@ -387,7 +235,7 @@ public class ModOptions
 					};
 					BiFunction<GameOptions, ?, ?> displayStringGetter;
 					int version = 1160;
-					if (((ParameterizedType)ctorM.getGenericParameterTypes()[2]).getActualTypeArguments()[2] == String.class)
+					if (((ParameterizedType)FabricReflectionHelper.Info_new_CyclingOption3().getGenericParameterTypes()[2]).getActualTypeArguments()[2] == String.class)
 					{
 						//1.14-1.15
 						displayStringGetter = (gameOptions, booleanOption) -> prefix + (getter.get() ? ": ON" : ": OFF");
@@ -398,11 +246,11 @@ public class ModOptions
 						//1.16
 						displayStringGetter = (gameOptions, booleanOption) -> createLiteralText(prefix + (getter.get() ? ": ON" : ": OFF"));
 					}
-					Object returnValue = ctor.invoke(key, _setter, displayStringGetter);
+					Object returnValue = FabricReflectionHelper.new_CyclingOption(key, _setter, displayStringGetter);
 					if (tooltip != null)
 					{
-						Object tooltipObject = createTooltip(false, tooltip, version, resolver);
-						returnValue = writeTooltip(returnValue, tooltipObject, version, resolver);
+						Object tooltipObject = createTooltip(false, tooltip, version);
+						returnValue = writeTooltip(returnValue, tooltipObject, version);
 					}
 					return returnValue;
 				}
@@ -410,65 +258,32 @@ public class ModOptions
 			else
 			{
 				//1.19+
-				String SimpleOption_TooltipFactoryGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7307");
-				Class<?> SimpleOption_TooltipFactoryGetter_Class = null;
-				try
-				{
-					SimpleOption_TooltipFactoryGetter_Class = Class.forName(SimpleOption_TooltipFactoryGetter_ClassName);
-				}
-				catch (Throwable e2)
-				{
-				}
-				Class<?> SimpleOption_TooltipParameter_Class;
-
-				String SimpleOption_ValueTextGetter_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7303");
-				Class<?> SimpleOption_ValueTextGetter_Class = Class.forName(SimpleOption_ValueTextGetter_ClassName);
-				Class<?> SimpleOption_Callbacks_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7178"));
-				Class<?> SimpleOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172"));
-
-				Object tooltipParameter;
-
-				if (SimpleOption_TooltipFactoryGetter_Class != null)
-				{
-					//1.19-1.19.2
-					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactoryGetter_Class;
-					tooltipParameter = createTooltip(false, tooltip, 1190, resolver);
-				}
-				else
-				{
-					//1.19.3+
-					String SimpleOption_TooltipFactory_ClassName = resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7277");
-					Class<?> SimpleOption_TooltipFactory_Class = Class.forName(SimpleOption_TooltipFactory_ClassName);
-					SimpleOption_TooltipParameter_Class = SimpleOption_TooltipFactory_Class;
-					tooltipParameter = createTooltip(false, tooltip, 1193, resolver);
-				}
-
 				ValueTextGetterHelper<Boolean> valueTextGetterImpl = (optionText, value) ->
 				{
 					return (Text)createLiteralText(prefix + ": " + (value ? "ON" : "OFF"));
 				};
-				String toString_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172$class_7303", "toString", "(Lnet/minecraft/class_2585)Lnet/minecraft/class_2585;");
-				Lookup lookup = MethodHandles.lookup();
-				MethodType mType = MethodType.methodType(Text.class, Text.class, Object.class);
-				Object valueTextGetter = LambdaMetafactory.metafactory(
-					lookup,
-					toString_MethodName,
-					MethodType.methodType(SimpleOption_ValueTextGetter_Class, ValueTextGetterHelper.class),
-					mType,
-					lookup.findVirtual(ValueTextGetterHelper.class, "toString", mType),
-					mType
-				).getTarget().invoke(valueTextGetterImpl);
-
-				String SimpleOption_BOOLEAN_FieldName = resolver.mapFieldName("intermediary", "net.minecraft.class_7172", "field_38278", "Lnet/minecraft/class_7172$class_7173;");
-				Object callbacks = SimpleOption_Class.getField(SimpleOption_BOOLEAN_FieldName).get(null);
+				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
 
 				Consumer<Boolean> changeCallback = (value) ->
 				{
 					setter.accept(value);
 					saveOptions();
 				};
-				MethodHandle mh = MethodHandles.publicLookup().findConstructor(SimpleOption_Class, MethodType.methodType(void.class, String.class, SimpleOption_TooltipParameter_Class, SimpleOption_ValueTextGetter_Class, SimpleOption_Callbacks_Class, Object.class, Consumer.class));
-				Object returnValue = mh.invoke(key, tooltipParameter, valueTextGetter, callbacks, getter.get(), changeCallback);
+
+				Object returnValue;
+				if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
+				{
+					//1.19-1.19.2
+					Object tooltipParameter = createTooltip(false, tooltip, 1190);
+					returnValue = FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
+				}
+				else
+				{
+					//1.19.3+
+					Object tooltipParameter = createTooltip(false, tooltip, 1193);
+					returnValue = FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
+				}
+
 				((OptionMixinHelper)returnValue).setOmitBuilderKeyText();
 				return returnValue;
 			}
@@ -481,178 +296,94 @@ public class ModOptions
 
 	//there doesn't seem to be a way to do tooltips on 1.14 and 1.15, so for now we won't
 
-	private static Object createTooltip(boolean isDouble, String tooltip, int version, MappingResolver resolver) throws Throwable
+	private static Object createTooltip(boolean isDouble, String tooltip, int version) throws Throwable
 	{
 		//version is in the following format: 1.19.3 = 1193
 		//rounded down to what we know (e.g. 1.16.5 may be just 1160, or 1.15 may be just 1140)
 
+		if (version >= 1193)
+		{
+			//1.19.3+
+			return tooltip == null ? FabricReflectionHelper.SimpleOption_emptyTooltip_2() : FabricReflectionHelper.SimpleOption_constantTooltip_2(createLiteralText(tooltip));
+		}
+
+
 		if (version >= 1190)
 		{
-			Class<?> SimpleOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172"));
-			Class<?> Text_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_2561"));
+			//1.19-1.19.2
+			return tooltip == null ? FabricReflectionHelper.SimpleOption_emptyTooltip_1() : FabricReflectionHelper.SimpleOption_constantTooltip_1(createLiteralText(tooltip));
+		}
 
-			if (version >= 1193)
+		if (version >= 1170)
+		{
+			//1.17-1.18
+			ArrayList<Object> tooltipList = new ArrayList<>();
+			String[] strings = tooltip.split("\\n");
+			for (String str : strings)
 			{
-				//1.19.3+
-				Class<?> SimpleOption_TooltipFactory_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7277"));
-				if (tooltip == null)
+				for (String str2 : splitTooltipLine(str))
 				{
-					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7277;");
-					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactory_Class));
-					Object tooltipFactory = emptyTooltipMethod.invoke();
-					return tooltipFactory;
-				}
-				else
-				{
-					String constantTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7277;");
-					MethodHandle constantTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, constantTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactory_Class, Text_Class));
-					Object tooltipFactory = constantTooltipMethod.invoke(createLiteralText(tooltip));
-					return tooltipFactory;
+					tooltipList.add(FabricReflectionHelper.OrderedText_styledForwardsVisitedString(str2, FabricReflectionHelper.Style_EMPTY()));
 				}
 			}
-			else
-			{
-				//1.19-1.19.2
-				Class<?> SimpleOption_TooltipFactoryGetter_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_7172$class_7307"));
-				if (tooltip == null)
-				{
-					String emptyTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42399", "()Lnet/minecraft/class_7172$class_7307;");
-					MethodHandle emptyTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, emptyTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class));
-					Object tooltipFactoryGetter = emptyTooltipMethod.invoke();
-					return tooltipFactoryGetter;
-				}
-				else
-				{
-					String constantTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7307;");
-					MethodHandle constantTooltipMethod = MethodHandles.publicLookup().findStatic(SimpleOption_Class, constantTooltip_MethodName, MethodType.methodType(SimpleOption_TooltipFactoryGetter_Class, Text_Class));
-					Object tooltipFactoryGetter = constantTooltipMethod.invoke(createLiteralText(tooltip));
-					return tooltipFactoryGetter;
-				}
-			}
+			Function<?, ?> tooltipFunc = (Object o) -> tooltipList;
+
+			if (isDouble) return tooltipFunc;
+
+			Object tooltipFunc2 = FabricReflectionHelper.convertToCyclingButtonWidget_TooltipFactory(tooltipFunc);
+			Function<?, ?> tooltips = (MinecraftClient client) -> tooltipFunc2;
+			return tooltips;
 		}
 
 		if (version >= 1160)
 		{
-			//1.16-1.18
-			Class<?> Style_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_2583"));
-			String Style_EMPTY_Field = resolver.mapFieldName("intermediary", "net.minecraft.class_2583", "field_24360", "Lnet/minecraft/class_2583;");
-			Object Style_EMPTY = Style_Class.getField(Style_EMPTY_Field).get(null);
-
-			if (version >= 1170)
+			//1.16
+			if (FabricReflectionHelper.Try_OrderedText() != null)
 			{
-				//1.17-1.18
-				Class<?> OrderedText_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5481"));
-				String styledForwardsVisitedString_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_5481", "method_30747", "(Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_5481;");
-				MethodHandle styledForwardsVisitedStringMethod = MethodHandles.publicLookup().findStatic(OrderedText_Class, styledForwardsVisitedString_MethodName, MethodType.methodType(OrderedText_Class, String.class, Style_Class));
-
-				ArrayList<Object> tooltipList = new ArrayList<>();
+				//1.16.2-1.16.5
 				String[] strings = tooltip.split("\\n");
+				ArrayList<Object> tooltipList = new ArrayList<>();
 				for (String str : strings)
 				{
-					for (String str2 : splitTooltipLine(str, resolver))
+					for (String str2 : splitTooltipLine(str))
 					{
-						tooltipList.add(styledForwardsVisitedStringMethod.invoke(str2, Style_EMPTY));
+						tooltipList.add(FabricReflectionHelper.OrderedText_styledForwardsVisitedString(str2, FabricReflectionHelper.Style_EMPTY()));
 					}
 				}
-				Function<?, ?> tooltipFunc = (Object o) -> tooltipList;
-
-				if (isDouble) return tooltipFunc;
-
-				//convert tooltipFunc to a CyclingButtonWidget.TooltipFactory
-				Lookup lookup = MethodHandles.lookup();
-				Class<?> CyclingButtonWidget_TooltipFactory_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5676$class_5679"));
-				MethodType mType = MethodType.methodType(Object.class, Object.class);
-				Object tooltipFunc2 = LambdaMetafactory.metafactory(
-					lookup,
-					"apply",
-					MethodType.methodType(CyclingButtonWidget_TooltipFactory_Class, Function.class),
-					mType,
-					lookup.findVirtual(Function.class, "apply", mType),
-					mType
-				).getTarget().invoke(tooltipFunc);
-
-				Function<?, ?> tooltips = (MinecraftClient client) -> tooltipFunc2;
-
-				return tooltips;
+				return tooltipList;
 			}
-
 			else
 			{
-				//1.16
-				Class<?> OrderedText_Class = null;
-				try
+				//1.16-1.16.1
+				String[] strings = tooltip.split("\\n");
+				ArrayList<Object> tooltipList = new ArrayList<>();
+				for (String str : strings)
 				{
-					OrderedText_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5481"));
-				}
-				catch (Throwable t)
-				{
-				}
-				if (OrderedText_Class != null)
-				{
-					//1.16.2-1.16.5
-					String styledString_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_5481", "method_30747", "(Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_5481;");
-					MethodHandle styledStringMethod = MethodHandles.publicLookup().findStatic(OrderedText_Class, styledString_MethodName, MethodType.methodType(OrderedText_Class, String.class, Style_Class));
-
-					String[] strings = tooltip.split("\\n");
-					ArrayList<Object> tooltipList = new ArrayList<>();
-					for (String str : strings)
+					for (String str2 : splitTooltipLine(str))
 					{
-						for (String str2 : splitTooltipLine(str, resolver))
-						{
-							tooltipList.add(styledStringMethod.invoke(str2, Style_EMPTY));
-						}
+						tooltipList.add(FabricReflectionHelper.StringVisitable_styled(str2, FabricReflectionHelper.Style_EMPTY()));
 					}
-					return tooltipList;
 				}
-				else
-				{
-					//1.16-1.16.1
-					Class<?> StringRenderable_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5348"));
-					String styled_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_5348", "method_29431", "(Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_5348;");
-					MethodHandle styledMethod = MethodHandles.publicLookup().findStatic(StringRenderable_Class, styled_MethodName, MethodType.methodType(StringRenderable_Class, String.class, Style_Class));
-
-					String[] strings = tooltip.split("\\n");
-					ArrayList<Object> tooltipList = new ArrayList<>();
-					for (String str : strings)
-					{
-						for (String str2 : splitTooltipLine(str, resolver))
-						{
-							tooltipList.add(styledMethod.invoke(str2, Style_EMPTY));
-						}
-					}
-					return tooltipList;
-				}
+				return tooltipList;
 			}
 		}
 
 		return null;
 	}
 
-	private static List<String> splitTooltipLine(String line, MappingResolver resolver) throws Throwable
+	private static List<String> splitTooltipLine(String line) throws Throwable
 	{
-		Class<?> StringVisitable_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5348"));
-		Class<?> TextHandler_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_5225"));
-		Class<?> Style_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_2583"));
-		Class<?> TextRenderer_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_327"));
-		String wrapLines_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_5225", "method_27498", "(Ljava/lang/String;ILnet/minecraft/class_2583;)Ljava/util/List;");
-		MethodHandle wrapLinesMethod = MethodHandles.publicLookup().findVirtual(TextHandler_Class, wrapLines_MethodName, MethodType.methodType(List.class, String.class, int.class, Style_Class));
-		MethodHandle getStringMethod = MethodHandles.publicLookup().findVirtual(StringVisitable_Class, "getString", MethodType.methodType(String.class));
-		String getTextHandler_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_327", "method_27527", "()Lnet/minecraft/class_5225;");
-		MethodHandle getTextHandlerMethod = MethodHandles.publicLookup().findVirtual(TextRenderer_Class, getTextHandler_MethodName, MethodType.methodType(TextHandler_Class));
-		Field textRenderer_Field = MinecraftClient.class.getField(resolver.mapFieldName("intermediary", "net.minecraft.class_310", "field_1772", "Lnet/minecraft/class_327;"));
-		textRenderer_Field.setAccessible(true);
-		String Style_EMPTY_Field = resolver.mapFieldName("intermediary", "net.minecraft.class_2583", "field_24360", "Lnet/minecraft/class_2583;");
-		Object Style_EMPTY = Style_Class.getField(Style_EMPTY_Field).get(null);
-		List<?> listVisitable = (List<?>)wrapLinesMethod.invoke(getTextHandlerMethod.invoke(textRenderer_Field.get(MinecraftClient.getInstance())), line, 200, Style_EMPTY);
+		List<?> listVisitable = FabricReflectionHelper.TextHandler_wrapLines(FabricReflectionHelper.TextRenderer_getTextHandler(((MinecraftClientAccessor)MinecraftClient.getInstance()).getTextRenderer()), line, 200, FabricReflectionHelper.Style_EMPTY());
 		ArrayList<String> resultList = new ArrayList<>();
 		for (Object o : listVisitable)
 		{
-			resultList.add((String)getStringMethod.invoke(o));
+			resultList.add(FabricReflectionHelper.StringVisitable_getString(o));
 		}
 		return resultList;
 	}
 
-	private static Object writeTooltip(Object option, Object tooltipObject, int version, MappingResolver resolver) throws Throwable
+	@SuppressWarnings("unchecked")
+	private static Object writeTooltip(Object option, Object tooltipObject, int version) throws Throwable
 	{
 		//version is in the following format: 1.19.3 = 1193
 		//rounded down to what we know (e.g. 1.16.5 may be just 1160, or 1.15 may be just 1140)
@@ -667,21 +398,13 @@ public class ModOptions
 		{
 			//1.17-1.18
 			//runs on CyclingOption only
-			Class<?> CyclingOption_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_4064"));
-			String tooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_4064", "method_32528", "(Ljava/util/function/Function;)Lnet/minecraft/class_4064;");
-			MethodHandle tooltipMethod = MethodHandles.publicLookup().findVirtual(CyclingOption_Class, tooltip_MethodName, MethodType.methodType(CyclingOption_Class, Function.class));
-
-			return tooltipMethod.invoke(option, tooltipObject);
+			return FabricReflectionHelper.CyclingOption_tooltip(option, (Function<MinecraftClient, ?>)tooltipObject);
 		}
 
 		if (version >= 1160)
 		{
 			//1.16
-			Class<?> Option_Class = Class.forName(resolver.mapClassName("intermediary", "net.minecraft.class_316"));
-			String setTooltip_MethodName = resolver.mapMethodName("intermediary", "net.minecraft.class_316", "method_29618", "(Ljava/util/List;)V");
-			MethodHandle setTooltipMethod = MethodHandles.publicLookup().findVirtual(Option_Class, setTooltip_MethodName, MethodType.methodType(void.class, List.class));
-
-			setTooltipMethod.invoke(option, tooltipObject);
+			FabricReflectionHelper.Option_setTooltip(option, (List<?>)tooltipObject);
 			return option;
 		}
 
