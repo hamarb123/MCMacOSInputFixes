@@ -41,7 +41,7 @@ double sgn(double x)
 double scrollX = 0.0;
 double scrollY = 0.0;
 
-void processScroll(NSEvent* event, double& x, double& y, double& ungroupedX, double& ungroupedY)
+void processScroll(NSEvent* event, double& x, double& y, double& xWithMomentum, double& yWithMomentum, double& ungroupedX, double& ungroupedY)
 {
 	//if shift is down, macos adds vertical axis to horizontal axis and sets vertical to 0 for 'legacy scroll events' (indicated by NSEventPhaseNone)
 	if ((event.modifierFlags & NSEventModifierFlagShift) != 0 && event.phase == NSEventPhaseNone)
@@ -115,12 +115,15 @@ void processScroll(NSEvent* event, double& x, double& y, double& ungroupedX, dou
 		}
 	}
 
+	//copy x and y to the ones with momentum, before removing it
+	xWithMomentum = x;
+	yWithMomentum = y;
+
 	//check that it wasn't caused by momentum
 	if (!momentumScrolling && event.momentumPhase != NSEventPhaseNone)
 	{
 		x = 0.0;
 		y = 0.0;
-		return;
 	}
 }
 
@@ -133,18 +136,22 @@ void handleScroll(NSEvent* event)
 		double x = event.scrollingDeltaX;
 		double y = event.scrollingDeltaY;
 
+		//grouped variables that include momentum scrolls
+		double xWithMomentum = x;
+		double yWithMomentum = y;
+
 		//variables that don't group x and y scrolls
 		double ungroupedX = x;
 		double ungroupedY = y;
 
 		//modify x and y based on information available from the event
-		processScroll(event, x, y, ungroupedX, ungroupedY);
+		processScroll(event, x, y, xWithMomentum, yWithMomentum, ungroupedX, ungroupedY);
 
 		//send the event to java
-		if (x != 0 || y != 0 || ungroupedX != 0 || ungroupedY != 0)
+		if (x != 0 || y != 0 || xWithMomentum != 0 || yWithMomentum != 0 || ungroupedX != 0 || ungroupedY != 0)
 		{
 			JNIEnv* jenv = get_jenv();
-			jenv->CallVoidMethod(_scrollCallback, _ScrollCallbackAccept, x, y, ungroupedX, ungroupedY);
+			jenv->CallVoidMethod(_scrollCallback, _ScrollCallbackAccept, x, y, xWithMomentum, yWithMomentum, ungroupedX, ungroupedY);
 		}
 	}
 }
@@ -183,7 +190,7 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 
 	//cache relevant java classes and methods
 	UpdateGlobalRef(oldJenv, jenv, _scrollCallback, scrollCallback);
-	_ScrollCallbackAccept = jenv->GetMethodID(jenv->FindClass("com/hamarb123/macos_input_fixes/ScrollCallback"), "accept", "(DDDD)V");
+	_ScrollCallbackAccept = jenv->GetMethodID(jenv->FindClass("com/hamarb123/macos_input_fixes/ScrollCallback"), "accept", "(DDDDDD)V");
 
 	//store the cocoa window id
 	_window = window;

@@ -2,6 +2,7 @@ package com.hamarb123.macos_input_fixes.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.Window;
 import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.hamarb123.macos_input_fixes.Common;
+import com.hamarb123.macos_input_fixes.FabricReflectionHelper;
 import com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod;
 
 @Mixin(MinecraftClient.class)
@@ -20,6 +22,9 @@ public class MinecraftClientMixin
 
 	@Shadow
 	private Mouse mouse;
+
+	@Shadow
+	private GameOptions options;
 
 	private boolean runOnce = false;
 
@@ -40,9 +45,21 @@ public class MinecraftClientMixin
 		}
 	}
 
-	private void scrollCallback(double horizontal, double vertical, double horizontalUngrouped, double verticalUngrouped)
+	private void scrollCallback(double horizontal, double vertical, double horizontalWithMomentum, double verticalWithMomentum, double horizontalUngrouped, double verticalUngrouped)
 	{
 		//recieve the native scrolling callback & convert it into a scroll event
+
+		//determine if discrete scroll is enabled
+		boolean discreteScroll = FabricReflectionHelper.Try_SimpleOption() != null
+			? (boolean)(Boolean)FabricReflectionHelper.SimpleOption_getValue(FabricReflectionHelper.GameOptions_getDiscreteMouseScroll(options)) //1.19+
+			: FabricReflectionHelper.GameOptions_discreteMouseScroll(options); //1.14-1.18
+
+		//replace ungrouped values with grouped values if discrete scroll is enabled
+		if (discreteScroll)
+		{
+			horizontalUngrouped = horizontalWithMomentum;
+			verticalUngrouped = verticalWithMomentum;
+		}
 
 		//use ungrouped values if not scrolling on hotbar
 		if (((MinecraftClient)(Object)this).getOverlay() != null || ((MinecraftClient)(Object)this).currentScreen != null || ((MinecraftClient)(Object)this).player == null)

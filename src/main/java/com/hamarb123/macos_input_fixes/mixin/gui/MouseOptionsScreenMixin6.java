@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.hamarb123.macos_input_fixes.FabricReflectionHelper;
 import net.minecraft.client.gui.screen.option.MouseOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonListWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 
@@ -17,13 +17,13 @@ import net.minecraft.text.OrderedText;
 public class MouseOptionsScreenMixin6
 {
     @Shadow
-	private ButtonListWidget buttonList;
+	private OptionListWidget buttonList;
 
 	@SuppressWarnings("unchecked")
 	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At("RETURN"), cancellable = true)
 	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
 	{
-		Optional<?> optional = buttonList.getHoveredButton(mouseX, mouseY);
+		Optional<?> optional = buttonList.getHoveredWidget(mouseX, mouseY);
 		if (optional.isPresent())
 		{
 			Object option;

@@ -20,13 +20,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonListWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 public class FabricReflectionHelper
 {
+	//Helpers:
+
 	//Looks up a class from Fabric at runtime
 	private static Class<?> lookupClass(String unmappedName, String name)
 	{
@@ -216,6 +218,8 @@ public class FabricReflectionHelper
 		return makeLambdaConverter(toUnmapped, methodName, methodDescriptor, from, to, returnType, returnType, pTypes, pTypes);
 	}
 
+
+	//Classes:
 
 	/**
 	 * <p>Intemediary name: {@code net.minecraft.class_316}</p>
@@ -464,15 +468,35 @@ public class FabricReflectionHelper
 
 	/**
 	 * <p>Intemediary name: {@code net.minecraft.class_7172}</p>
-	 * <p>Mapped name: {@code net.minecraft.client.option.SimpleOption}</p>
+	 * <p>Mapped name: {@code net.minecraft.text.SimpleOption}</p>
 	 * <p>Versions: 1.19+</p>
 	 */
 	public static Class<?> SimpleOption()
 	{
-		if (_SimpleOptionClass == null) _SimpleOptionClass = lookupClass("net.minecraft.class_7172", "net.minecraft.client.option.SimpleOption");
+		if (_SimpleOptionClass == null)
+		{
+			_triedSimpleOptionClass = true;
+			_SimpleOptionClass = lookupClass("net.minecraft.class_7172", "net.minecraft.text.SimpleOption");
+		}
 		return _SimpleOptionClass;
 	}
 	private static Class<?> _SimpleOptionClass;
+
+	/**
+	 * <p>Intemediary name: {@code net.minecraft.class_7172}</p>
+	 * <p>Mapped name: {@code net.minecraft.text.SimpleOption}</p>
+	 * <p>Versions: 1.19+</p>
+	 */
+	public static Class<?> Try_SimpleOption()
+	{
+		if (!_triedSimpleOptionClass)
+		{
+			_triedSimpleOptionClass = true;
+			_SimpleOptionClass = tryLookupClass("net.minecraft.class_7172", "net.minecraft.text.SimpleOption");
+		}
+		return _SimpleOptionClass;
+	}
+	private static boolean _triedSimpleOptionClass;
 
 	/**
 	 * <p>Intemediary name: {@code net.minecraft.class_7172$class_7173}</p>
@@ -566,6 +590,8 @@ public class FabricReflectionHelper
 	}
 	private static boolean _triedSimpleOption_TooltipFactoryGetterClass;
 
+
+	//Methods:
 
 	/**
 	 * <p>Intemediary names: {@code method_25441} (1.16+), {@code hasControlDown} (1.14-1.15.x)</p>
@@ -722,13 +748,13 @@ public class FabricReflectionHelper
 	 * <p>Containing class: {@code net.minecraft.class_4667} ({@code GameOptionsScreen})</p>
 	 * <p>Descriptor: {@code (Lnet/minecraft/class_353;II)Ljava/util/List;}</p>
 	 * <p>Return type: {@code List<OrderedText>}</p>
-	 * <p>Parameters types: (none)</p>
+	 * <p>Parameters types: (OptionListWidget buttonList, int mouseX, int mouseY)</p>
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.16.2-1.19.2</p>
 	 */
-	public static List<?> GameOptionsScreen_getHoveredButtonTooltip(ButtonListWidget buttonList, int mouseX, int mouseY)
+	public static List<?> GameOptionsScreen_getHoveredButtonTooltip(OptionListWidget buttonList, int mouseX, int mouseY)
 	{
-		if (_GameOptionsScreen_getHoveredButtonTooltipMethod == null) _GameOptionsScreen_getHoveredButtonTooltipMethod = lookupMethod("net.minecraft.class_4667", "method_31048", "(Lnet/minecraft/class_353;II)Ljava/util/List;", true, false, GameOptionsScreen.class, "getHoveredButtonTooltip", List.class, ButtonListWidget.class, int.class, int.class);
+		if (_GameOptionsScreen_getHoveredButtonTooltipMethod == null) _GameOptionsScreen_getHoveredButtonTooltipMethod = lookupMethod("net.minecraft.class_4667", "method_31048", "(Lnet/minecraft/class_353;II)Ljava/util/List;", true, false, GameOptionsScreen.class, "getHoveredButtonTooltip", List.class, OptionListWidget.class, int.class, int.class);
 		return (List<?>)invokeMethod("getHoveredButtonTooltip", _GameOptionsScreen_getHoveredButtonTooltipMethod, buttonList, mouseX, mouseY);
 	}
 	private static MethodHandle _GameOptionsScreen_getHoveredButtonTooltipMethod;
@@ -771,6 +797,23 @@ public class FabricReflectionHelper
 		return invokeMethod("tooltip", _CyclingOption_tooltipMethod, instance, tooltips);
 	}
 	private static MethodHandle _CyclingOption_tooltipMethod;
+
+	/**
+	 * <p>Intemediary name: {@code method_41753}</p>
+	 * <p>Mapped name: {@code getValue}</p>
+	 * <p>Containing class: {@code net.minecraft.class_7172} ({@code SimpleOption})</p>
+	 * <p>Descriptor: {@code ()Ljava/lang/Object;}</p>
+	 * <p>Return type: {@code Object (T)}</p>
+	 * <p>Parameters types: ()</p>
+	 * <p>Static: no</p>
+	 * <p>Versions: 1.19+</p>
+	 */
+	public static Object SimpleOption_getValue(Object instance)
+	{
+		if (_SimpleOption_getValueMethod == null) _SimpleOption_getValueMethod = lookupMethod("net.minecraft.class_7172", "method_41753", "()Ljava/lang/Object;", false, false, SimpleOption(), "getValue", Object.class);
+		return invokeMethod("getValue", _SimpleOption_getValueMethod, instance);
+	}
+	private static MethodHandle _SimpleOption_getValueMethod;
 
 	/**
 	 * <p>Intemediary name: {@code method_42717}</p>
@@ -841,6 +884,23 @@ public class FabricReflectionHelper
 	private static MethodHandle _SimpleOption_emptyTooltip2Method;
 
 	/**
+	 * <p>Intemediary name: {@code method_42439}</p>
+	 * <p>Mapped name: {@code getDiscreteMouseScroll}</p>
+	 * <p>Containing class: {@code net.minecraft.class_315} ({@code GameOptions})</p>
+	 * <p>Descriptor: {@code ()Lnet/minecraft/class_7172;}</p>
+	 * <p>Return type: {@code SimpleOption}</p>
+	 * <p>Parameters types: ()</p>
+	 * <p>Static: no</p>
+	 * <p>Versions: 1.19+</p>
+	 */
+	public static Object GameOptions_getDiscreteMouseScroll(GameOptions instance)
+	{
+		if (_GameOptions_getDiscreteMouseScrollMethod == null) _GameOptions_getDiscreteMouseScrollMethod = lookupMethod("net.minecraft.class_315", "method_42439", "()Lnet/minecraft/class_7172;", false, false, GameOptions.class, "getDiscreteMouseScroll", SimpleOption());
+		return invokeMethod("getDiscreteMouseScroll", _GameOptions_getDiscreteMouseScrollMethod, instance);
+	}
+	private static MethodHandle _GameOptions_getDiscreteMouseScrollMethod;
+
+	/**
 	 * <p>Intemediary name: {@code method_43470}</p>
 	 * <p>Mapped name: {@code literal}</p>
 	 * <p>Containing class: {@code net.minecraft.class_2561} ({@code Text})</p>
@@ -882,7 +942,6 @@ public class FabricReflectionHelper
 	}
 	private static boolean _triedText_literalMethod;
 
-
 	/**
 	 * <p>Intemediary name: {@code getString}</p>
 	 * <p>Mapped name: {@code getString}</p>
@@ -900,6 +959,8 @@ public class FabricReflectionHelper
 	}
 	private static MethodHandle _StringVisitable_getStringMethod;
 
+
+	//Constructors:
 
 	/**
 	 * <p>Class intemediary name: {@code net.minecraft.class_2585}</p>
@@ -1051,6 +1112,8 @@ public class FabricReflectionHelper
 	private static MethodHandle _new_DoubleObjectCtor6_2;
 
 
+	//Fields:
+
 	/**
 	 * <p>Intemediary name: {@code field_18012}</p>
 	 * <p>Mapped name: {@code option}</p>
@@ -1067,6 +1130,23 @@ public class FabricReflectionHelper
 		return readField("DoubleOptionSliderWidget.option", _DoubleOptionSliderWidget_optionField, instance);
 	}
 	private static Field _DoubleOptionSliderWidget_optionField;
+
+	/**
+	 * <p>Intemediary name: {@code field_19244}</p>
+	 * <p>Mapped name: {@code discreteMouseScroll}</p>
+	 * <p>Containing class: {@code net.minecraft.class_315} ({@code GameOptions})</p>
+	 * <p>Descriptor: {@code Z}</p>
+	 * <p>Field type: {@code boolean}</p>
+	 * <p>Static: no</p>
+	 * <p>Private: no</p>
+	 * <p>Versions: 1.14-1.18.x</p>
+	 */
+	public static boolean GameOptions_discreteMouseScroll(GameOptions instance)
+	{
+		if (_GameOptions_discreteMouseScrollField == null) _GameOptions_discreteMouseScrollField = lookupField("net.minecraft.class_315", "field_19244", "Z", false, false, GameOptions.class, "discreteMouseScroll", boolean.class);
+		return (boolean)(Boolean)readField("GameOptions.discreteMouseScroll", _GameOptions_discreteMouseScrollField, instance);
+	}
+	private static Field _GameOptions_discreteMouseScrollField;
 
 	/**
 	 * <p>Intemediary name: {@code field_24360}</p>
@@ -1120,20 +1200,22 @@ public class FabricReflectionHelper
 	private static Field _SimpleOption_BOOLEANField;
 
 
-	//helper functional interface that can be converted to the correct functional interface
+	//Helper functional interfaces that can be converted to the correct functional interface:
+
 	@FunctionalInterface
 	public interface ValueTextGetterHelper<T>
 	{
 		public Text toString(Text var1, T var2);
 	}
 
-	//helper functional interface that can be converted to the correct functional interface
 	@FunctionalInterface
 	public interface CyclingOptionSetterHelper<T>
 	{
-		public void accept(GameOptions gameOptions, /*Option*/ Object option, T value);	 
+		public void accept(GameOptions gameOptions, /*Option*/ Object option, T value);
 	}
 
+
+	//Methods that take helper functional interfaces:
 
 	/**
 	 * Versions: 1.17-1.18.x
@@ -1150,7 +1232,7 @@ public class FabricReflectionHelper
 	/**
 	 * Versions: 1.17-1.18.x
 	 * From: Function
-	 * To: net.minecraft.class_5676$class_5679 (CyclingOption.Setter)
+	 * To: net.minecraft.class_5676$class_5679 (CyclingButtonWidget.TooltipFactory)
 	 */
 	public static Object convertToCyclingButtonWidget_TooltipFactory(Function<?, ?> method)
 	{

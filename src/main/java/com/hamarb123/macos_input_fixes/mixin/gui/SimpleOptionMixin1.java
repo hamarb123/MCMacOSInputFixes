@@ -14,8 +14,8 @@ public class SimpleOptionMixin1 implements OptionMixinHelper
 {
 	private boolean omitBuilderKeyText = false;
 
-	@Inject(method = "createButton(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("HEAD"))
-	private void before_createButton(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	@Inject(method = "createWidget(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("HEAD"))
+	private void before_createWidget(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{
@@ -24,8 +24,8 @@ public class SimpleOptionMixin1 implements OptionMixinHelper
 		}
 	}
 
-	@Inject(method = "createButton(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("RETURN"))
-	private void after_createButton(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	@Inject(method = "createWidget(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("RETURN"))
+	private void after_createWidget(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{

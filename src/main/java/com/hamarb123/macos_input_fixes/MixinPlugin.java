@@ -59,8 +59,8 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 		else
 		{
-			li.add("gui.ButtonListWidgetMixin1");
 			li.add("gui.MouseOptionsScreenMixin1");
+			li.add("gui.OptionListWidgetMixin1");
 			li.add("gui.SimpleOptionMixin1");
 		}
 		if (hasCyclingButtonWidgetClass)

@@ -5,11 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.hamarb123.macos_input_fixes.Common;
 import com.hamarb123.macos_input_fixes.ModOptions;
-import net.minecraft.client.gui.widget.ButtonListWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
 
-@Mixin(ButtonListWidget.class)
-public class ButtonListWidgetMixin1
+@Mixin(OptionListWidget.class)
+public class OptionListWidgetMixin1
 {
 	//this is where we add additional menu options
 	@ModifyVariable(method = "addAll([Lnet/minecraft/client/option/SimpleOption;)V", at = @At("HEAD"), ordinal = 0)
