@@ -13,7 +13,7 @@ public class MacOSInputFixesClientMod implements ClientModInitializer
 	}
 
 	//these functions are defined in Objective C++
-	public static native void registerCallbacks(ScrollCallback scrollCallback, long window);
+	public static native void registerCallbacks(ScrollCallback scrollCallback, KeyCallback keyCallback, long window);
 	public static native void setTrackpadSensitivity(double sensitivity);
 	public static native void setMomentumScrolling(boolean option);
 	public static native void setInterfaceSmoothScroll(boolean option);

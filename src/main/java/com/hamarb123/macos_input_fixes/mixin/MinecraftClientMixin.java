@@ -1,5 +1,6 @@
 package com.hamarb123.macos_input_fixes.mixin;
 
+import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.option.GameOptions;
@@ -24,6 +25,9 @@ public class MinecraftClientMixin
 	private Mouse mouse;
 
 	@Shadow
+	private Keyboard keyboard;
+
+	@Shadow
 	private GameOptions options;
 
 	private boolean runOnce = false;
@@ -39,7 +43,7 @@ public class MinecraftClientMixin
 				//register the native callback for scrolling
 				long glfwWindow = window.getHandle();
 				long cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(glfwWindow);
-				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, cocoaWindow);
+				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, this::keyCallback, cocoaWindow);
 				runOnce = true;
 			}
 		}
@@ -86,6 +90,18 @@ public class MinecraftClientMixin
 
 		//disable onMouseScroll
 		Common.setAllowedInputOSX(false);
+	}
+
+	private void keyCallback(int key, int scancode, int action, int modifiers)
+	{
+		//enable onKey
+		Common.setAllowedInputOSX2(true);
+
+		//on 1.14 we need to use the window field, on 1.19 the field still exists
+		keyboard.onKey(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
+
+		//disable onKey
+		Common.setAllowedInputOSX2(false);
 	}
 
 	//dropping stack in game

@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
  * Method:    registerCallbacks
- * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;J)V
+ * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;Lcom/hamarb123/macos_input_fixes/KeyCallback;J)V
  */
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_registerCallbacks
-  (JNIEnv *, jclass, jobject, jlong);
+  (JNIEnv *, jclass, jobject, jobject, jlong);
 
 /*
  * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod

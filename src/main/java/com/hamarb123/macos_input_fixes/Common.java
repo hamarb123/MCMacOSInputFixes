@@ -47,6 +47,18 @@ public class Common
 		_allowInputOSX.set(value);
 	}
 
+	//enable and disable the onKey function (for some specific key codes)
+	private static ThreadLocal<Boolean> _allowInputOSX2 = new ThreadLocal<Boolean>();
+	public static boolean allowInputOSX2()
+	{
+		Boolean value = _allowInputOSX2.get();
+		return value != null && value;
+	}
+	public static void setAllowedInputOSX2(boolean value)
+	{
+		_allowInputOSX2.set(value);
+	}
+
 	//enable and disable the addAll parameter modification mixin
 	private static ThreadLocal<Boolean> _modifyAddAllParameter = new ThreadLocal<Boolean>();
 	public static boolean modifyAddAllParameter()

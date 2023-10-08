@@ -19,6 +19,8 @@ JavaVM* jvm = NULL;
 double trackpadSensitivity = 20.0;
 bool momentumScrolling = false;
 bool interfaceSmoothScroll = false;
+jobject _keyCallback = NULL;
+jmethodID _KeyCallbackAccept = NULL;
 
 //gets a jenv from the currently cached jvm
 JNIEnv* get_jenv()
@@ -156,6 +158,49 @@ void handleScroll(NSEvent* event)
 	}
 }
 
+void handleKey(NSEvent* event)
+{
+	//check that we have a function to actually call
+	if (_keyCallback != NULL)
+	{
+		//check if we have tab or escape
+		unsigned short scancode = event.keyCode;
+		if (scancode == 0x30 /*kVK_Tab*/ || scancode == 0x35 /*kVK_Escape*/)
+		{
+			//convert the key to a glfw key (see org.lwjgl.glfw.GLFW class for values)
+			int key;
+			if (scancode == 0x30 /*kVK_Tab*/) key = 258 /*GLFW_KEY_TAB*/;
+			else if (scancode == 0x35 /*kVK_Escape*/) key = 256 /*GLFW_KEY_ESCAPE*/;
+			else return;
+
+			//determine the action
+			int action;
+			NSEventType eventType = event.type;
+			if (eventType == NSEventTypeKeyDown)
+			{
+				if (event.ARepeat) action = 2 /*GLFW.GLFW_REPEAT*/;
+				else action = 1 /*GLFW.GLFW_PRESS*/;
+			}
+			else if (eventType == NSEventTypeKeyUp) action = 0 /*GLFW.GLFW_RELEASE*/;
+			else return;
+
+			//determine the modifiers
+			int modifiers = 0;
+			NSEventModifierFlags modifierFlags = event.modifierFlags;
+			if (modifierFlags & NSEventModifierFlagShift) modifiers |= 0x01 /*GLFW_MOD_SHIFT*/;
+			if (modifierFlags & NSEventModifierFlagControl) modifiers |= 0x02 /*GLFW_MOD_CONTROL*/;
+			if (modifierFlags & NSEventModifierFlagOption) modifiers |= 0x04 /*GLFW_MOD_ALT*/;
+			if (modifierFlags & NSEventModifierFlagCommand) modifiers |= 0x08 /*GLFW_MOD_SUPER*/;
+			if (modifierFlags & NSEventModifierFlagCapsLock) modifiers |= 0x10 /*GLFW_MOD_CAPS_LOCK*/;
+			//GLFW_MOD_NUM_LOCK - not sent by glfw
+
+			//send the event to java
+			JNIEnv* jenv = get_jenv();
+			jenv->CallVoidMethod(_keyCallback, _KeyCallbackAccept, key, (int)scancode, action, modifiers);
+		}
+	}
+}
+
 template<typename T>
 void UpdateGlobalRef(JNIEnv* old_jenv, JNIEnv* new_jenv, T& storage, T value)
 {
@@ -168,10 +213,10 @@ void UpdateGlobalRef(JNIEnv* old_jenv, JNIEnv* new_jenv, T& storage, T value)
 /*
  * Class:     com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod
  * Method:    registerCallbacks
- * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;J)V
+ * Signature: (Lcom/hamarb123/macos_input_fixes/ScrollCallback;Lcom/hamarb123/macos_input_fixes/KeyCallback;J)V
  */
 JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesClientMod_registerCallbacks
-  (JNIEnv* jenv, jclass, jobject scrollCallback, jlong window)
+  (JNIEnv* jenv, jclass, jobject scrollCallback, jobject keyCallback, jlong window)
 {
 	//this a function that is called from java
 	//we only store 1 state at once, if the function is called more than once then we replace old state
@@ -191,6 +236,8 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 	//cache relevant java classes and methods
 	UpdateGlobalRef(oldJenv, jenv, _scrollCallback, scrollCallback);
 	_ScrollCallbackAccept = jenv->GetMethodID(jenv->FindClass("com/hamarb123/macos_input_fixes/ScrollCallback"), "accept", "(DDDDDD)V");
+	UpdateGlobalRef(oldJenv, jenv, _keyCallback, keyCallback);
+	_KeyCallbackAccept = jenv->GetMethodID(jenv->FindClass("com/hamarb123/macos_input_fixes/KeyCallback"), "accept", "(IIII)V");
 
 	//store the cocoa window id
 	_window = window;
@@ -209,6 +256,15 @@ JNIEXPORT void JNICALL Java_com_hamarb123_macos_1input_1fixes_MacOSInputFixesCli
 			if (event.window == (__bridge void*)_window)
 			{
 				handleScroll(event);
+			}
+			return event;
+		}];
+		[NSEvent addLocalMonitorForEventsMatchingMask: (NSEventMaskKeyDown | NSEventMaskKeyUp) handler: ^NSEvent *(NSEvent *event)
+		{
+			//check it is the relevant window and the call our handle function
+			if (event.window == (__bridge void*)_window)
+			{
+				handleKey(event);
 			}
 			return event;
 		}];

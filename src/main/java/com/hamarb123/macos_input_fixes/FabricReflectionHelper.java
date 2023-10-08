@@ -601,7 +601,7 @@ public class FabricReflectionHelper
 	 * <p>Return type: {@code boolean}</p>
 	 * <p>Parameters types: (none)</p>
 	 * <p>Static: yes</p>
-	 * <p>Versions: 1.14-current</p>
+	 * <p>Versions: 1.14+</p>
 	 */
 	public static boolean Screen_hasControlDown()
 	{
