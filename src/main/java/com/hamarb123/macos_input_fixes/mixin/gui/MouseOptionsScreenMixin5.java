@@ -10,7 +10,6 @@ import com.hamarb123.macos_input_fixes.FabricReflectionHelper;
 import net.minecraft.client.gui.screen.option.MouseOptionsScreen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
 
 @Mixin(MouseOptionsScreen.class)
 public abstract class MouseOptionsScreenMixin5
@@ -18,11 +17,10 @@ public abstract class MouseOptionsScreenMixin5
     @Shadow
 	private OptionListWidget buttonList;
 
-	@SuppressWarnings("unchecked")
-	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At("RETURN"), cancellable = true)
+	@Inject(method = "method_25394(Lnet/minecraft/class_4587;IIF)V", at = @At("RETURN"), cancellable = true, remap = false)
 	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
 	{
-		List<OrderedText> list = (List<OrderedText>)FabricReflectionHelper.GameOptionsScreen_getHoveredButtonTooltip(this.buttonList, mouseX, mouseY);
+		List<?> list = (List<?>)FabricReflectionHelper.GameOptionsScreen_getHoveredButtonTooltip(this.buttonList, mouseX, mouseY);
 		if (list != null) ((ScreenAccessor7)this).renderOrderedTooltip(matrices, list, mouseX, mouseY);
 	}
 }
