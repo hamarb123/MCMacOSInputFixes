@@ -10,6 +10,8 @@ Fixes [MC-59810](https://bugs.mojang.com/browse/MC-59810)
 
 Fixes [MC-22882](https://bugs.mojang.com/browse/MC-22882)
 
+Fixes control + tab and control + escape not being detected
+
 Specific fixes:
 - Correctly detects left click while control is pressed
 - Make trackpad scrolling not scroll a ridiculous number of items at once

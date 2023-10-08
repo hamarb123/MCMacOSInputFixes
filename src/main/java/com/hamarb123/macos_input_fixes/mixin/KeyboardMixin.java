@@ -24,7 +24,7 @@ public class KeyboardMixin
 			{
 				if (!Common.allowInputOSX2())
 				{
-					//only accept scroll event on macOS if it's from the native callback
+					//only accept key event on macOS if it's from the native callback
 					info.cancel();
 					return;
 				}
