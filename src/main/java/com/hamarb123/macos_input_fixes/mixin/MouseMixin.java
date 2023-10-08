@@ -52,6 +52,9 @@ public class MouseMixin
 	@Redirect(method = "onMouseButton(JIII)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;IS_SYSTEM_MAC:Z", opcode = Opcodes.GETSTATIC))
 	private boolean leftMouseClick()
 	{
+		//check if we want to disable the below fix
+		if (ModOptions.disableCtrlClickFix) return MinecraftClient.IS_SYSTEM_MAC;
+
 		//onMouseButton converts left click + control on macOS to right click, simply tell it we're not on macOS so it can't do that (there's no other uses of macOS in the function)
 		return false;
 	}

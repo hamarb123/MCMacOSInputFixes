@@ -307,7 +307,6 @@ public class ModOptions
 			return tooltip == null ? FabricReflectionHelper.SimpleOption_emptyTooltip_2() : FabricReflectionHelper.SimpleOption_constantTooltip_2(createLiteralText(tooltip));
 		}
 
-
 		if (version >= 1190)
 		{
 			//1.19-1.19.2
@@ -420,13 +419,14 @@ public class ModOptions
 		loadInterface(); //load the elements if they are not loaded yet
 		if (MinecraftClient.IS_SYSTEM_MAC)
 		{
-			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, and interface smooth scroll options
-			Object[] arr = new Object[5];
+			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix
+			Object[] arr = new Object[6];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
 			arr[2] = TRACKPAD_SENSITIVITY;
 			arr[3] = MOMENTUM_SCROLLING;
 			arr[4] = INTERFACE_SMOOTH_SCROLL;
+			arr[5] = DISABLE_CTRL_CLICK_FIX;
 			return arr;
 		}
 		else
@@ -470,6 +470,13 @@ public class ModOptions
 					() -> interfaceSmoothScroll,
 					(value) -> setInterfaceSmoothScroll(value),
 					"Affects all scrolling from legacy input devices (except for the hotbar).\nmacOS sometimes adjusts how much a single scroll does to make it feel 'smoother', but this can cause scroll amounts to feel random sometimes.\nDefault: OFF\nOFF: Modify smooth scrolling events to all be the same scroll amount.\nON: Keep smooth scrolling events as-is.");
+
+				DISABLE_CTRL_CLICK_FIX = booleanOption(
+					"options.macos_input_fixes.disable_ctrl_click_fix",
+					"Disable Ctrl+Click Fix",
+					() -> disableCtrlClickFix,
+					(value) -> disableCtrlClickFix = value,
+					"When enabled, disables the fix for the bug which causes Minecraft\nto map Control + Left Click to Right Click.");
 			}
 
 			REVERSE_HOTBAR_SCROLLING = booleanOption(
@@ -593,6 +600,20 @@ public class ModOptions
 				}
 				setInterfaceSmoothScroll(actualValue);
 			}
+			if (compoundTag.contains("disableCtrlClickFix")) //read disableCtrlClickFix option
+			{
+				boolean actualValue = false; //default value
+				try
+				{
+					Boolean value = Boolean.parseBoolean(compoundTag.getString("disableCtrlClickFix"));
+					actualValue = value;
+				}
+				catch (Exception ex1)
+				{
+					ex1.printStackTrace(System.err); //failed to parse
+				}
+				disableCtrlClickFix = actualValue;
+			}
 
 			loadedInterface = false;
 		}
@@ -612,6 +633,7 @@ public class ModOptions
 			printWriter.println("reverseScrolling:" + reverseScrolling);
 			printWriter.println("momentumScrolling:" + momentumScrolling);
 			printWriter.println("interfaceSmoothScroll:" + interfaceSmoothScroll);
+			printWriter.println("disableCtrlClickFix:" + disableCtrlClickFix);
 		}
 		catch (Exception ex2)
 		{
@@ -666,4 +688,7 @@ public class ModOptions
 		//set the value in the native library also
 		MacOSInputFixesClientMod.setInterfaceSmoothScroll(value);
 	}
+
+	public static boolean disableCtrlClickFix = false;
+	public static Object DISABLE_CTRL_CLICK_FIX;
 }
