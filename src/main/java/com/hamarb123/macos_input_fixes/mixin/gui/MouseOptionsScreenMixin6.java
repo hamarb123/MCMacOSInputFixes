@@ -43,7 +43,7 @@ public class MouseOptionsScreenMixin6
 			if (optional2.isPresent())
 			{
 				//cast is purely to satisfy syntax
-				((MouseOptionsScreen)(Object)this).renderOrderedTooltip(matrices, (List<? extends OrderedText>)optional2.get(), mouseX, mouseY);
+				((ScreenAccessor7)this).renderOrderedTooltip(matrices, (List<? extends OrderedText>)optional2.get(), mouseX, mouseY);
 			}
 		}
 	}

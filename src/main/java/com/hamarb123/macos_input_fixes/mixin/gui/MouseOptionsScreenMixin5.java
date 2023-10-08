@@ -23,6 +23,6 @@ public abstract class MouseOptionsScreenMixin5
 	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
 	{
 		List<OrderedText> list = (List<OrderedText>)FabricReflectionHelper.GameOptionsScreen_getHoveredButtonTooltip(this.buttonList, mouseX, mouseY);
-		if (list != null) ((MouseOptionsScreen)(Object)this).renderOrderedTooltip(matrices, list, mouseX, mouseY);
+		if (list != null) ((ScreenAccessor7)this).renderOrderedTooltip(matrices, list, mouseX, mouseY);
 	}
 }

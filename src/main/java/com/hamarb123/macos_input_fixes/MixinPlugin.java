@@ -75,6 +75,10 @@ public class MixinPlugin implements IMixinConfigPlugin
 		{
 			li.add("gui.MouseOptionsScreenMixin6");
 		}
+		if (hasGameOptionsScreen_getHoveredButtonTooltip || (hasScreen_renderTooltip && hasOptionClass))
+		{
+			li.add("gui.ScreenAccessor7");
+		}
 		return li;
 	}
 

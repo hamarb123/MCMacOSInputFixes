@@ -17,11 +17,15 @@ Specific fixes:
 - On the trackpad it also only considers scrolling while fingers are on the trackpad (and the same for any fancy mice that support the relevant api e.g. probably apple's fancy mice/trackpad thing)
 - It also fixes (almost perfectly) scrolling being broken when shift is down, this issue only affects mice that use older input APIs and doesn't change anything on the trackpad. It converts scrolling with shift down which shows as horizontal scrolling to the correct vertical scroll, the only issue when you actually scroll horizontally and hold shift, this will show as vertical scrolling (which is imo acceptable since very few people would be scrolling Minecraft items with horizantal scrolling on a non-apple input device compared to people scrolling vertical on any mice; and they could, if they need, use vertical scrolling instead which would be completely consistent - and this also isn't an issue if the Minecraft item scroll direction for + vertical scrolling is treated the same as + horizontal scrolling). TL;DR - this project will work properly for both vertical and horizontal scrolling including when pressing shift.
 - When dropping an item, Minecraft checks for command + the key, since the default key is Q, this doesn't make sense, so this mod allows both control + key and command + key to work
+- Fixes control + tab and control + escape not being detected
 
 Menu Options (under Mouse Settings Screen):
 - Option for trackpad scrolling sensitivity (macOS only)
+- Option to enable momentum scrolling on hotbar (macOS only)
+- Option to disable workaround for smooth scrolling in interfaces (macOS only)
 - Option to reverse scrolling of the whole game
 - Option to reverse scrolling of the hotbar
+- Option to disable the fix for the ctrl + left click becomes right click bug (macOS only)
 
 On platforms other than macOS, the mod does nothing (except the aformentioned menu options), so it can be safely included in any modpack.
 
@@ -33,7 +37,7 @@ On platforms other than macOS, the mod does nothing (except the aformentioned me
 
 ## Running
 
-This mod requires Fabric, Fabric loader 0.14.11+, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
+This mod requires Fabric, Fabric loader 0.14.22+, and Minecraft 1.14+. I've only really tested it properly on the major releases, so ymmv if you run it on snapshots, but it probably works.
 
 ## Setup
 
@@ -54,6 +58,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.18
 - 1.19
 - 1.19.3
+- 1.20
 
 ## Mixin Naming Scheme
 
@@ -64,6 +69,7 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 4. Both the `Option` and `CyclingButtonWidget` classes are available (1.17-1.18)
 5. The `GameOptionsScreen.getHoveredButtonTooltip(ButtonListWidget, int, int)` function exists (1.16.2-1.19.2)
 6. The `GameOptionsScreen.getHoveredButtonTooltip(ButtonListWidget, int, int)` function doesn't exist, the `Screen.renderTooltip(MatrixStack, List, int, int)` function exists, and the `Option` class exists (1.16-1.16.1)
+7. Either 5 or 6 (1.16-1.19.2)
 
 ## License
 
