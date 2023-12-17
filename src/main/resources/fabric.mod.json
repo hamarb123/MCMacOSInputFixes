@@ -18,13 +18,9 @@
 	"license": "BSD-3-Clause",
 	"icon": "assets/macos_input_fixes/icon.png",
 
-	"environment": "*",
+	"environment": "client",
 	"entrypoints":
 	{
-		"main":
-		[
-			"com.hamarb123.macos_input_fixes.MacOSInputFixesMod"
-		],
 		"client":
 		[
 			"com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod"
@@ -40,8 +36,5 @@
 		"fabricloader": ">=0.14.22",
 		"minecraft": ">=1.14",
 		"java": ">=8"
-	},
-	"suggests":
-	{
 	}
 }
