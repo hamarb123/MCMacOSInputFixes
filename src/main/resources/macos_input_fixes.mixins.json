@@ -4,9 +4,6 @@
 	"plugin": "com.hamarb123.macos_input_fixes.MixinPlugin",
 	"package": "com.hamarb123.macos_input_fixes.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"mixins":
-	[
-	],
 	"client":
 	[
 		"gui.GameOptionsAccessor",
