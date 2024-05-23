@@ -8,7 +8,7 @@ import com.hamarb123.macos_input_fixes.Common;
 import net.minecraft.client.gui.screen.option.MouseOptionsScreen;
 
 @Mixin(MouseOptionsScreen.class)
-public class MouseOptionsScreenMixin1
+public class MouseOptionsScreenMixin9
 {
 	//sets the modifyAddAllParameter() flag, which is checked and reset in ButtonListWidgetMixin1
 	@Inject(method = "init()V", at = @At("HEAD"))

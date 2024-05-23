@@ -9,7 +9,7 @@ import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
 
 @Mixin(OptionListWidget.class)
-public class OptionListWidgetMixin1
+public class OptionListWidgetMixin9
 {
 	//this is where we add additional menu options
 	@ModifyVariable(method = "addAll([Lnet/minecraft/client/option/SimpleOption;)V", at = @At("HEAD"), ordinal = 0)

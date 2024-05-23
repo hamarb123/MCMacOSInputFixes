@@ -537,7 +537,7 @@ public class FabricReflectionHelper
 	/**
 	 * <p>Intemediary name: {@code net.minecraft.class_7172$class_7277}</p>
 	 * <p>Mapped name: {@code net.minecraft.client.option.SimpleOption$TooltipFactoryGetter}</p>
-	 * <p>Versions: 1.19+</p>
+	 * <p>Versions: 1.19-1.19.2</p>
 	 */
 	public static Class<?> SimpleOption_TooltipFactory()
 	{

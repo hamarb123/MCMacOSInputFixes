@@ -49,6 +49,9 @@ public class MixinPlugin implements IMixinConfigPlugin
 		boolean hasScreen_renderTooltip = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_437"),
 			resolver.mapMethodName("intermediary", "net.minecraft.class_437", "method_25417", "(Lnet/minecraft/class_4587;Ljava/util/List;II)V"),
 			"(L" + resolver.mapClassName("intermediary", "net.minecraft.class_4587").replace(".", "/") + ";Ljava/util/List;II)V");
+		boolean hasMouseOptionsScreen_init = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_4288"),
+			resolver.mapMethodName("intermediary", "net.minecraft.class_4288", "method_25426", "()V"),
+			"()V");
 		if (hasOptionClass)
 		{
 			li.add("gui.MouseOptionsScreenMixin2");
@@ -59,9 +62,16 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 		else
 		{
-			li.add("gui.MouseOptionsScreenMixin1");
-			li.add("gui.OptionListWidgetMixin1");
 			li.add("gui.SimpleOptionMixin1");
+			if (hasMouseOptionsScreen_init)
+			{
+				li.add("gui.MouseOptionsScreenMixin9");
+				li.add("gui.OptionListWidgetMixin9");
+			}
+			else
+			{
+				li.add("gui.OptionListWidgetMixin8");
+			}
 		}
 		if (hasCyclingButtonWidgetClass)
 		{
