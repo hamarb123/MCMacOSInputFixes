@@ -8,7 +8,7 @@ import com.hamarb123.macos_input_fixes.Common;
 import com.hamarb123.macos_input_fixes.OptionMixinHelper;
 import net.minecraft.client.option.GameOptions;
 
-@Mixin(targets = "net.minecraft.class_4064" /*CyclingOption*/, remap = false)
+@Mixin(targets = {"net.minecraft.class_4064"} /*CyclingOption*/, remap = false)
 public class CyclingOptionMixin4 implements OptionMixinHelper
 {
 	private boolean omitBuilderKeyText = false;

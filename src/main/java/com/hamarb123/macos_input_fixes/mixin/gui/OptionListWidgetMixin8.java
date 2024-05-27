@@ -13,7 +13,7 @@ import net.minecraft.client.option.SimpleOption;
 @Mixin(OptionListWidget.class)
 public class OptionListWidgetMixin8
 {
-	@Shadow(remap = false, aliases = {"field_49483"})
+	@Shadow(remap = false, aliases = {"field_49483", "optionsScreen"})
 	private GameOptionsScreen optionsScreen;
 
 	//this is where we add additional menu options
