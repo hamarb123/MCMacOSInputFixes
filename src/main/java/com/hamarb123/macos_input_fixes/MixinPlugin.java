@@ -52,6 +52,9 @@ public class MixinPlugin implements IMixinConfigPlugin
 		boolean hasMouseOptionsScreen_init = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_4288"),
 			resolver.mapMethodName("intermediary", "net.minecraft.class_4288", "method_25426", "()V"),
 			"()V");
+		boolean hasPlayerInventory_scrollInHotbar = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_1661"),
+			resolver.mapMethodName("intermediary", "net.minecraft.class_1661", "method_7373", "(D)V"),
+			"(D)V");
 		if (hasOptionClass)
 		{
 			li.add("gui.MouseOptionsScreenMixin2");
@@ -88,6 +91,14 @@ public class MixinPlugin implements IMixinConfigPlugin
 		if (hasGameOptionsScreen_getHoveredButtonTooltip || (hasScreen_renderTooltip && hasOptionClass))
 		{
 			li.add("gui.ScreenAccessor7");
+		}
+		if (hasPlayerInventory_scrollInHotbar)
+		{
+			li.add("PlayerInventoryMixin10");
+		}
+		else
+		{
+			li.add("MouseMixin11");
 		}
 		return li;
 	}

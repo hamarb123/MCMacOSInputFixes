@@ -16,7 +16,6 @@
 		"MinecraftClientMixin",
 		"MouseInvokerMixin",
 		"MouseMixin",
-		"PlayerInventoryMixin",
 		"ScreenMixin"
 	],
 	"injectors":

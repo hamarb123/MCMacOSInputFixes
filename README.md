@@ -62,6 +62,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.19.3
 - 1.20
 - 1.21
+- 1.21.2
 
 ## Mixin Naming Scheme
 
@@ -75,6 +76,8 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 7. Either 5 or 6 (1.16-1.19.2)
 8. 1 and doesn't have `MouseOptionsScreen.init()` (1.21+)
 9. 1 and has `MouseOptionsScreen.init()` (1.19-1.20.x)
+10. Has `PlayerInventory.scrollInHotbar(double)` (1.14-1.21.1)
+11. Doesn't have `PlayerInventory.scrollInHotbar(double)` (1.21.2+)
 
 ## License
 

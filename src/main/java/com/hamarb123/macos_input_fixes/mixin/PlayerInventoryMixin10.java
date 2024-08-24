@@ -7,7 +7,7 @@ import com.hamarb123.macos_input_fixes.ModOptions;
 import net.minecraft.entity.player.PlayerInventory;
 
 @Mixin(PlayerInventory.class)
-public class PlayerInventoryMixin
+public class PlayerInventoryMixin10
 {
 	@ModifyVariable(method = "scrollInHotbar(D)V", at = @At("HEAD"), ordinal = 0)
 	private double fixHotbarScrollDirection(double d)

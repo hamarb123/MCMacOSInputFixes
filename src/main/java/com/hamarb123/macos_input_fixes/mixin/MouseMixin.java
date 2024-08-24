@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.hamarb123.macos_input_fixes.Common;
 import com.hamarb123.macos_input_fixes.ModOptions;
 
-@Mixin(Mouse.class)
+@Mixin(value = Mouse.class)
 public class MouseMixin
 {
 	@Inject(at = @At("HEAD"), method = "onMouseScroll(JDD)V", cancellable = true)
