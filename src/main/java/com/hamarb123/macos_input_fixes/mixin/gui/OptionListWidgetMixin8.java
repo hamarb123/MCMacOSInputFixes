@@ -13,7 +13,8 @@ import net.minecraft.client.option.SimpleOption;
 @Mixin(OptionListWidget.class)
 public class OptionListWidgetMixin8
 {
-	@Shadow(remap = false, aliases = {"field_49483", "optionsScreen"})
+	// Intermediary, Yarn, SRG, Mojmap
+	@Shadow(remap = false, aliases = {"field_49483", "optionsScreen", "f_316801_", "screen"})
 	private GameOptionsScreen optionsScreen;
 
 	//this is where we add additional menu options
