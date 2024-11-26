@@ -13,7 +13,7 @@ import net.minecraft.client.option.SimpleOption;
 @Mixin(OptionListWidget.class)
 public class OptionListWidgetMixin8
 {
-	// Intermediary, Yarn, SRG, Mojmap
+	//Intermediary, Yarn, SRG, Mojmap
 	@Shadow(remap = false, aliases = {"field_49483", "optionsScreen", "f_316801_", "screen"})
 	private GameOptionsScreen optionsScreen;
 
