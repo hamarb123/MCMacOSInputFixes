@@ -650,6 +650,7 @@ public class ModOptions
 	public static void setTrackpadSensitivity(double value)
 	{
 		trackpadSensitivity = value;
+		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
 
 		//set the value in the native library also, ensure the value is clamped here
 		if (value < 0) value = 0.0;
@@ -673,6 +674,7 @@ public class ModOptions
 	public static void setMomentumScrolling(boolean value)
 	{
 		momentumScrolling = value;
+		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
 
 		//set the value in the native library also
 		MacOSInputFixesClientMod.setMomentumScrolling(value);
@@ -684,6 +686,7 @@ public class ModOptions
 	public static void setInterfaceSmoothScroll(boolean value)
 	{
 		interfaceSmoothScroll = value;
+		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
 
 		//set the value in the native library also
 		MacOSInputFixesClientMod.setInterfaceSmoothScroll(value);
