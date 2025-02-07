@@ -27,6 +27,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public class ModOptions
