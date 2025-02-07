@@ -9,7 +9,10 @@ public class MacOSInputFixesClientMod implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
-		ModOptions.loadOptions();
+		if (Util.getOperatingSystem() == Util.OperatingSystem.OSX)
+		{
+			ModOptions.loadOptions();
+		}
 	}
 
 	//these functions are defined in Objective C++
