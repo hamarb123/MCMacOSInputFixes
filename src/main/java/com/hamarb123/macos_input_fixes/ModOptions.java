@@ -504,6 +504,20 @@ public class ModOptions
 
 	//saving and loading of options:
 
+	private static String getStringSafely(String key, NbtCompound compoundTag)
+	{
+		if (FabricReflectionHelper.Has_NbtCompound_getStringOr())
+		{
+			//1.21.5+
+			return FabricReflectionHelper.NbtCompound_getStringOr(key, "");
+		}
+		else
+		{
+			//1.14-1.21.4
+			return compoundTag.getString(key);
+		}
+	}
+
 	public static File optionsFile;
 
 	@SuppressWarnings("resource")
@@ -536,7 +550,7 @@ public class ModOptions
 				double actualValue = 20.0; //default value
 				try
 				{
-					Double value = Double.parseDouble(compoundTag.getString("trackpadSensitivity"));
+					Double value = Double.parseDouble(getStringSafely("trackpadSensitivity", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)
@@ -550,7 +564,7 @@ public class ModOptions
 				boolean actualValue = false; //default value
 				try
 				{
-					Boolean value = Boolean.parseBoolean(compoundTag.getString("reverseHotbarScrolling"));
+					Boolean value = Boolean.parseBoolean(getStringSafely("reverseHotbarScrolling", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)
@@ -564,7 +578,7 @@ public class ModOptions
 				boolean actualValue = false; //default value
 				try
 				{
-					Boolean value = Boolean.parseBoolean(compoundTag.getString("reverseScrolling"));
+					Boolean value = Boolean.parseBoolean(getStringSafely("reverseScrolling", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)
@@ -578,7 +592,7 @@ public class ModOptions
 				boolean actualValue = false; //default value
 				try
 				{
-					Boolean value = Boolean.parseBoolean(compoundTag.getString("momentumScrolling"));
+					Boolean value = Boolean.parseBoolean(getStringSafely("momentumScrolling", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)
@@ -592,7 +606,7 @@ public class ModOptions
 				boolean actualValue = false; //default value
 				try
 				{
-					Boolean value = Boolean.parseBoolean(compoundTag.getString("interfaceSmoothScroll"));
+					Boolean value = Boolean.parseBoolean(getStringSafely("interfaceSmoothScroll", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)
@@ -606,7 +620,7 @@ public class ModOptions
 				boolean actualValue = false; //default value
 				try
 				{
-					Boolean value = Boolean.parseBoolean(compoundTag.getString("disableCtrlClickFix"));
+					Boolean value = Boolean.parseBoolean(getStringSafely("disableCtrlClickFix", compoundTag));
 					actualValue = value;
 				}
 				catch (Exception ex1)

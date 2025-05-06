@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -959,6 +960,47 @@ public class FabricReflectionHelper
 	}
 	private static MethodHandle _StringVisitable_getStringMethod;
 
+	/**
+	 * <p>Intemediary name: {@code method_68564}</p>
+	 * <p>Mapped name: {@code getStringOr}</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code net.minecraft.nbt.NbtCompound})</p>
+	 * <p>Descriptor: {@code (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;}</p>
+	 * <p>Return type: {@code String}</p>
+	 * <p>Parameters types: (String key, String defaultValue)</p>
+	 * <p>Static: yes</p>
+	 * <p>Versions: 1.21.5+</p>
+	 */
+	public static String NbtCompound_getStringOr(String string, String defaultValue)
+	{
+		if (_NbtCompound_getStringOrMethod == null)
+		{
+			_triedNbtCompound_getStringOrMethod = true;
+			_NbtCompound_getStringOrMethod = lookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", true, false, NbtCompound.class, "getStringOr", String.class, String.class, String.class);
+		}
+		return (String)invokeMethod("getStringOr", _NbtCompound_getStringOrMethod, string, defaultValue);
+	}
+	private static MethodHandle _NbtCompound_getStringOrMethod;
+
+	/**
+	 * <p>Intemediary name: {@code method_68564}</p>
+	 * <p>Mapped name: {@code getStringOr}</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code net.minecraft.nbt.NbtCompound})</p>
+	 * <p>Descriptor: {@code (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;}</p>
+	 * <p>Return type: {@code String}</p>
+	 * <p>Parameters types: (String key, String defaultValue)</p>
+	 * <p>Static: yes</p>
+	 * <p>Versions: 1.21.5+</p>
+	 */
+	public static boolean Has_NbtCompound_getStringOr()
+	{
+		if (!_triedNbtCompound_getStringOrMethod)
+		{
+			_triedText_literalMethod = true;
+			_NbtCompound_getStringOrMethod = tryLookupMethod("net.minecraft.class_2487", "method_43470", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", true, false, NbtCompound.class, "getStringOr", String.class, String.class, String.class);
+		}
+		return _NbtCompound_getStringOrMethod != null;
+	}
+	private static boolean _triedNbtCompound_getStringOrMethod;
 
 	//Constructors:
 
