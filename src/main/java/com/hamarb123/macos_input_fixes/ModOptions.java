@@ -510,7 +510,7 @@ public class ModOptions
 	public static void loadOptions()
 	{
 		//load options similarly to how minecraft does
-		optionsFile = new File(MinecraftClient.getInstance().runDirectory, "options_macos_input_fixes.txt");
+		optionsFile = new File(MinecraftClient.getInstance().runDirectory, "config/macos_input_fixes.txt");
 		try
 		{
 			if (!optionsFile.exists())

@@ -18,7 +18,7 @@
 	"license": "BSD-3-Clause",
 	"icon": "assets/macos_input_fixes/icon.png",
 
-	"environment": "*",
+	"environment": "client",
 	"entrypoints":
 	{
 		"main":
