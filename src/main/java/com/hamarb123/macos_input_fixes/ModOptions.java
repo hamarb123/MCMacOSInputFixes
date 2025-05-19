@@ -504,7 +504,7 @@ public class ModOptions
 
 	//saving and loading of options:
 
-	private static String getStringSafely(String key, NbtCompound compoundTag)
+	private static String getStringHelper(NbtCompound instance, String key)
 	{
 		if (FabricReflectionHelper.Has_NbtCompound_getStringOr())
 		{
