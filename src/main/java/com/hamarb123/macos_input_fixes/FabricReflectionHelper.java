@@ -963,14 +963,14 @@ public class FabricReflectionHelper
 	/**
 	 * <p>Intemediary name: {@code method_68564}</p>
 	 * <p>Mapped name: {@code getStringOr}</p>
-	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code net.minecraft.nbt.NbtCompound})</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code NbtCompound})</p>
 	 * <p>Descriptor: {@code (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;}</p>
 	 * <p>Return type: {@code String}</p>
-	 * <p>Parameters types: (String key, String defaultValue)</p>
+	 * <p>Parameters types: (String key, String fallback)</p>
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.21.5+</p>
 	 */
-	public static String NbtCompound_getStringOr(String string, String defaultValue)
+	public static String NbtCompound_getString_2(String key, String defaultValue)
 	{
 		if (_NbtCompound_getStringOrMethod == null)
 		{
