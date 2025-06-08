@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -594,6 +595,26 @@ public class FabricReflectionHelper
 	//Methods:
 
 	/**
+	 * <p>Intemediary name: {@code method_10558}</p>
+	 * <p>Mapped name: {@code getString}</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code NbtCompound})</p>
+	 * <p>Descriptor: {@code (Ljava/lang/String;)Ljava/lang/String;}</p>
+	 * <p>Return type: {@code String}</p>
+	 * <p>Parameters types: (String key)</p>
+	 * <p>Static: no</p>
+	 * <p>Versions: 1.14-1.21.4</p>
+	 */
+	public static String NbtCompound_getString_1(NbtCompound instance, String key)
+	{
+		if (_NbtCompound_getString_1Method == null)
+		{
+			_NbtCompound_getString_1Method = lookupMethod("net.minecraft.class_2487", "method_10558", "(Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class);
+		}
+		return (String)invokeMethod("getString", _NbtCompound_getString_1Method, instance);
+	}
+	private static MethodHandle _NbtCompound_getString_1Method;
+
+	/**
 	 * <p>Intemediary names: {@code method_25441} (1.16+), {@code hasControlDown} (1.14-1.15.x)</p>
 	 * <p>Mapped name: {@code hasControlDown}</p>
 	 * <p>Containing class: {@code net.minecraft.class_437} ({@code net.minecraft.client.gui.screen.Screen})</p>
@@ -959,6 +980,47 @@ public class FabricReflectionHelper
 	}
 	private static MethodHandle _StringVisitable_getStringMethod;
 
+	/**
+	 * <p>Intemediary name: {@code method_68564}</p>
+	 * <p>Mapped name: {@code getString}</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code NbtCompound})</p>
+	 * <p>Descriptor: {@code (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;}</p>
+	 * <p>Return type: {@code String}</p>
+	 * <p>Parameters types: (String key, String fallback)</p>
+	 * <p>Static: no</p>
+	 * <p>Versions: 1.21.5+</p>
+	 */
+	public static String NbtCompound_getString_2(NbtCompound instance, String key, String defaultValue)
+	{
+		if (_NbtCompound_getString_2Method == null)
+		{
+			_triedNbtCompound_getString_2Method = true;
+			_NbtCompound_getString_2Method = lookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class, String.class);
+		}
+		return (String)invokeMethod("getString", _NbtCompound_getString_2Method, instance, key, defaultValue);
+	}
+	private static MethodHandle _NbtCompound_getString_2Method;
+
+	/**
+	 * <p>Intemediary name: {@code method_68564}</p>
+	 * <p>Mapped name: {@code getString}</p>
+	 * <p>Containing class: {@code net.minecraft.class_2487} ({@code net.minecraft.nbt.NbtCompound})</p>
+	 * <p>Descriptor: {@code (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;}</p>
+	 * <p>Return type: {@code String}</p>
+	 * <p>Parameters types: (String key, String defaultValue)</p>
+	 * <p>Static: no</p>
+	 * <p>Versions: 1.21.5+</p>
+	 */
+	public static boolean Has_NbtCompound_getString_2()
+	{
+		if (!_triedNbtCompound_getString_2Method)
+		{
+			_triedNbtCompound_getString_2Method = true;
+			_NbtCompound_getString_2Method = tryLookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class, String.class);
+		}
+		return _NbtCompound_getString_2Method != null;
+	}
+	private static boolean _triedNbtCompound_getString_2Method;
 
 	//Constructors:
 
