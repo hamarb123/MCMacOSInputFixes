@@ -63,6 +63,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.20
 - 1.21
 - 1.21.2
+- 1.21.5
 
 ## Mixin Naming Scheme
 
