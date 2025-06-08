@@ -3,11 +3,13 @@ package com.hamarb123.macos_input_fixes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +25,7 @@ import com.hamarb123.macos_input_fixes.mixin.MinecraftClientAccessor;
 import com.hamarb123.macos_input_fixes.mixin.gui.GameOptionsAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.nbt.NbtCompound;
@@ -509,8 +512,29 @@ public class ModOptions
 	@SuppressWarnings("resource")
 	public static void loadOptions()
 	{
+		//locate options file
+		optionsFile = new File(FabricLoader.getInstance().getConfigDir().toAbsolutePath().toString(), "macos_input_fixes.txt");
+
+		//check if we need to migrate from the old path
+		if (!optionsFile.exists())
+		{
+			File oldFile = new File(MinecraftClient.getInstance().runDirectory, "options_macos_input_fixes.txt");
+			if (oldFile.exists())
+			{
+				optionsFile.getParentFile().mkdir();
+				try
+				{
+					Files.copy(oldFile.toPath(), optionsFile.toPath());
+				}
+				catch (IOException e)
+				{
+					throw new RuntimeException("Failed to migrate old macos input fixes options file from " + oldFile.toPath() + " to " + optionsFile.toPath(), e);
+				}
+				oldFile.delete();
+			}
+		}
+
 		//load options similarly to how minecraft does
-		optionsFile = new File(MinecraftClient.getInstance().runDirectory, "config/macos_input_fixes.txt");
 		try
 		{
 			if (!optionsFile.exists())
