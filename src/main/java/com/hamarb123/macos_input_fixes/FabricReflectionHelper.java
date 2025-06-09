@@ -610,7 +610,7 @@ public class FabricReflectionHelper
 		{
 			_NbtCompound_getString_1Method = lookupMethod("net.minecraft.class_2487", "method_10558", "(Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class);
 		}
-		return (String)invokeMethod("getString", _NbtCompound_getString_1Method, instance);
+		return (String)invokeMethod("getString", _NbtCompound_getString_1Method, instance, key);
 	}
 	private static MethodHandle _NbtCompound_getString_1Method;
 
