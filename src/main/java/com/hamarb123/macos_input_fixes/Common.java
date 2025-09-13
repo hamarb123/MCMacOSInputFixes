@@ -96,11 +96,15 @@ public class Common
 		_omitBuilderKeyText.set(value);
 	}
 
-	public static void runOnRenderThread(Runnable runnable) {
-		if (IxerisCompat.isModPresent()) {
+	//assumes we are on the main/event thread
+	public static void runOnRenderThreadHelper(Runnable runnable)
+	{
+		if (IxerisCompat.isModPresent())
+		{
 			IxerisCompat.runOnRenderThread(runnable);
 		}
-		else {
+		else
+		{
 			runnable.run();
 		}
 	}

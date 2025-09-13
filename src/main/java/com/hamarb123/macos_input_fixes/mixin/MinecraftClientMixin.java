@@ -82,15 +82,15 @@ public class MinecraftClientMixin
 		//check if we actually have an event still
 		if (horizontal == 0 && vertical == 0) return;
 
-		double finalHorizontal = horizontal;
-		double finalVertical = vertical;
-		Common.runOnRenderThread(() ->
+		double horizontalCopy = horizontal;
+		double verticalCopy = vertical;
+		Common.runOnRenderThreadHelper(() ->
 		{
 			//enable onMouseScroll
 			Common.setAllowedInputOSX(true);
 
 			//on 1.14 we need to use the window field, on 1.19 the field still exists
-			((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), finalHorizontal, finalVertical);
+			((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), horizontalCopy, verticalCopy);
 
 			//disable onMouseScroll
 			Common.setAllowedInputOSX(false);
@@ -99,7 +99,8 @@ public class MinecraftClientMixin
 
 	private void keyCallback(int key, int scancode, int action, int modifiers)
 	{
-		Common.runOnRenderThread(() ->
+		//we assume we are on the main/event thread, we want to ensure we run this on the render thread
+		Common.runOnRenderThreadHelper(() ->
 		{
 			//enable onKey
 			Common.setAllowedInputOSX2(true);
@@ -119,6 +120,7 @@ public class MinecraftClientMixin
 		//enable hasControlDown() injector
 		Common.setInjectHasControlDown(true);
 	}
+
 	@Inject(method = "handleInputEvents()V", at = @At("RETURN"))
 	private void keyPressed_hasControlDownEnd(CallbackInfo info)
 	{
