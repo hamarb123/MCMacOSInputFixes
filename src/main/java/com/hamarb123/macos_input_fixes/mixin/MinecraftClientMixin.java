@@ -100,16 +100,16 @@ public class MinecraftClientMixin
 	private void keyCallback(int key, int scancode, int action, int modifiers)
 	{
 		Common.runOnRenderThread(() ->
-        {
-            //enable onKey
-            Common.setAllowedInputOSX2(true);
+		{
+			//enable onKey
+			Common.setAllowedInputOSX2(true);
 
-            //on 1.14 we need to use the window field, on 1.19 the field still exists
-            keyboard.onKey(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
+			//on 1.14 we need to use the window field, on 1.19 the field still exists
+			keyboard.onKey(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
 
-            //disable onKey
-            Common.setAllowedInputOSX2(false);
-        });
+			//disable onKey
+			Common.setAllowedInputOSX2(false);
+		});
 	}
 
 	//dropping stack in game
