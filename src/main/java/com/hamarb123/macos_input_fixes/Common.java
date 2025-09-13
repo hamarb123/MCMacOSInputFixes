@@ -1,5 +1,6 @@
 package com.hamarb123.macos_input_fixes;
 
+import com.hamarb123.macos_input_fixes.compat.IxerisCompat;
 import com.hamarb123.macos_input_fixes.mixin.MinecraftClientAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -93,5 +94,18 @@ public class Common
 	public static void setOmitBuilderKeyText(boolean value)
 	{
 		_omitBuilderKeyText.set(value);
+	}
+
+	//assumes we are on the main/event thread
+	public static void runOnRenderThreadHelper(Runnable runnable)
+	{
+		if (IxerisCompat.isModPresent())
+		{
+			IxerisCompat.runOnRenderThread(runnable);
+		}
+		else
+		{
+			runnable.run();
+		}
 	}
 }

@@ -82,26 +82,34 @@ public class MinecraftClientMixin
 		//check if we actually have an event still
 		if (horizontal == 0 && vertical == 0) return;
 
-		//enable onMouseScroll
-		Common.setAllowedInputOSX(true);
+		double horizontalCopy = horizontal;
+		double verticalCopy = vertical;
+		Common.runOnRenderThreadHelper(() ->
+		{
+			//enable onMouseScroll
+			Common.setAllowedInputOSX(true);
 
-		//on 1.14 we need to use the window field, on 1.19 the field still exists
-		((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), horizontal, vertical);
+			//on 1.14 we need to use the window field, on 1.19 the field still exists
+			((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), horizontalCopy, verticalCopy);
 
-		//disable onMouseScroll
-		Common.setAllowedInputOSX(false);
+			//disable onMouseScroll
+			Common.setAllowedInputOSX(false);
+		});
 	}
 
 	private void keyCallback(int key, int scancode, int action, int modifiers)
 	{
-		//enable onKey
-		Common.setAllowedInputOSX2(true);
+		Common.runOnRenderThreadHelper(() ->
+		{
+			//enable onKey
+			Common.setAllowedInputOSX2(true);
 
-		//on 1.14 we need to use the window field, on 1.19 the field still exists
-		keyboard.onKey(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
+			//on 1.14 we need to use the window field, on 1.19 the field still exists
+			keyboard.onKey(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
 
-		//disable onKey
-		Common.setAllowedInputOSX2(false);
+			//disable onKey
+			Common.setAllowedInputOSX2(false);
+		});
 	}
 
 	//dropping stack in game
@@ -111,6 +119,7 @@ public class MinecraftClientMixin
 		//enable hasControlDown() injector
 		Common.setInjectHasControlDown(true);
 	}
+
 	@Inject(method = "handleInputEvents()V", at = @At("RETURN"))
 	private void keyPressed_hasControlDownEnd(CallbackInfo info)
 	{
