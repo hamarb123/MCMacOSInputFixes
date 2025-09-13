@@ -99,7 +99,6 @@ public class MinecraftClientMixin
 
 	private void keyCallback(int key, int scancode, int action, int modifiers)
 	{
-		//we assume we are on the main/event thread, we want to ensure we run this on the render thread
 		Common.runOnRenderThreadHelper(() ->
 		{
 			//enable onKey
