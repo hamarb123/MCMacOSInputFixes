@@ -27,12 +27,16 @@
 		],
 		"client":
 		[
-			"com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod"
+			"com.hamarb123.macos_input_fixes.client.MacOSInputFixesClientMod"
 		]
 	},
 	"mixins":
 	[
-		"macos_input_fixes.mixins.json"
+		"macos_input_fixes.mixins.json",
+		{
+			"config": "macos_input_fixes.client.mixins.json",
+			"environment": "client"
+		}
 	],
 
 	"depends":
