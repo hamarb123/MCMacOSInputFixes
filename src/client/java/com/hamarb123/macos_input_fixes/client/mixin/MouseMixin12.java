@@ -12,7 +12,7 @@ import com.hamarb123.macos_input_fixes.client.ModOptions;
 public class MouseMixin12
 {
 	//@Redirect(method = "onMouseButton(JIII)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;IS_SYSTEM_MAC:Z", opcode = Opcodes.GETSTATIC))
-	@Redirect(method = "method_1601(JIII)V", at = @At(value = "FIELD", target = "net/minecraft/class_310;field_1703:Z", opcode = Opcodes.GETSTATIC, remap = false), remap = false)
+	@Redirect(method = "method_1601(JIII)V", at = @At(value = "FIELD", target = "Lnet/minecraft/class_310;field_1703:Z", opcode = Opcodes.GETSTATIC, remap = false), remap = false)
 	private boolean leftMouseClick()
 	{
 		//check if we want to disable the below fix
