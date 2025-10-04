@@ -16,7 +16,7 @@ import net.minecraft.client.util.math.MatrixStack;
 @Mixin(MouseOptionsScreen.class)
 public abstract class MouseOptionsScreenMixin5
 {
-    @Shadow
+	@Shadow(aliases = "field_19246", remap = false)
 	private OptionListWidget buttonList;
 
 	@Inject(method = "method_25394(Lnet/minecraft/class_4587;IIF)V", at = @At("RETURN"), cancellable = true, remap = false)

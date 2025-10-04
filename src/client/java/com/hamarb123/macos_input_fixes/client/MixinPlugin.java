@@ -125,47 +125,47 @@ public class MixinPlugin implements IMixinConfigPlugin
 
 	private static boolean isClassPresent(String className)
 	{
-        try
+		try
 		{
-            MixinService.getService().getBytecodeProvider().getClassNode(className);
-            return true;
-        }
+			MixinService.getService().getBytecodeProvider().getClassNode(className);
+			return true;
+		}
 		catch (ClassNotFoundException ignored)
 		{
-            // Class isn't present, skip this mixin.
-            return false;
-        }
+			// Class isn't present, skip this mixin.
+			return false;
+		}
 		catch (Exception e)
 		{
-            // Something else went wrong which might be more serious.
-            e.printStackTrace();
-            return false;
-        }
-    }
+			// Something else went wrong which might be more serious.
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	private static boolean isMethodPresent(String className, String methodName, String descriptor)
 	{
-        try
+		try
 		{
-            ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode(className);
+			ClassNode classNode = MixinService.getService().getBytecodeProvider().getClassNode(className);
 			for (MethodNode methodNode : classNode.methods)
 			{
 				if (methodNode.name.equals(methodName) && methodNode.desc.equals(descriptor)) return true;
 			}
-            return false;
-        }
+			return false;
+		}
 		catch (ClassNotFoundException ignored)
 		{
-            // Class isn't present, skip this mixin.
-            return false;
-        }
+			// Class isn't present, skip this mixin.
+			return false;
+		}
 		catch (Exception e)
 		{
-            // Something else went wrong which might be more serious.
-            e.printStackTrace();
-            return false;
-        }
-    }
+			// Something else went wrong which might be more serious.
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	@Override
 	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo)

@@ -731,7 +731,7 @@ public class FabricReflectionHelper
 	 */
 	public static boolean InputUtil_isKeyPressed_1(long handle, int code)
 	{
-		if (_InputUtil_isKeyPressed_1Method == null) _InputUtil_isKeyPressed_1Method = lookupMethod("net.minecraft.class_3675", "method_15987", "(JI)Z", true, false, InputUtil.class, "isKeyPressed", long.class, int.class);
+		if (_InputUtil_isKeyPressed_1Method == null) _InputUtil_isKeyPressed_1Method = lookupMethod("net.minecraft.class_3675", "method_15987", "(JI)Z", true, false, InputUtil.class, "isKeyPressed", boolean.class, long.class, int.class);
 		return (boolean)invokeMethod("isKeyPressed", _InputUtil_isKeyPressed_1Method, handle, code);
 	}
 	private static MethodHandle _InputUtil_isKeyPressed_1Method;

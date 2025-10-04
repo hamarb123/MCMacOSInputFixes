@@ -14,12 +14,12 @@ import com.llamalad7.mixinextras.sugar.Local;
 public class HandledScreenMixin13
 {
 	@ModifyExpressionValue(method = "keyPressed(Lnet/minecraft/client/input/KeyInput;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/KeyInput;hasCtrl()Z"))
-    private boolean keyPressedHasCtrlAdjustment(boolean result, @Local(argsOnly = true) KeyInput input)
+	private boolean keyPressedHasCtrlAdjustment(boolean result, @Local(argsOnly = true) KeyInput input)
 	{
 		if (!result && Common.IS_SYSTEM_MAC)
 		{
 			result = (((AbstractInput)Common.asObject(input)).modifiers() & 2) != 0;
 		}
 		return result;
-    }
+	}
 }

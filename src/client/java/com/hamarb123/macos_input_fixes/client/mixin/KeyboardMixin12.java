@@ -13,7 +13,8 @@ import net.minecraft.client.Keyboard;
 @Mixin(Keyboard.class)
 public class KeyboardMixin12
 {
-	@Inject(at = @At("HEAD"), method = "onKey(JIIII)V", cancellable = true)
+	//@Inject(at = @At("HEAD"), method = "onKey(JIIII)V", cancellable = true)
+	@Inject(at = @At("HEAD"), method = "method_1466(JIIII)V", cancellable = true, remap = false)
 	public void onKey(long window, int key, int scancode, int action, int modifiers, CallbackInfo info)
 	{
 		if (Common.IS_SYSTEM_MAC)

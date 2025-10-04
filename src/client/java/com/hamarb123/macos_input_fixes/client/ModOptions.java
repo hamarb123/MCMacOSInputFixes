@@ -1,8 +1,5 @@
 package com.hamarb123.macos_input_fixes.client;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -10,6 +7,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +30,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public class ModOptions
@@ -522,41 +520,41 @@ public class ModOptions
 		}
 	}
 
-	public static File optionsFile;
+	public static Path optionsFile;
 
 	@SuppressWarnings("resource")
 	public static void loadOptions()
 	{
 		//locate options file
-		optionsFile = new File(FabricLoader.getInstance().getConfigDir().toAbsolutePath().toString(), "macos_input_fixes.txt");
+		optionsFile = FabricLoader.getInstance().getConfigDir().resolve("macos_input_fixes.txt");
 
 		//check if we need to migrate from the old path
-		if (!optionsFile.exists())
+		if (!Files.exists(optionsFile))
 		{
-			File oldFile = new File(MinecraftClient.getInstance().runDirectory, "options_macos_input_fixes.txt");
-			if (oldFile.exists())
+			Path oldFile = Paths.get(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), "options_macos_input_fixes.txt");
+			if (Files.exists(oldFile))
 			{
-				optionsFile.getParentFile().mkdir();
 				try
 				{
-					Files.copy(oldFile.toPath(), optionsFile.toPath());
+					Files.createDirectories(optionsFile.getParent());
+					Files.copy(oldFile, optionsFile);
+					Files.deleteIfExists(oldFile);
 				}
 				catch (IOException e)
 				{
-					throw new RuntimeException("Failed to migrate old macos input fixes options file from " + oldFile.toPath() + " to " + optionsFile.toPath(), e);
+					throw new RuntimeException("Failed to migrate old macos input fixes options file from " + oldFile + " to " + optionsFile, e);
 				}
-				oldFile.delete();
 			}
 		}
 
 		//load options similarly to how minecraft does
 		try
 		{
-			if (!optionsFile.exists())
+			if (!Files.exists(optionsFile))
 			{
 				return;
 			}
-			List<String> lines = IOUtils.readLines(new FileInputStream(optionsFile), StandardCharsets.UTF_8); //split by lines
+			List<String> lines = IOUtils.readLines(Files.newInputStream(optionsFile), StandardCharsets.UTF_8); //split by lines
 			NbtCompound compoundTag = new NbtCompound();
 			for (String line : lines) //read the lines into a tag
 			{
@@ -666,7 +664,7 @@ public class ModOptions
 	public static void saveOptions()
 	{
 		//write the options to the file in a similar way to minecraft
-		try (PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(optionsFile), StandardCharsets.UTF_8)))
+		try (PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(optionsFile), StandardCharsets.UTF_8)))
 		{
 			printWriter.println("trackpadSensitivity:" + trackpadSensitivity);
 			printWriter.println("reverseHotbarScrolling:" + reverseHotbarScrolling);
@@ -690,7 +688,7 @@ public class ModOptions
 	public static void setTrackpadSensitivity(double value)
 	{
 		trackpadSensitivity = value;
-		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
+		if (!Common.IS_SYSTEM_MAC) return;
 
 		//set the value in the native library also, ensure the value is clamped here
 		if (value < 0) value = 0.0;
@@ -714,7 +712,7 @@ public class ModOptions
 	public static void setMomentumScrolling(boolean value)
 	{
 		momentumScrolling = value;
-		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
+		if (!Common.IS_SYSTEM_MAC) return;
 
 		//set the value in the native library also
 		MacOSInputFixesClientMod.setMomentumScrolling(value);
@@ -726,7 +724,7 @@ public class ModOptions
 	public static void setInterfaceSmoothScroll(boolean value)
 	{
 		interfaceSmoothScroll = value;
-		if (Util.getOperatingSystem() != Util.OperatingSystem.OSX) return;
+		if (!Common.IS_SYSTEM_MAC) return;
 
 		//set the value in the native library also
 		MacOSInputFixesClientMod.setInterfaceSmoothScroll(value);
