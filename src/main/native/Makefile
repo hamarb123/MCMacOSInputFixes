@@ -2,7 +2,7 @@ CC=clang++
 JNIINCLUDEFOLDER="jdk8_include"
 CFLAGS=-c -Wall -arch x86_64 -arch arm64 -std=c++17 -I${JNIINCLUDEFOLDER} -I${JNIINCLUDEFOLDER}/darwin -mmacosx-version-min=10.9
 LDFLAGS=-arch x86_64 -arch arm64 -dynamiclib -framework Foundation -framework AppKit -mmacosx-version-min=10.9
-SOURCES=com_hamarb123_macos_input_fixes_MacOSInputFixesClientMod.mm
+SOURCES=com_hamarb123_macos_input_fixes_client_MacOSInputFixesClientMod.mm
 OBJECTS=$(SOURCES:.mm=.o)
 EXECUTABLE=macos_input_fixes.dylib
 

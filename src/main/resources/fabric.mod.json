@@ -4,7 +4,7 @@
 	"version": "${version}",
 
 	"name": "MacOS Input Fixes",
-	"description": "This mod fixes MC-59810 and MC-121772. It makes scrolling with shift work properly on macOS, left click + control = left click (instead of right click) and more fixes! See the full list of fixes on the site.",
+	"description": "This mod fixes MC-22882, MC-59810, MC-121772, and MC-122296. It makes scrolling with shift work properly on macOS, left click + control = left click (instead of right click) and more fixes! See the full list of fixes on the site.",
 	"authors":
 	[
 		"hamarb123"
@@ -23,21 +23,23 @@
 	{
 		"main":
 		[
-			"com.hamarb123.macos_input_fixes.MacOSInputFixesMod"
 		],
 		"client":
 		[
-			"com.hamarb123.macos_input_fixes.MacOSInputFixesClientMod"
+			"com.hamarb123.macos_input_fixes.client.MacOSInputFixesClientMod"
 		]
 	},
 	"mixins":
 	[
-		"macos_input_fixes.mixins.json"
+		{
+			"config": "macos_input_fixes.client.mixins.json",
+			"environment": "client"
+		}
 	],
 
 	"depends":
 	{
-		"fabricloader": ">=0.14.22",
+		"fabricloader": ">=0.15.0",
 		"minecraft": ">=1.14",
 		"java": ">=8"
 	},
