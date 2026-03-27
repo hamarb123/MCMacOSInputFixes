@@ -1,0 +1,49 @@
+{
+	"schemaVersion": 1,
+	"id": "macos_input_fixes_helper",
+	"version": "${mod_version}",
+	"name": "MacOS Input Fixes (Helper)",
+	"description": "See the actual MacOS Input Fixes mod for useful information - this mod just allows the other one to load on both 1.14-1.21.11 and 26.1+ without two seperate jars.",
+	"authors":
+	[
+		"hamarb123"
+	],
+	"contact":
+	{
+		"homepage": "https://github.com/hamarb123/MCMacOSInputFixes",
+		"sources": "https://github.com/hamarb123/MCMacOSInputFixes"
+	},
+	"license": "BSD-3-Clause",
+	"icon": "assets/macos_input_fixes/icon.png",
+	"environment": "client",
+	"entrypoints":
+	{
+		"main":
+		[
+		],
+		"client":
+		[
+		]
+	},
+	"mixins":
+	[
+	],
+	"jars":
+	[
+		{
+			"file": "META-INF/jars/macos-input-fixes-${mod_version}+1.21.11.jar"
+		},
+		{
+			"file": "META-INF/jars/macos-input-fixes-${mod_version}+26.1.jar"
+		}
+	],
+	"depends":
+	{
+		"fabricloader": ">=${loader_version}",
+		"minecraft": ">=1.14",
+		"java": ">=8"
+	},
+	"suggests":
+	{
+	}
+}

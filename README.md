@@ -49,6 +49,10 @@ For setup instructions please see the [fabric wiki page](https://fabricmc.net/wi
 
 To build this, you also need to build the native file before building the mod itself any time you modify it. This can only be done on macOS and requires Apple's XCode (or command line-tools) to be installed on the machine. To build the native library, simply run `make clean && make` in the `src/main/native` directory. This should work on both intel and arm machines, but I've only tested in on an intel machine. The resulting binary supports both x64 and arm64, so no need to worry about the architecture of the native.
 
+Normal build with `stonecutter` is done via `./gradlew buildAndCollect` - this produces two jar files in a folder (one for each target version).
+
+To package the mod into one jar, you must run `./util/package.sh` on Unix with .NET installed. Or if on Windows, you can manually do `dotnet run util/Packager.cs` with current directory set to the directory containing this file.
+
 ## Testing
 
 If you make changes, you should test everything works properly on the following versions at least:
