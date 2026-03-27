@@ -70,9 +70,9 @@ If you make changes, you should test everything works properly on the following 
 ## Mixin Naming Scheme
 
 Some mixins are in a folder called `gui`, these mixins are to do with the option menu interface, or only used by other option menu interface code. Some mixins have a number at the end of their name, these mixins are conditionally loaded based on whether certain classes are available at runtime. The numbering is currently as follows (note some of the classes may have different names in different intermediary mappings, consult the latest applicable version if you can't find the class):
-1. The `SimpleOption` class is available (1.19+)
+1. The `SimpleOption`/`OptionInstance` class is available (1.19+)
 2. The `Option` class is available (1.14-1.18.x)
-3. The `CyclingButtonWidget` class is available (1.17+)
+3. The `CyclingButtonWidget`/`CyclingOption` class is available (1.17+)
 4. Both the `Option` and `CyclingButtonWidget` classes are available (1.17-1.18.x)
 5. The `GameOptionsScreen.getHoveredButtonTooltip(ButtonListWidget, int, int)` function exists (1.16.2-1.19.2)
 6. The `GameOptionsScreen.getHoveredButtonTooltip(ButtonListWidget, int, int)` function doesn't exist, the `Screen.renderTooltip(MatrixStack, List, int, int)` function exists, and the `Option` class exists (1.16-1.16.1)
