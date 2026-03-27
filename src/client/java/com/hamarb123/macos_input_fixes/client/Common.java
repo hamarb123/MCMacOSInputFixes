@@ -1,12 +1,12 @@
 package com.hamarb123.macos_input_fixes.client;
 
 import com.hamarb123.macos_input_fixes.client.compat.IxerisCompat;
-import com.hamarb123.macos_input_fixes.client.mixin.MinecraftClientAccessor;
+import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Util;
-import net.minecraft.util.Util.OperatingSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.Util;
+import net.minecraft.Util.OS;
 
 @Environment(EnvType.CLIENT)
 public class Common
@@ -28,8 +28,8 @@ public class Common
 			//replace hasControlDown() on macOS with hasControlDown() (which tests command) or 'actual control down' for this function only
 			returnValue = FabricReflectionHelper.Screen_hasControlDown() ||
 				//ctrl key check
-				FabricReflectionHelper.InputUtil_isKeyPressed_1(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 341) ||
-				FabricReflectionHelper.InputUtil_isKeyPressed_1(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), 345);
+				FabricReflectionHelper.InputUtil_isKeyPressed_1(((MinecraftAccessor)Minecraft.getInstance()).getWindow().handle(), 341) ||
+				FabricReflectionHelper.InputUtil_isKeyPressed_1(((MinecraftAccessor)Minecraft.getInstance()).getWindow().handle(), 345);
 		}
 
 		//restore injector and return
@@ -116,5 +116,5 @@ public class Common
 		return o;
 	}
 
-	public static final boolean IS_SYSTEM_MAC = Util.getOperatingSystem() == OperatingSystem.OSX;
+	public static final boolean IS_SYSTEM_MAC = Util.getPlatform() == OS.OSX;
 }

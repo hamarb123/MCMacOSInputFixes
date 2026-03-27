@@ -3,8 +3,8 @@ package com.hamarb123.macos_input_fixes.client;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,19 +15,19 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
-import net.minecraft.client.Keyboard;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public class FabricReflectionHelper
 {
@@ -650,9 +650,9 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.14-1.21.8</p>
 	 */
-	public static void Keyboard_onKey_1(Keyboard instance, long window, int key, int scancode, int action, int modifiers)
+	public static void Keyboard_onKey_1(KeyboardHandler instance, long window, int key, int scancode, int action, int modifiers)
 	{
-		if (_Keyboard_onKey_1Method == null) _Keyboard_onKey_1Method = lookupMethod("net.minecraft.class_309", "method_1466", "(JIIII)V", false, false, Keyboard.class, "onKey", void.class, long.class, int.class, int.class, int.class, int.class);
+		if (_Keyboard_onKey_1Method == null) _Keyboard_onKey_1Method = lookupMethod("net.minecraft.class_309", "method_1466", "(JIIII)V", false, false, KeyboardHandler.class, "onKey", void.class, long.class, int.class, int.class, int.class, int.class);
 		invokeMethod("onKey", _Keyboard_onKey_1Method, instance, window, key, scancode, action, modifiers);
 	}
 	private static MethodHandle _Keyboard_onKey_1Method;
@@ -667,12 +667,12 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.21.9+</p>
 	 */
-	public static void Keyboard_onKey_2(Keyboard instance, long window, int action, Object input)
+	public static void Keyboard_onKey_2(KeyboardHandler instance, long window, int action, Object input)
 	{
 		if (_Keyboard_onKey_2Method == null)
 		{
 			_triedKeyboard_onKey_2Method = true;
-			_Keyboard_onKey_2Method = lookupMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", false, true, Keyboard.class, "onKey", void.class, long.class, int.class, KeyInput());
+			_Keyboard_onKey_2Method = lookupMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", false, true, KeyboardHandler.class, "onKey", void.class, long.class, int.class, KeyInput());
 		}
 		invokeMethod("onKey", _Keyboard_onKey_2Method, instance, window, action, input);
 	}
@@ -693,7 +693,7 @@ public class FabricReflectionHelper
 		if (!_triedKeyboard_onKey_2Method)
 		{
 			_triedKeyboard_onKey_2Method = true;
-			if (Try_KeyInput() != null) _Keyboard_onKey_2Method = tryLookupMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", false, true, Keyboard.class, "onKey", void.class, long.class, int.class, KeyInput());
+			if (Try_KeyInput() != null) _Keyboard_onKey_2Method = tryLookupMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", false, true, KeyboardHandler.class, "onKey", void.class, long.class, int.class, KeyInput());
 		}
 		return _Keyboard_onKey_2Method != null;
 	}
@@ -709,11 +709,11 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.14-1.21.4</p>
 	 */
-	public static String NbtCompound_getString_1(NbtCompound instance, String key)
+	public static String NbtCompound_getString_1(CompoundTag instance, String key)
 	{
 		if (_NbtCompound_getString_1Method == null)
 		{
-			_NbtCompound_getString_1Method = lookupMethod("net.minecraft.class_2487", "method_10558", "(Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class);
+			_NbtCompound_getString_1Method = lookupMethod("net.minecraft.class_2487", "method_10558", "(Ljava/lang/String;)Ljava/lang/String;", false, false, CompoundTag.class, "getString", String.class, String.class);
 		}
 		return (String)invokeMethod("getString", _NbtCompound_getString_1Method, instance, key);
 	}
@@ -731,7 +731,7 @@ public class FabricReflectionHelper
 	 */
 	public static boolean InputUtil_isKeyPressed_1(long handle, int code)
 	{
-		if (_InputUtil_isKeyPressed_1Method == null) _InputUtil_isKeyPressed_1Method = lookupMethod("net.minecraft.class_3675", "method_15987", "(JI)Z", true, false, InputUtil.class, "isKeyPressed", boolean.class, long.class, int.class);
+		if (_InputUtil_isKeyPressed_1Method == null) _InputUtil_isKeyPressed_1Method = lookupMethod("net.minecraft.class_3675", "method_15987", "(JI)Z", true, false, InputConstants.class, "isKeyPressed", boolean.class, long.class, int.class);
 		return (boolean)invokeMethod("isKeyPressed", _InputUtil_isKeyPressed_1Method, handle, code);
 	}
 	private static MethodHandle _InputUtil_isKeyPressed_1Method;
@@ -791,9 +791,9 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.16+</p>
 	 */
-	public static Object TextRenderer_getTextHandler(TextRenderer instance)
+	public static Object TextRenderer_getTextHandler(Font instance)
 	{
-		if (_TextRenderer_getTextHandlerMethod == null) _TextRenderer_getTextHandlerMethod = lookupMethod("net.minecraft.class_327", "method_27527", "()Lnet/minecraft/class_5225;", false, false, TextRenderer.class, "getTextHandler", TextHandler());
+		if (_TextRenderer_getTextHandlerMethod == null) _TextRenderer_getTextHandlerMethod = lookupMethod("net.minecraft.class_327", "method_27527", "()Lnet/minecraft/class_5225;", false, false, Font.class, "getTextHandler", TextHandler());
 		return invokeMethod("getTextHandler", _TextRenderer_getTextHandlerMethod, instance);
 	}
 	private static MethodHandle _TextRenderer_getTextHandlerMethod;
@@ -880,7 +880,7 @@ public class FabricReflectionHelper
 	 */
 	public static Optional<?> OptionButtonWidget_getHoveredWidget(Object instance, double mouseX, double mouseY)
 	{
-		if (_OptionButtonWidget_getHoveredWidgetMethod == null) _OptionButtonWidget_getHoveredWidgetMethod = lookupMethod("net.minecraft.class_353", "method_29624", "(DD)Ljava/util/Optional;", false, false, OptionListWidget.class, "getHoveredWidget", Optional.class, double.class, double.class);
+		if (_OptionButtonWidget_getHoveredWidgetMethod == null) _OptionButtonWidget_getHoveredWidgetMethod = lookupMethod("net.minecraft.class_353", "method_29624", "(DD)Ljava/util/Optional;", false, false, OptionsList.class, "getHoveredWidget", Optional.class, double.class, double.class);
 		return (Optional<?>)invokeMethod("getHoveredWidget", _OptionButtonWidget_getHoveredWidgetMethod, instance, mouseX, mouseY);
 	}
 	private static MethodHandle _OptionButtonWidget_getHoveredWidgetMethod;
@@ -912,9 +912,9 @@ public class FabricReflectionHelper
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.16.2-1.19.2</p>
 	 */
-	public static List<?> GameOptionsScreen_getHoveredButtonTooltip(OptionListWidget buttonList, int mouseX, int mouseY)
+	public static List<?> GameOptionsScreen_getHoveredButtonTooltip(OptionsList buttonList, int mouseX, int mouseY)
 	{
-		if (_GameOptionsScreen_getHoveredButtonTooltipMethod == null) _GameOptionsScreen_getHoveredButtonTooltipMethod = lookupMethod("net.minecraft.class_4667", "method_31048", "(Lnet/minecraft/class_353;II)Ljava/util/List;", true, false, GameOptionsScreen.class, "getHoveredButtonTooltip", List.class, OptionListWidget.class, int.class, int.class);
+		if (_GameOptionsScreen_getHoveredButtonTooltipMethod == null) _GameOptionsScreen_getHoveredButtonTooltipMethod = lookupMethod("net.minecraft.class_4667", "method_31048", "(Lnet/minecraft/class_353;II)Ljava/util/List;", true, false, OptionsSubScreen.class, "getHoveredButtonTooltip", List.class, OptionsList.class, int.class, int.class);
 		return (List<?>)invokeMethod("getHoveredButtonTooltip", _GameOptionsScreen_getHoveredButtonTooltipMethod, buttonList, mouseX, mouseY);
 	}
 	private static MethodHandle _GameOptionsScreen_getHoveredButtonTooltipMethod;
@@ -929,13 +929,13 @@ public class FabricReflectionHelper
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.17-1.18.x</p>
 	 */
-	public static Object CyclingOption_create(String key, Text on, Text off, Function<GameOptions, Boolean> getter, Object setter)
+	public static Object CyclingOption_create(String key, Component on, Component off, Function<Options, Boolean> getter, Object setter)
 	{
 		if (_CyclingOption_createMethod == null)
 		{
 			_CyclingOption_createMethod =
 				lookupMethod("net.minecraft.class_4064", "method_32525", "(Ljava/lang/String;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_4064$class_5675;)Lnet/minecraft/class_4064;",
-				true, false, CyclingOption(), "create", CyclingOption(), String.class, Text.class, Text.class, Function.class, CyclingOption_Setter());
+				true, false, CyclingOption(), "create", CyclingOption(), String.class, Component.class, Component.class, Function.class, CyclingOption_Setter());
 		}
 		return invokeMethod("create", _CyclingOption_createMethod, key, on, off, getter, setter);
 	}
@@ -951,7 +951,7 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.17-1.18.x</p>
 	 */
-	public static Object CyclingOption_tooltip(Object instance, Function<MinecraftClient, ?> tooltips)
+	public static Object CyclingOption_tooltip(Object instance, Function<Minecraft, ?> tooltips)
 	{
 		if (_CyclingOption_tooltipMethod == null) _CyclingOption_tooltipMethod = lookupMethod("net.minecraft.class_4064", "method_32528", "(Ljava/util/function/Function;)Lnet/minecraft/class_4064;", false, false, CyclingOption(), "tooltip", CyclingOption(), Function.class);
 		return invokeMethod("tooltip", _CyclingOption_tooltipMethod, instance, tooltips);
@@ -985,9 +985,9 @@ public class FabricReflectionHelper
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.19-1.19.2</p>
 	 */
-	public static Object SimpleOption_constantTooltip_1(Text text)
+	public static Object SimpleOption_constantTooltip_1(Component text)
 	{
-		if (_SimpleOption_constantTooltip1Method == null) _SimpleOption_constantTooltip1Method = lookupMethod("net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7307;", true, false, SimpleOption(), "constantTooltip", SimpleOption_TooltipFactoryGetter(), Text.class);
+		if (_SimpleOption_constantTooltip1Method == null) _SimpleOption_constantTooltip1Method = lookupMethod("net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7307;", true, false, SimpleOption(), "constantTooltip", SimpleOption_TooltipFactoryGetter(), Component.class);
 		return invokeMethod("constantTooltip", _SimpleOption_constantTooltip1Method, text);
 	}
 	private static MethodHandle _SimpleOption_constantTooltip1Method;
@@ -1002,9 +1002,9 @@ public class FabricReflectionHelper
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.19.3+</p>
 	 */
-	public static Object SimpleOption_constantTooltip_2(Text text)
+	public static Object SimpleOption_constantTooltip_2(Component text)
 	{
-		if (_SimpleOption_constantTooltip2Method == null) _SimpleOption_constantTooltip2Method = lookupMethod("net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7277;", true, false, SimpleOption(), "constantTooltip", SimpleOption_TooltipFactory(), Text.class);
+		if (_SimpleOption_constantTooltip2Method == null) _SimpleOption_constantTooltip2Method = lookupMethod("net.minecraft.class_7172", "method_42717", "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7277;", true, false, SimpleOption(), "constantTooltip", SimpleOption_TooltipFactory(), Component.class);
 		return invokeMethod("constantTooltip", _SimpleOption_constantTooltip2Method, text);
 	}
 	private static MethodHandle _SimpleOption_constantTooltip2Method;
@@ -1053,9 +1053,9 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.19+</p>
 	 */
-	public static Object GameOptions_getDiscreteMouseScroll(GameOptions instance)
+	public static Object GameOptions_getDiscreteMouseScroll(Options instance)
 	{
-		if (_GameOptions_getDiscreteMouseScrollMethod == null) _GameOptions_getDiscreteMouseScrollMethod = lookupMethod("net.minecraft.class_315", "method_42439", "()Lnet/minecraft/class_7172;", false, false, GameOptions.class, "getDiscreteMouseScroll", SimpleOption());
+		if (_GameOptions_getDiscreteMouseScrollMethod == null) _GameOptions_getDiscreteMouseScrollMethod = lookupMethod("net.minecraft.class_315", "method_42439", "()Lnet/minecraft/class_7172;", false, false, Options.class, "getDiscreteMouseScroll", SimpleOption());
 		return invokeMethod("getDiscreteMouseScroll", _GameOptions_getDiscreteMouseScrollMethod, instance);
 	}
 	private static MethodHandle _GameOptions_getDiscreteMouseScrollMethod;
@@ -1070,14 +1070,14 @@ public class FabricReflectionHelper
 	 * <p>Static: yes</p>
 	 * <p>Versions: 1.19+</p>
 	 */
-	public static Text Text_literal(String string)
+	public static Component Text_literal(String string)
 	{
 		if (_Text_literalMethod == null)
 		{
 			_triedText_literalMethod = true;
-			_Text_literalMethod = lookupMethod("net.minecraft.class_2561", "method_43470", "(Ljava/lang/String;)Lnet/minecraft/class_5250;", true, false, Text.class, "literal", MutableText(), String.class);
+			_Text_literalMethod = lookupMethod("net.minecraft.class_2561", "method_43470", "(Ljava/lang/String;)Lnet/minecraft/class_5250;", true, false, Component.class, "literal", MutableText(), String.class);
 		}
-		return (Text)invokeMethod("literal", _Text_literalMethod, string);
+		return (Component)invokeMethod("literal", _Text_literalMethod, string);
 	}
 	private static MethodHandle _Text_literalMethod;
 
@@ -1096,7 +1096,7 @@ public class FabricReflectionHelper
 		if (!_triedText_literalMethod)
 		{
 			_triedText_literalMethod = true;
-			_Text_literalMethod = tryLookupMethod("net.minecraft.class_2561", "method_43470", "(Ljava/lang/String;)Lnet/minecraft/class_5250;", true, false, Text.class, "literal", Try_MutableText(), String.class);
+			_Text_literalMethod = tryLookupMethod("net.minecraft.class_2561", "method_43470", "(Ljava/lang/String;)Lnet/minecraft/class_5250;", true, false, Component.class, "literal", Try_MutableText(), String.class);
 		}
 		return _Text_literalMethod != null;
 	}
@@ -1129,12 +1129,12 @@ public class FabricReflectionHelper
 	 * <p>Static: no</p>
 	 * <p>Versions: 1.21.5+</p>
 	 */
-	public static String NbtCompound_getString_2(NbtCompound instance, String key, String defaultValue)
+	public static String NbtCompound_getString_2(CompoundTag instance, String key, String defaultValue)
 	{
 		if (_NbtCompound_getString_2Method == null)
 		{
 			_triedNbtCompound_getString_2Method = true;
-			_NbtCompound_getString_2Method = lookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class, String.class);
+			_NbtCompound_getString_2Method = lookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, CompoundTag.class, "getString", String.class, String.class, String.class);
 		}
 		return (String)invokeMethod("getString", _NbtCompound_getString_2Method, instance, key, defaultValue);
 	}
@@ -1155,7 +1155,7 @@ public class FabricReflectionHelper
 		if (!_triedNbtCompound_getString_2Method)
 		{
 			_triedNbtCompound_getString_2Method = true;
-			_NbtCompound_getString_2Method = tryLookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, NbtCompound.class, "getString", String.class, String.class, String.class);
+			_NbtCompound_getString_2Method = tryLookupMethod("net.minecraft.class_2487", "method_68564", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", false, false, CompoundTag.class, "getString", String.class, String.class, String.class);
 		}
 		return _NbtCompound_getString_2Method != null;
 	}
@@ -1171,10 +1171,10 @@ public class FabricReflectionHelper
 	 * <p>Versions: 1.14-1.18.x</p>
 	 */
 	//it was changed to a record in 1.19, and it also doesn't implement Text, so ignore it there for now
-	public static Text new_LiteralText(String string)
+	public static Component new_LiteralText(String string)
 	{
 		if (_new_LiteralTextCtor1 == null) _new_LiteralTextCtor1 = lookupConstructor("(Ljava/lang/String;)V", false, LiteralText(), String.class);
-		return (Text)invokeMethod("LiteralText.<init>(Ljava/lang/String;)V", _new_LiteralTextCtor1, string);
+		return (Component)invokeMethod("LiteralText.<init>(Ljava/lang/String;)V", _new_LiteralTextCtor1, string);
 	}
 	private static MethodHandle _new_LiteralTextCtor1;
 
@@ -1185,7 +1185,7 @@ public class FabricReflectionHelper
 	 * <p>Parameters types: {@code (String key, BiConsumer<GameOptions, Integer> setter, BiFunction<GameOptions, CyclingOption, Text> messageProvider)} (1.16+), {@code (String key, BiConsumer<GameOptions, Integer> setter, BiFunction<GameOptions, CyclingOption, String> messageProvider)} (1.14-1.15.x)</p>
 	 * <p>Versions: 1.14-1.16.x</p>
 	 */
-	public static Object new_CyclingOption(String key, BiConsumer<GameOptions, Integer> setter, BiFunction<GameOptions, ?, ?> messageProvider)
+	public static Object new_CyclingOption(String key, BiConsumer<Options, Integer> setter, BiFunction<Options, ?, ?> messageProvider)
 	{
 		if (_new_CyclingOption3 == null) _new_CyclingOption3 = lookupConstructor("(Ljava/lang/String;Ljava/util/function/BiConsumer;Ljava/util/function/BiFunction;)V", false, CyclingOption(), String.class, BiConsumer.class, BiFunction.class);
 		return invokeMethod("CyclingOption.<init>(Ljava/lang/String;Ljava/util/function/BiConsumer;Ljava/util/function/BiFunction;)V", _new_CyclingOption3, key, setter, messageProvider);
@@ -1213,7 +1213,7 @@ public class FabricReflectionHelper
 	 * <p>Parameters types: {@code (String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, DoubleOption, Text> displayStringGetter)} (1.16+), {@code (String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, DoubleOption, String> displayStringGetter)} (1.14-1.15.x)</p>
 	 * <p>Versions: 1.14-1.18.x</p>
 	 */
-	public static Object new_DoubleOption(String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, ?, ?> displayStringGetter)
+	public static Object new_DoubleOption(String key, double min, double max, float step, Function<Options, Double> getter, BiConsumer<Options, Double> setter, BiFunction<Options, ?, ?> displayStringGetter)
 	{
 		if (_new_DoubleOptionCtor7 == null) _new_DoubleOptionCtor7 = lookupConstructor("(Ljava/lang/String;DDFLjava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/BiFunction;)V", false, DoubleOption(), String.class, double.class, double.class, float.class, Function.class, BiConsumer.class, BiFunction.class);
 		return invokeMethod("DoubleOption.<init>(Ljava/lang/String;DDFLjava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/BiFunction;)V", _new_DoubleOptionCtor7, key, min, max, step, getter, setter, displayStringGetter);
@@ -1241,7 +1241,7 @@ public class FabricReflectionHelper
 	 * <p>Parameters types: {@code (String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, DoubleOption, Text> displayStringGetter, Function<MinecraftClient, List<OrderedText>> tooltipsGetter)}</p>
 	 * <p>Versions: 1.17-1.18.x</p>
 	 */
-	public static Object new_DoubleOption(String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, ?, ?> displayStringGetter, Function<MinecraftClient, List<?>> tooltipsGetter)
+	public static Object new_DoubleOption(String key, double min, double max, float step, Function<Options, Double> getter, BiConsumer<Options, Double> setter, BiFunction<Options, ?, ?> displayStringGetter, Function<Minecraft, List<?>> tooltipsGetter)
 	{
 		if (_new_DoubleOptionCtor8 == null)
 		{
@@ -1356,9 +1356,9 @@ public class FabricReflectionHelper
 	 * <p>Private: no</p>
 	 * <p>Versions: 1.14-1.18.x</p>
 	 */
-	public static boolean GameOptions_discreteMouseScroll(GameOptions instance)
+	public static boolean GameOptions_discreteMouseScroll(Options instance)
 	{
-		if (_GameOptions_discreteMouseScrollField == null) _GameOptions_discreteMouseScrollField = lookupField("net.minecraft.class_315", "field_19244", "Z", false, false, GameOptions.class, "discreteMouseScroll", boolean.class);
+		if (_GameOptions_discreteMouseScrollField == null) _GameOptions_discreteMouseScrollField = lookupField("net.minecraft.class_315", "field_19244", "Z", false, false, Options.class, "discreteMouseScroll", boolean.class);
 		return (boolean)(Boolean)readField("GameOptions.discreteMouseScroll", _GameOptions_discreteMouseScrollField, instance);
 	}
 	private static Field _GameOptions_discreteMouseScrollField;
@@ -1420,13 +1420,13 @@ public class FabricReflectionHelper
 	@FunctionalInterface
 	public interface ValueTextGetterHelper<T>
 	{
-		public Text toString(Text var1, T var2);
+		public Component toString(Component var1, T var2);
 	}
 
 	@FunctionalInterface
 	public interface CyclingOptionSetterHelper<T>
 	{
-		public void accept(GameOptions gameOptions, /*Option*/ Object option, T value);
+		public void accept(Options gameOptions, /*Option*/ Object option, T value);
 	}
 
 
@@ -1439,7 +1439,7 @@ public class FabricReflectionHelper
 	 */
 	public static Object convertToCyclingOption_Setter(CyclingOptionSetterHelper<?> method)
 	{
-		if (_convertToCyclingOption_SetterConverter == null) _convertToCyclingOption_SetterConverter = makeLambdaConverter("net.minecraft.class_4064$class_5675", "accept", "(Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Object;)V", CyclingOptionSetterHelper.class, CyclingOption_Setter(), void.class, void.class, new Class<?>[] { GameOptions.class, Object.class, Object.class }, new Class<?>[] { GameOptions.class, Option(), Object.class });
+		if (_convertToCyclingOption_SetterConverter == null) _convertToCyclingOption_SetterConverter = makeLambdaConverter("net.minecraft.class_4064$class_5675", "accept", "(Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Object;)V", CyclingOptionSetterHelper.class, CyclingOption_Setter(), void.class, void.class, new Class<?>[] { Options.class, Object.class, Object.class }, new Class<?>[] { Options.class, Option(), Object.class });
 		return invokeMethod("convertToCyclingOption_Setter", _convertToCyclingOption_SetterConverter, method);
 	}
 	private static MethodHandle _convertToCyclingOption_SetterConverter;
@@ -1463,7 +1463,7 @@ public class FabricReflectionHelper
 	 */
 	public static Object convertToSimpleOption_ValueTextGetter(ValueTextGetterHelper<?> method)
 	{
-		if (_convertToSimpleOption_ValueTextGetterConverter == null) _convertToSimpleOption_ValueTextGetterConverter = makeLambdaConverter("net.minecraft.class_7172$class_7303", "toString", "(Lnet/minecraft/class_2585;Ljava/lang/Object;)Lnet/minecraft/class_2585;", ValueTextGetterHelper.class, SimpleOption_ValueTextGetter(), Text.class, Text.class, Object.class);
+		if (_convertToSimpleOption_ValueTextGetterConverter == null) _convertToSimpleOption_ValueTextGetterConverter = makeLambdaConverter("net.minecraft.class_7172$class_7303", "toString", "(Lnet/minecraft/class_2585;Ljava/lang/Object;)Lnet/minecraft/class_2585;", ValueTextGetterHelper.class, SimpleOption_ValueTextGetter(), Component.class, Component.class, Object.class);
 		return invokeMethod("convertToSimpleOption_ValueTextGetter", _convertToSimpleOption_ValueTextGetterConverter, method);
 	}
 	private static MethodHandle _convertToSimpleOption_ValueTextGetterConverter;

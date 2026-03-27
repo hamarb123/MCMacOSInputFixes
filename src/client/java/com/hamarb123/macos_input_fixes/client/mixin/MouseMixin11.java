@@ -7,26 +7,26 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
 
-@Mixin(Mouse.class)
-public class MouseMixin11
+@Mixin(MouseHandler.class)
+public class MouseHandlerMixin11
 {
 	@Shadow
-	private MinecraftClient client;
+	private Minecraft minecraft;
 
-	@ModifyVariable(at = @At("HEAD"), method = "onMouseScroll(JDD)V", ordinal = 0)
+	@ModifyVariable(at = @At("HEAD"), method = "onScroll(JDD)V", ordinal = 0)
 	private double onMouseScroll1(double horizontal)
 	{
 		if (!ModOptions.reverseHotbarScrolling) return horizontal;
-		if (this.client.getOverlay() == null)
+		if (this.minecraft.getOverlay() == null)
 		{
-			if (this.client.currentScreen == null)
+			if (this.minecraft.screen == null)
 			{
-				if (this.client.player != null)
+				if (this.minecraft.player != null)
 				{
-					if (!this.client.player.isSpectator() || this.client.inGameHud.getSpectatorHud().isOpen())
+					if (!this.minecraft.player.isSpectator() || this.minecraft.gui.getSpectatorGui().isMenuActive())
 					{
 						return -horizontal;
 					}
@@ -36,17 +36,17 @@ public class MouseMixin11
 		return horizontal;
 	}
 
-	@ModifyVariable(at = @At("HEAD"), method = "onMouseScroll(JDD)V", ordinal = 1)
+	@ModifyVariable(at = @At("HEAD"), method = "onScroll(JDD)V", ordinal = 1)
 	private double onMouseScroll2(double vertical)
 	{
 		if (!ModOptions.reverseHotbarScrolling) return vertical;
-		if (this.client.getOverlay() == null)
+		if (this.minecraft.getOverlay() == null)
 		{
-			if (this.client.currentScreen == null)
+			if (this.minecraft.screen == null)
 			{
-				if (this.client.player != null)
+				if (this.minecraft.player != null)
 				{
-					if (!this.client.player.isSpectator() || this.client.inGameHud.getSpectatorHud().isOpen())
+					if (!this.minecraft.player.isSpectator() || this.minecraft.gui.getSpectatorGui().isMenuActive())
 					{
 						return -vertical;
 					}

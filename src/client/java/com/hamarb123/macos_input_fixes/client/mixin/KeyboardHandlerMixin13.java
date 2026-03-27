@@ -8,21 +8,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.hamarb123.macos_input_fixes.client.Common;
 
-import net.minecraft.client.Keyboard;
+import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
 
-@Mixin(Keyboard.class)
-public class KeyboardMixin12
+@Mixin(KeyboardHandler.class)
+public class KeyboardHandlerMixin13
 {
-	//@Inject(at = @At("HEAD"), method = "onKey(JIIII)V", cancellable = true)
-	@Inject(at = @At("HEAD"), method = "method_1466(JIIII)V", cancellable = true, remap = false)
-	public void onKey(long window, int key, int scancode, int action, int modifiers, CallbackInfo info)
+	@Inject(at = @At("HEAD"), method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", cancellable = true)
+	public void onKey(long window, int action, KeyEvent input, CallbackInfo info)
 	{
 		if (Common.IS_SYSTEM_MAC)
 		{
 			//disable built-in callback for tab and escape
 			// - these are the keys which don't get registered properly when control is pressed in some configurations
 			// - space can seemingly ONLY be fixed by changing macOS settings
-			if (key == GLFW.GLFW_KEY_TAB || key == GLFW.GLFW_KEY_ESCAPE)
+			if (((InputWithModifiers)Common.asObject(input)).input() == GLFW.GLFW_KEY_TAB || ((InputWithModifiers)Common.asObject(input)).input() == GLFW.GLFW_KEY_ESCAPE)
 			{
 				if (!Common.allowInputOSX2())
 				{

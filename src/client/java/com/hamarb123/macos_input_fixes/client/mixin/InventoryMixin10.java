@@ -6,10 +6,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.entity.player.Inventory;
 
-@Mixin(PlayerInventory.class)
-public class PlayerInventoryMixin10
+@Mixin(Inventory.class)
+public class InventoryMixin10
 {
 	//@ModifyVariable(method = "scrollInHotbar(D)V", at = @At("HEAD"), ordinal = 0)
 	@ModifyVariable(method = "method_7373(D)V", at = @At("HEAD"), ordinal = 0)

@@ -8,16 +8,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.OptionMixinHelper;
 
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.Options;
+import net.minecraft.client.OptionInstance;
 
-@Mixin(SimpleOption.class)
-public class SimpleOptionMixin1 implements OptionMixinHelper
+@Mixin(OptionInstance.class)
+public class OptionInstanceMixin1 implements OptionMixinHelper
 {
 	private boolean omitBuilderKeyText = false;
 
-	@Inject(method = "createWidget(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("HEAD"))
-	private void before_createWidget(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	@Inject(method = "createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;", at = @At("HEAD"))
+	private void before_createWidget(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{
@@ -26,8 +26,8 @@ public class SimpleOptionMixin1 implements OptionMixinHelper
 		}
 	}
 
-	@Inject(method = "createWidget(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;", at = @At("RETURN"))
-	private void after_createWidget(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	@Inject(method = "createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;", at = @At("RETURN"))
+	private void after_createWidget(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{

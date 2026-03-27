@@ -1,6 +1,6 @@
 package com.hamarb123.macos_input_fixes.client.mixin;
 
-import net.minecraft.client.Mouse;
+import net.minecraft.client.MouseHandler;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
-@Mixin(Mouse.class)
-public class MouseMixin12
+@Mixin(MouseHandler.class)
+public class MouseHandlerMixin12
 {
 	//@Redirect(method = "onMouseButton(JIII)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;IS_SYSTEM_MAC:Z", opcode = Opcodes.GETSTATIC))
 	@Redirect(method = "method_1601(JIII)V", at = @At(value = "FIELD", target = "Lnet/minecraft/class_310;field_1703:Z", opcode = Opcodes.GETSTATIC, remap = false), remap = false)

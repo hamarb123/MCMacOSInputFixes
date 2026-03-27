@@ -1,40 +1,39 @@
 package com.hamarb123.macos_input_fixes.client.mixin;
 
-import net.minecraft.client.Keyboard;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.util.Window;
 import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper;
 import com.hamarb123.macos_input_fixes.client.MacOSInputFixesClientMod;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.Options;
 
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin
+@Mixin(Minecraft.class)
+public class MinecraftMixin
 {
 	@Shadow
 	private Window window;
 
 	@Shadow
-	private Mouse mouse;
+	private MouseHandler mouseHandler;
 
 	@Shadow
-	private Keyboard keyboard;
+	private KeyboardHandler keyboardHandler;
 
 	@Shadow
-	private GameOptions options;
+	private Options options;
 
 	private boolean runOnce = false;
 
 	//function that is called immediately after the window is created on both versions
-	@Inject(at = @At("HEAD"), method = "onWindowFocusChanged(Z)V", cancellable = true)
+	@Inject(at = @At("HEAD"), method = "setWindowActive(Z)V", cancellable = true)
 	private void onWindowFocusChanged(boolean focused, CallbackInfo info)
 	{
 		if (Common.IS_SYSTEM_MAC)
@@ -42,7 +41,7 @@ public class MinecraftClientMixin
 			if (!runOnce)
 			{
 				//register the native callback for scrolling
-				long glfwWindow = window.getHandle();
+				long glfwWindow = window.handle();
 				long cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(glfwWindow);
 				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, this::keyCallback, cocoaWindow);
 				runOnce = true;
@@ -67,7 +66,7 @@ public class MinecraftClientMixin
 		}
 
 		//use ungrouped values if not scrolling on hotbar
-		if (((MinecraftClient)(Object)this).getOverlay() != null || ((MinecraftClient)(Object)this).currentScreen != null || ((MinecraftClient)(Object)this).player == null)
+		if (((Minecraft)(Object)this).getOverlay() != null || ((Minecraft)(Object)this).screen != null || ((Minecraft)(Object)this).player == null)
 		{
 			horizontal = horizontalUngrouped;
 			vertical = verticalUngrouped;
@@ -91,7 +90,7 @@ public class MinecraftClientMixin
 			Common.setAllowedInputOSX(true);
 
 			//on 1.14 we need to use the window field, on 1.19 the field still exists
-			((MouseInvokerMixin)mouse).callOnMouseScroll(((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), horizontalCopy, verticalCopy);
+			((MouseHandlerInvokerMixin) mouseHandler).callOnScroll(((MinecraftAccessor)Minecraft.getInstance()).getWindow().handle(), horizontalCopy, verticalCopy);
 
 			//disable onMouseScroll
 			Common.setAllowedInputOSX(false);
@@ -107,12 +106,12 @@ public class MinecraftClientMixin
 
 			if (FabricReflectionHelper.Has_Keyboard_onKey_2())
 			{
-				FabricReflectionHelper.Keyboard_onKey_2(keyboard, MinecraftClient.getInstance().getWindow().getHandle(), action, FabricReflectionHelper.new_KeyInput(key, scancode, modifiers));
+				FabricReflectionHelper.Keyboard_onKey_2(keyboardHandler, Minecraft.getInstance().getWindow().handle(), action, FabricReflectionHelper.new_KeyInput(key, scancode, modifiers));
 			}
 			else
 			{
 				//on 1.14 we need to use the window field, on 1.19 the field still exists
-				FabricReflectionHelper.Keyboard_onKey_1(keyboard, ((MinecraftClientAccessor)MinecraftClient.getInstance()).getWindow().getHandle(), key, scancode, action, modifiers);
+				FabricReflectionHelper.Keyboard_onKey_1(keyboardHandler, ((MinecraftAccessor)Minecraft.getInstance()).getWindow().handle(), key, scancode, action, modifiers);
 			}
 
 			//disable onKey

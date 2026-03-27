@@ -21,15 +21,15 @@ import org.apache.commons.io.IOUtils;
 
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.CyclingOptionSetterHelper;
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.ValueTextGetterHelper;
-import com.hamarb123.macos_input_fixes.client.mixin.MinecraftClientAccessor;
-import com.hamarb123.macos_input_fixes.client.mixin.gui.GameOptionsAccessor;
+import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
+import com.hamarb123.macos_input_fixes.client.mixin.gui.OptionsAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public class ModOptions
@@ -91,7 +91,7 @@ public class ModOptions
 
 	//here's the implementation for creating the different interface elements:
 
-	private static Text createLiteralText(String value)
+	private static Component createLiteralText(String value)
 	{
 		if (FabricReflectionHelper.Has_Text_literal())
 		{
@@ -126,13 +126,13 @@ public class ModOptions
 					is117Plus = true;
 					version = 1170;
 				}
-				Function<GameOptions, Double> _getter = (gameOptions) -> getter.get();
-				BiConsumer<GameOptions, Double> _setter = (gameOptions, value) ->
+				Function<Options, Double> _getter = (gameOptions) -> getter.get();
+				BiConsumer<Options, Double> _setter = (gameOptions, value) ->
 				{
 					setter.accept(value);
 					saveOptions();
 				};
-				BiFunction<GameOptions, ?, ?> displayStringGetter;
+				BiFunction<Options, ?, ?> displayStringGetter;
 				if (((ParameterizedType)ctorM.getGenericParameterTypes()[6]).getActualTypeArguments()[2] == String.class)
 				{
 					//1.14-1.15
@@ -153,7 +153,7 @@ public class ModOptions
 					Object tooltipObject = createTooltip(true, tooltip, version);
 					if (is117Plus)
 					{
-						return FabricReflectionHelper.new_DoubleOption(key, min, max, step, _getter, _setter, displayStringGetter, (Function<MinecraftClient, List<?>>)tooltipObject);
+						return FabricReflectionHelper.new_DoubleOption(key, min, max, step, _getter, _setter, displayStringGetter, (Function<Minecraft, List<?>>)tooltipObject);
 					}
 					else
 					{
@@ -170,7 +170,7 @@ public class ModOptions
 				ValueTextGetterHelper<Double> valueTextGetterImpl = (optionText, value) ->
 				{
 					double result = Math.round(value * step2) * step + min;
-					return (Text)createLiteralText(prefix + ": " + result);
+					return (Component)createLiteralText(prefix + ": " + result);
 				};
 				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
 
@@ -212,7 +212,7 @@ public class ModOptions
 				if (FabricReflectionHelper.Try_CyclingOption_Setter() != null)
 				{
 					//1.17-1.18
-					Function<GameOptions, Boolean> _getter = (gameOptions) -> getter.get();
+					Function<Options, Boolean> _getter = (gameOptions) -> getter.get();
 					CyclingOptionSetterHelper<Boolean> _setter = (gameOptions, option, value) ->
 					{
 						setter.accept(value);
@@ -231,12 +231,12 @@ public class ModOptions
 				else
 				{
 					//1.14-1.16
-					BiConsumer<GameOptions, Integer> _setter = (gameOptions, value) ->
+					BiConsumer<Options, Integer> _setter = (gameOptions, value) ->
 					{
 						setter.accept(!getter.get());
 						saveOptions();
 					};
-					BiFunction<GameOptions, ?, ?> displayStringGetter;
+					BiFunction<Options, ?, ?> displayStringGetter;
 					int version = 1160;
 					if (((ParameterizedType)FabricReflectionHelper.Info_new_CyclingOption3().getGenericParameterTypes()[2]).getActualTypeArguments()[2] == String.class)
 					{
@@ -263,7 +263,7 @@ public class ModOptions
 				//1.19+
 				ValueTextGetterHelper<Boolean> valueTextGetterImpl = (optionText, value) ->
 				{
-					return (Text)createLiteralText(prefix + ": " + (value ? "ON" : "OFF"));
+					return (Component)createLiteralText(prefix + ": " + (value ? "ON" : "OFF"));
 				};
 				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
 
@@ -333,7 +333,7 @@ public class ModOptions
 			if (isDouble) return tooltipFunc;
 
 			Object tooltipFunc2 = FabricReflectionHelper.convertToCyclingButtonWidget_TooltipFactory(tooltipFunc);
-			Function<?, ?> tooltips = (MinecraftClient client) -> tooltipFunc2;
+			Function<?, ?> tooltips = (Minecraft client) -> tooltipFunc2;
 			return tooltips;
 		}
 
@@ -375,7 +375,7 @@ public class ModOptions
 
 	private static List<String> splitTooltipLine(String line) throws Throwable
 	{
-		List<?> listVisitable = FabricReflectionHelper.TextHandler_wrapLines(FabricReflectionHelper.TextRenderer_getTextHandler(((MinecraftClientAccessor)MinecraftClient.getInstance()).getTextRenderer()), line, 200, FabricReflectionHelper.Style_EMPTY());
+		List<?> listVisitable = FabricReflectionHelper.TextHandler_wrapLines(FabricReflectionHelper.TextRenderer_getTextHandler(((MinecraftAccessor)Minecraft.getInstance()).getFont()), line, 200, FabricReflectionHelper.Style_EMPTY());
 		ArrayList<String> resultList = new ArrayList<>();
 		for (Object o : listVisitable)
 		{
@@ -400,7 +400,7 @@ public class ModOptions
 		{
 			//1.17-1.18
 			//runs on CyclingOption only
-			return FabricReflectionHelper.CyclingOption_tooltip(option, (Function<MinecraftClient, ?>)tooltipObject);
+			return FabricReflectionHelper.CyclingOption_tooltip(option, (Function<Minecraft, ?>)tooltipObject);
 		}
 
 		if (version >= 1160)
@@ -506,7 +506,7 @@ public class ModOptions
 
 	//saving and loading of options:
 
-	private static String getStringHelper(NbtCompound instance, String key)
+	private static String getStringHelper(CompoundTag instance, String key)
 	{
 		if (FabricReflectionHelper.Has_NbtCompound_getString_2())
 		{
@@ -531,7 +531,7 @@ public class ModOptions
 		//check if we need to migrate from the old path
 		if (!Files.exists(optionsFile))
 		{
-			Path oldFile = Paths.get(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), "options_macos_input_fixes.txt");
+			Path oldFile = Paths.get(Minecraft.getInstance().gameDirectory.getAbsolutePath(), "options_macos_input_fixes.txt");
 			if (Files.exists(oldFile))
 			{
 				try
@@ -555,12 +555,12 @@ public class ModOptions
 				return;
 			}
 			List<String> lines = IOUtils.readLines(Files.newInputStream(optionsFile), StandardCharsets.UTF_8); //split by lines
-			NbtCompound compoundTag = new NbtCompound();
+			CompoundTag compoundTag = new CompoundTag();
 			for (String line : lines) //read the lines into a tag
 			{
 				try
 				{
-					Iterator<String> iterator = GameOptionsAccessor.COLON_SPLITTER().omitEmptyStrings().limit(2).split(line).iterator();
+					Iterator<String> iterator = OptionsAccessor.OPTION_SPLITTER().omitEmptyStrings().limit(2).split(line).iterator();
 					compoundTag.putString(iterator.next(), iterator.next());
 				}
 				catch (Exception ex1)

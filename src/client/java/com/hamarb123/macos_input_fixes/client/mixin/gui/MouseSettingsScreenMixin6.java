@@ -10,18 +10,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper;
 
-import net.minecraft.client.gui.screen.option.MouseOptionsScreen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.screens.options.MouseSettingsScreen;
+import net.minecraft.client.gui.components.OptionsList;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-@Mixin(MouseOptionsScreen.class)
-public class MouseOptionsScreenMixin6
+@Mixin(MouseSettingsScreen.class)
+public class MouseSettingsScreenMixin6
 {
 	@Shadow(aliases = "field_19246", remap = false)
-	private OptionListWidget buttonList;
+	private OptionsList buttonList;
 
 	@Inject(method = "method_25394(Lnet/minecraft/class_4587;IIF)V", at = @At("RETURN"), cancellable = true, remap = false)
-	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
+	private void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
 	{
 		Optional<?> optional = FabricReflectionHelper.OptionButtonWidget_getHoveredWidget(buttonList, mouseX, mouseY);
 		if (optional.isPresent())

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.OptionMixinHelper;
 
-import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.Options;
 
 @Mixin(targets = {"net.minecraft.class_4064"} /*CyclingOption*/, remap = false)
 public class CyclingOptionMixin4 implements OptionMixinHelper
@@ -19,7 +19,7 @@ public class CyclingOptionMixin4 implements OptionMixinHelper
 	//`createButton(Lnet/minecraft/client/option/GameOptions;III)Lnet/minecraft/client/gui/widget/ClickableWidget;`
 
 	@Inject(method = "method_18520(Lnet/minecraft/class_315;III)Lnet/minecraft/class_339;", at = @At("HEAD"), remap = false)
-	private void before_createButton(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	private void before_createButton(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{
@@ -29,7 +29,7 @@ public class CyclingOptionMixin4 implements OptionMixinHelper
 	}
 
 	@Inject(method = "method_18520(Lnet/minecraft/class_315;III)Lnet/minecraft/class_339;", at = @At("RETURN"), remap = false)
-	private void after_createButton(GameOptions options, int x, int y, int width, CallbackInfoReturnable<?> info)
+	private void after_createButton(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
 		{

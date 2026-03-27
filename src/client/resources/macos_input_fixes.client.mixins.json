@@ -6,11 +6,11 @@
 	"compatibilityLevel": "JAVA_8",
 	"client":
 	[
-		"gui.GameOptionsAccessor",
-		"MinecraftClientAccessor",
-		"MinecraftClientMixin",
-		"MouseInvokerMixin",
-		"MouseMixin"
+		"gui.OptionsAccessor",
+		"MinecraftAccessor",
+		"MinecraftMixin",
+		"MouseHandlerInvokerMixin",
+		"MouseHandlerMixin"
 	],
 	"injectors":
 	{

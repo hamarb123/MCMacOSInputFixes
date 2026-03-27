@@ -7,15 +7,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.OptionInstance;
 
-@Mixin(OptionListWidget.class)
-public class OptionListWidgetMixin9
+@Mixin(OptionsList.class)
+public class OptionsListMixin9
 {
 	//this is where we add additional menu options
-	@ModifyVariable(method = "addAll([Lnet/minecraft/client/option/SimpleOption;)V", at = @At("HEAD"), ordinal = 0)
-	private SimpleOption<?>[] modifyAddAllParameter1(SimpleOption<?>[] options)
+	@ModifyVariable(method = "addSmall([Lnet/minecraft/client/OptionInstance;)V", at = @At("HEAD"), ordinal = 0)
+	private OptionInstance<?>[] modifyAddAllParameter1(OptionInstance<?>[] options)
 	{
 		//if we're not meant to modify anything immediately return it unmodified,
 		//otherwise immediately set it to false for the next function call
@@ -27,9 +27,9 @@ public class OptionListWidgetMixin9
 		if (modOptions == null) return options;
 
 		//combine the game options and mod options
-		SimpleOption<?>[] newOptions = new SimpleOption<?>[options.length + modOptions.length];
+		OptionInstance<?>[] newOptions = new OptionInstance<?>[options.length + modOptions.length];
 		for (int i = 0; i < options.length; i++) newOptions[i] = options[i];
-		for (int i = 0; i < modOptions.length; i++) newOptions[options.length + i] = (SimpleOption<?>)modOptions[i];
+		for (int i = 0; i < modOptions.length; i++) newOptions[options.length + i] = (OptionInstance<?>)modOptions[i];
 		return newOptions;
 	}
 }

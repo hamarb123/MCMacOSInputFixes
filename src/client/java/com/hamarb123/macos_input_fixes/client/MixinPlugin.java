@@ -62,7 +62,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 			"()Z");
 		if (hasOptionClass)
 		{
-			li.add("gui.MouseOptionsScreenMixin2");
+			li.add("gui.MouseSettingsScreenMixin2");
 			if (hasCyclingButtonWidgetClass)
 			{
 				li.add("gui.CyclingOptionMixin4");
@@ -70,28 +70,28 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 		else
 		{
-			li.add("gui.SimpleOptionMixin1");
+			li.add("gui.OptionInstanceMixin1");
 			if (hasMouseOptionsScreen_init)
 			{
-				li.add("gui.MouseOptionsScreenMixin9");
-				li.add("gui.OptionListWidgetMixin9");
+				li.add("gui.MouseSettingsScreenMixin9");
+				li.add("gui.OptionsListMixin9");
 			}
 			else
 			{
-				li.add("gui.OptionListWidgetMixin8");
+				li.add("gui.OptionsListMixin8");
 			}
 		}
 		if (hasCyclingButtonWidgetClass)
 		{
-			li.add("gui.CyclingButtonWidgetBuilderMixin3");
+			li.add("gui.CycleButtonBuilderMixin3");
 		}
 		if (hasGameOptionsScreen_getHoveredButtonTooltip)
 		{
-			li.add("gui.MouseOptionsScreenMixin5");
+			li.add("gui.MouseSettingsScreenMixin5");
 		}
 		if (!hasGameOptionsScreen_getHoveredButtonTooltip && hasScreen_renderTooltip && hasOptionClass)
 		{
-			li.add("gui.MouseOptionsScreenMixin6");
+			li.add("gui.MouseSettingsScreenMixin6");
 		}
 		if (hasGameOptionsScreen_getHoveredButtonTooltip || (hasScreen_renderTooltip && hasOptionClass))
 		{
@@ -99,26 +99,26 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 		if (hasPlayerInventory_scrollInHotbar)
 		{
-			li.add("PlayerInventoryMixin10");
+			li.add("InventoryMixin10");
 		}
 		else
 		{
-			li.add("MouseMixin11");
+			li.add("MouseHandlerMixin11");
 		}
 		if (hasScreen_hasControlDown)
 		{
-			li.add("HandledScreenMixin12");
-			li.add("KeyboardMixin12");
-			li.add("MinecraftClientMixin12");
-			li.add("MouseMixin12");
+			li.add("AbstractContainerScreenMixin12");
+			li.add("KeyboardHandlerMixin12");
+			li.add("MinecraftMixin12");
+			li.add("MouseHandlerMixin12");
 			li.add("ScreenMixin12");
 		}
 		else
 		{
-			li.add("HandledScreenMixin13");
-			li.add("KeyboardMixin13");
-			li.add("MinecraftClientMixin13");
-			li.add("MouseMixin13");
+			li.add("AbstractContainerScreenMixin13");
+			li.add("KeyboardHandlerMixin13");
+			li.add("MinecraftMixin13");
+			li.add("MouseHandlerMixin13");
 		}
 		return li;
 	}

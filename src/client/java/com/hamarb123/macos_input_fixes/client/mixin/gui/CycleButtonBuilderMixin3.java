@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.hamarb123.macos_input_fixes.client.Common;
 
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.gui.components.CycleButton;
 
-@Mixin(CyclingButtonWidget.Builder.class)
-public class CyclingButtonWidgetBuilderMixin3
+@Mixin(CycleButton.Builder.class)
+public class CycleButtonBuilderMixin3
 {
 	@Inject(method = "<init>(Ljava/util/function/Function;)V", at = @At("TAIL"), remap = false, require = 0)
 	private void init(Function<?, ?> valueToText, CallbackInfo info)
@@ -22,7 +22,7 @@ public class CyclingButtonWidgetBuilderMixin3
 		//call omitKeyText() to omit the prefix based on the key
 		if (Common.omitBuilderKeyText())
 		{
-			((CyclingButtonWidget.Builder<?>)(Object)this).omitKeyText();
+			((CycleButton.Builder<?>)(Object)this).displayOnlyValue();
 		}
 	}
 
@@ -33,7 +33,7 @@ public class CyclingButtonWidgetBuilderMixin3
 		//call omitKeyText() to omit the prefix based on the key
 		if (Common.omitBuilderKeyText())
 		{
-			((CyclingButtonWidget.Builder<?>)(Object)this).omitKeyText();
+			((CycleButton.Builder<?>)(Object)this).displayOnlyValue();
 		}
 	}
 }

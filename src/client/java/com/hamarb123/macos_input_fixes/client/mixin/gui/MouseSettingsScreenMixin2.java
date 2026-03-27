@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper;
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
-import net.minecraft.client.gui.screen.option.MouseOptionsScreen;
+import net.minecraft.client.gui.screens.options.MouseSettingsScreen;
 
-@Mixin(MouseOptionsScreen.class)
-public class MouseOptionsScreenMixin2
+@Mixin(MouseSettingsScreen.class)
+public class MouseSettingsScreenMixin2
 {
 	//ModifyArgs targets for init with yarn mappings:
 	//`init()V`, note: we mixin to both `init()V` (for 1.14-1.15) and `method_25426()V` (for 1.16+) as the intermediary name was changed
