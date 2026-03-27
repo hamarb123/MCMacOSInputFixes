@@ -52,7 +52,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 
 		li.add("gui.OptionInstanceMixin1");
 		li.add("gui.OptionsListMixin8");
-		li.add("gui.CycleButtonBuilderMixin3");
+		li.add("gui.CycleButtonBuilderMixin16");
 		li.add("MouseHandlerMixin11");
 		li.add("AbstractContainerScreenMixin13");
 		li.add("KeyboardHandlerMixin13");
@@ -85,6 +85,9 @@ public class MixinPlugin implements IMixinConfigPlugin
 			"()Z") || isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_437"),
 			resolver.mapMethodName("intermediary", "net.minecraft.class_437", "hasControlDown", "()Z"),
 			"()Z");
+		boolean hasCyclingButtonWidget_Builder_TwoParamCtor = isMethodPresent(resolver.mapClassName("intermediary", "net.minecraft.class_5676$class_5677"),
+			resolver.mapMethodName("intermediary", "net.minecraft.class_5676$class_5677", "<init>", "(Ljava/util/function/Function;Ljava/util/function/Supplier;)V"),
+			"(Ljava/util/function/Function;Ljava/util/function/Supplier;)V");
 		if (hasOptionClass)
 		{
 			li.add("gui.MouseSettingsScreenMixin2");
@@ -108,7 +111,14 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 		if (hasCyclingButtonWidgetClass)
 		{
-			li.add("gui.CycleButtonBuilderMixin3");
+			if (hasCyclingButtonWidget_Builder_TwoParamCtor)
+			{
+				li.add("gui.CycleButtonBuilderMixin16");
+			}
+			else
+			{
+				li.add("gui.CycleButtonBuilderMixin3");
+			}
 		}
 		if (hasGameOptionsScreen_getHoveredButtonTooltip)
 		{

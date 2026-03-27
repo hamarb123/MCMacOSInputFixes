@@ -37,6 +37,7 @@ sourceSets {
 		java {
 			exclude("com/hamarb123/macos_input_fixes/client/FabricReflectionHelper.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/AbstractContainerScreenMixin12.java")
+			exclude("com/hamarb123/macos_input_fixes/client/mixin/gui/CycleButtonBuilderMixin3.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/gui/CyclingOptionMixin4.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/gui/MouseSettingsScreenMixin2.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/gui/MouseSettingsScreenMixin5.java")
