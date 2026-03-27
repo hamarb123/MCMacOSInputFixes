@@ -12,7 +12,7 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          21,    # Current Java LTS & minimum supported by Minecraft
+          25,    # Current Java LTS & minimum supported by Minecraft
         ]
         # and run on macOS only since it needs xcode tools
         os: [macOS-latest]
@@ -35,9 +35,9 @@ jobs:
       - name: buildnative
         run: pushd ./src/main/native && make clean && make && popd
       - name: build
-        run: ./gradlew build
+        run: ./gradlew buildAndCollect
       - name: capture build artifacts
-        if: ${{ runner.os == 'macOS' && matrix.java == '21' }} # Only upload artifacts built from latest java on one OS
+        if: ${{ runner.os == 'macOS' && matrix.java == '25' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts
