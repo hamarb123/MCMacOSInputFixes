@@ -39,7 +39,7 @@
 
 	"depends":
 	{
-		"fabricloader": ">=0.18.5",
+		"fabricloader": "${loader_dependency}",
 		"minecraft": "${minecraft_dependency}",
 		"java": ">=8"
 	},

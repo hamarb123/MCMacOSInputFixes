@@ -6,10 +6,16 @@ pluginManagement {
         maven("https://maven.fabricmc.net/") { name = "Fabric" }
         maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
 	}
+
+    plugins {
+        val loomVersion = providers.gradleProperty("loom_version").get()
+        id("net.fabricmc.fabric-loom") version loomVersion
+        id("net.fabricmc.fabric-loom-remap") version loomVersion
+    }
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.9"
+    id("dev.kikugie.stonecutter") version providers.gradleProperty("stonecutter_version").get()
 }
 
 stonecutter {

@@ -1,7 +1,7 @@
 import org.gradle.jvm.tasks.Jar
 
 plugins {
-	id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
+	id("net.fabricmc.fabric-loom")
 	id("maven-publish")
 }
 
@@ -65,14 +65,27 @@ dependencies {
 }
 
 tasks.processResources {
+	val loaderDependency = ">=${project.property("loader_version") as String}"
+
 	inputs.property("version", project.version)
 	inputs.property("minecraft_dependency", project.property("minecraft_dependency") as String)
+	inputs.property("loader_dependency", loaderDependency)
 
 	filesMatching("fabric.mod.json") {
 		expand(
 			mapOf(
 				"version" to project.version,
-				"minecraft_dependency" to (project.property("minecraft_dependency") as String)
+				"minecraft_dependency" to (project.property("minecraft_dependency") as String),
+				"loader_dependency" to loaderDependency
+			)
+		)
+	}
+
+	filesMatching("macos_input_fixes.client.mixins.json") {
+		expand(
+			mapOf(
+				"loader_dependency" to loaderDependency,
+				"minecraft" to "${'$'}{minecraft}"
 			)
 		)
 	}
