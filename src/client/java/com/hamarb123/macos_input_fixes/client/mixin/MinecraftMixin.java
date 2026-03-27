@@ -44,7 +44,7 @@ public class MinecraftMixin
 	private boolean runOnce = false;
 
 	//? if >=26.1 {
-    @Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;window:Lcom/mojang/blaze3d/platform/Window;", opcode = Opcodes.PUTFIELD, shift = Shift.AFTER), cancellable = false)
+	@Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;window:Lcom/mojang/blaze3d/platform/Window;", opcode = Opcodes.PUTFIELD, shift = Shift.AFTER), cancellable = false)
 	private void onWindowSet(GameConfig config, CallbackInfo info)
 	//?} else {
 	/*
