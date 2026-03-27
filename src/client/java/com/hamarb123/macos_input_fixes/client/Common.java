@@ -1,16 +1,22 @@
 package com.hamarb123.macos_input_fixes.client;
 
 import com.hamarb123.macos_input_fixes.client.compat.IxerisCompat;
-import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.util.Util;
+import net.minecraft.util.Util.OS;
+
+//? if <26.1 {
+/*
+import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.Util;
-import net.minecraft.Util.OS;
+*///?}
 
 @Environment(EnvType.CLIENT)
 public class Common
 {
+	//? if <26.1 {
+	/*
 	public static boolean hasControlDownInjector()
 	{
 		//disable the injector for this call but put back after
@@ -36,6 +42,7 @@ public class Common
 		setInjectHasControlDown(oldValue);
 		return returnValue;
 	}
+	*///?}
 
 	//enable and disable the onMouseScroll function
 	private static ThreadLocal<Boolean> _allowInputOSX = new ThreadLocal<Boolean>();

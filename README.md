@@ -65,6 +65,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.21.2
 - 1.21.5
 - 1.21.9
+- 26.1
 
 ## Mixin Naming Scheme
 
@@ -82,6 +83,8 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 11. Doesn't have `PlayerInventory.scrollInHotbar(double)` (1.21.2+)
 12. Has `Screen.hasControlDown()` /  doesn't have `KeyInput` (1.14-1.21.8)
 13. Doesn't have `Screen.hasControlDown()` / has `KeyInput` (1.21.9+)
+14. Before Minecraft 26.1 (1.14-1.21.11)
+15. From Minecraft 26.1 (26.1+)
 
 ## License
 

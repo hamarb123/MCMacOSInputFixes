@@ -3,33 +3,41 @@ package com.hamarb123.macos_input_fixes.client;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import org.apache.commons.io.IOUtils;
 
-import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.CyclingOptionSetterHelper;
-import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.ValueTextGetterHelper;
-import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
 import com.hamarb123.macos_input_fixes.client.mixin.gui.OptionsAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+
+//? if >=26.1 {
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.OptionInstance.CaptionBasedToString;
+import net.minecraft.client.OptionInstance.TooltipSupplier;
+//?} else {
+/*
+import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.CyclingOptionSetterHelper;
+import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper.ValueTextGetterHelper;
+import com.hamarb123.macos_input_fixes.client.mixin.MinecraftAccessor;
+import net.minecraft.client.Options;
+*///?}
 
 @Environment(EnvType.CLIENT)
 public class ModOptions
@@ -93,6 +101,10 @@ public class ModOptions
 
 	private static Component createLiteralText(String value)
 	{
+		//? if >=26.1 {
+		return Component.literal(value);
+		//?} else {
+		/*
 		if (FabricReflectionHelper.Has_Text_literal())
 		{
 			//1.19+
@@ -103,13 +115,70 @@ public class ModOptions
 			//1.14-1.18
 			return FabricReflectionHelper.new_LiteralText(value);
 		}
+		*///?}
 	}
 
+	private static Object doubleObject119Impl(String key, String prefix, double min, double max, float step, Supplier<Double> getter, Consumer<Double> setter, String tooltip) throws Throwable
+	{
+		double step2 = (max - min) / step;
+
+		//? if >=26.1 {
+		CaptionBasedToString<Double> valueTextGetter = (caption, value) ->
+		//?} else {
+		/*
+		ValueTextGetterHelper<Double> valueTextGetterImpl = (optionText, value) ->
+		*///?}
+		{
+			double result = Math.round(value * step2) * step + min;
+			return (Component)createLiteralText(prefix + ": " + result);
+		};
+
+		//? if <26.1 {
+		/*
+		Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
+		*///?}
+
+		Double defaultValue = (getter.get() - min) / (max - min);
+
+		Consumer<Double> changeCallback = (value) ->
+		{
+			double result = Math.round(value * step2) * step + min;
+			setter.accept(result);
+			saveOptions();
+		};
+
+		//? if >=26.1 {
+		TooltipSupplier<Double> tooltipParameter = createTooltip(true, tooltip, 1193);
+		return new OptionInstance<Double>(key, tooltipParameter, valueTextGetter, OptionInstance.UnitDouble.INSTANCE, defaultValue, changeCallback);
+		//?} else {
+		/*
+		if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
+		{
+			//1.19-1.19.2
+			Object tooltipParameter = createTooltip(true, tooltip, 1190);
+			return FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
+		}
+		else
+		{
+			//1.19.3+
+			Object tooltipParameter = createTooltip(true, tooltip, 1193);
+			return FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
+		}
+		*///?}
+	}
+
+	//? if <26.1 {
+	/*
 	@SuppressWarnings("unchecked")
+	*///?}
 	private static Object doubleOption(String key, String prefix, double min, double max, float step, Supplier<Double> getter, Consumer<Double> setter, String tooltip)
 	{
 		try
 		{
+			//? if >=26.1 {
+			return doubleObject119Impl(key, prefix, min, max, step, getter, setter, tooltip);
+			//?} else {
+			/*
 			if (FabricReflectionHelper.Try_DoubleOption() != null)
 			{
 				//1.14-1.18
@@ -166,35 +235,9 @@ public class ModOptions
 			else
 			{
 				//1.19+
-				double step2 = (max - min) / step;
-				ValueTextGetterHelper<Double> valueTextGetterImpl = (optionText, value) ->
-				{
-					double result = Math.round(value * step2) * step + min;
-					return (Component)createLiteralText(prefix + ": " + result);
-				};
-				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
-
-				Double defaultValue = (getter.get() - min) / (max - min);
-
-				Consumer<Double> changeCallback = (value) ->
-				{
-					double result = Math.round(value * step2) * step + min;
-					setter.accept(result);
-					saveOptions();
-				};
-				if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
-				{
-					//1.19-1.19.2
-					Object tooltipParameter = createTooltip(true, tooltip, 1190);
-					return FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
-				}
-				else
-				{
-					//1.19.3+
-					Object tooltipParameter = createTooltip(true, tooltip, 1193);
-					return FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_DoubleSliderCallbacks_INSTANCE(), defaultValue, changeCallback);
-				}
+				return doubleObject119Impl(key, prefix, min, max, step, getter, setter, tooltip);
 			}
+			*///?}
 		}
 		catch (Throwable t)
 		{
@@ -202,10 +245,61 @@ public class ModOptions
 		}
 	}
 
+	private static Object booleanOption119Impl(String key, String prefix, Supplier<Boolean> getter, Consumer<Boolean> setter, String tooltip) throws Throwable
+	{
+		//? if >=26.1 {
+		CaptionBasedToString<Boolean> valueTextGetter = (caption, value) ->
+		//?} else {
+		/*
+		ValueTextGetterHelper<Boolean> valueTextGetterImpl = (optionText, value) ->
+		*///?}
+		{
+			return (Component)createLiteralText(prefix + ": " + (value ? "ON" : "OFF"));
+		};
+
+		//? if <26.1 {
+		/*
+		Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
+		*///?}
+
+		Consumer<Boolean> changeCallback = (value) ->
+		{
+			setter.accept(value);
+			saveOptions();
+		};
+
+		Object returnValue;
+		//? if >=26.1 {
+		TooltipSupplier<Boolean> tooltipParameter = createTooltip(false, tooltip, 1193);
+		returnValue = OptionInstance.createBoolean(key, tooltipParameter, valueTextGetter, getter.get(), changeCallback);
+		//?} else {
+		/*
+		if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
+		{
+			//1.19-1.19.2
+			Object tooltipParameter = createTooltip(false, tooltip, 1190);
+			returnValue = FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
+		}
+		else
+		{
+			//1.19.3+
+			Object tooltipParameter = createTooltip(false, tooltip, 1193);
+			returnValue = FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
+		}
+		*///?}
+
+		((OptionMixinHelper)returnValue).setOmitBuilderKeyText();
+		return returnValue;
+	}
+
 	private static Object booleanOption(String key, String prefix, Supplier<Boolean> getter, Consumer<Boolean> setter, String tooltip)
 	{
 		try
 		{
+			//? if >=26.1 {
+			return booleanOption119Impl(key, prefix, getter, setter, tooltip);
+			//?} else {
+			/*
 			if (FabricReflectionHelper.Try_CyclingOption() != null)
 			{
 				//1.14-1.18
@@ -261,35 +355,9 @@ public class ModOptions
 			else
 			{
 				//1.19+
-				ValueTextGetterHelper<Boolean> valueTextGetterImpl = (optionText, value) ->
-				{
-					return (Component)createLiteralText(prefix + ": " + (value ? "ON" : "OFF"));
-				};
-				Object valueTextGetter = FabricReflectionHelper.convertToSimpleOption_ValueTextGetter(valueTextGetterImpl);
-
-				Consumer<Boolean> changeCallback = (value) ->
-				{
-					setter.accept(value);
-					saveOptions();
-				};
-
-				Object returnValue;
-				if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
-				{
-					//1.19-1.19.2
-					Object tooltipParameter = createTooltip(false, tooltip, 1190);
-					returnValue = FabricReflectionHelper.new_SimpleOption_1(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
-				}
-				else
-				{
-					//1.19.3+
-					Object tooltipParameter = createTooltip(false, tooltip, 1193);
-					returnValue = FabricReflectionHelper.new_SimpleOption_2(key, tooltipParameter, valueTextGetter, FabricReflectionHelper.SimpleOption_BOOLEAN(), getter.get(), changeCallback);
-				}
-
-				((OptionMixinHelper)returnValue).setOmitBuilderKeyText();
-				return returnValue;
+				return booleanOption119Impl(key, prefix, getter, setter, tooltip);
 			}
+			*///?}
 		}
 		catch (Throwable t)
 		{
@@ -298,7 +366,13 @@ public class ModOptions
 	}
 
 	//there doesn't seem to be a way to do tooltips on 1.14 and 1.15, so for now we won't
-
+	//? if >=26.1 {
+	private static <T> TooltipSupplier<T> createTooltip(boolean isDouble, String tooltip, int version) throws Throwable
+	{
+		return tooltip == null ? OptionInstance.noTooltip() : OptionInstance.cachedConstantTooltip(createLiteralText(tooltip));
+	}
+	//?} else {
+	/*
 	private static Object createTooltip(boolean isDouble, String tooltip, int version) throws Throwable
 	{
 		//version is in the following format: 1.19.3 = 1193
@@ -412,6 +486,7 @@ public class ModOptions
 
 		return option;
 	}
+	*///?}
 
 
 	//here is the rest of the class that selects the interface options, and loads & stores the options:
@@ -508,6 +583,10 @@ public class ModOptions
 
 	private static String getStringHelper(CompoundTag instance, String key)
 	{
+		//? if >=26.1 {
+		return instance.getStringOr(key, "");
+		//?} else {
+		/*
 		if (FabricReflectionHelper.Has_NbtCompound_getString_2())
 		{
 			//1.21.5+
@@ -518,6 +597,7 @@ public class ModOptions
 			//1.14-1.21.4
 			return FabricReflectionHelper.NbtCompound_getString_1(instance, key);
 		}
+		*///?}
 	}
 
 	public static Path optionsFile;

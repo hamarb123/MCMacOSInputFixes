@@ -19,7 +19,10 @@ public class ScreenMixin12
 		//if the hasControlDown() injector is enabled, replace the return value with our own logic
 		if (Common.injectHasControlDown())
 		{
+			//? if <26.1 {
+			/*
 			info.setReturnValue(Common.hasControlDownInjector());
+			*///?}
 			return;
 		}
 	}

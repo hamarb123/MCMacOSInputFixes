@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+
+//? if <26.1 {
+/*
+// LEGACY LOGIC:
+
+import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.service.MixinService;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
+
+*///?}
 
 public class MixinPlugin implements IMixinConfigPlugin
 {
@@ -38,8 +45,26 @@ public class MixinPlugin implements IMixinConfigPlugin
 	@Override
 	public List<String> getMixins()
 	{
-		//load certain mixins at runtime depending on whether certain classes are available
 		List<String> li = new ArrayList<String>();
+
+		//? if >=26.1 {
+		// MODERN LOGIC:
+
+		li.add("gui.OptionInstanceMixin1");
+		li.add("gui.OptionsListMixin8");
+		li.add("gui.CycleButtonBuilderMixin3");
+		li.add("MouseHandlerMixin11");
+		li.add("AbstractContainerScreenMixin13");
+		li.add("KeyboardHandlerMixin13");
+		li.add("MinecraftMixin13");
+		li.add("MouseHandlerMixin13");
+		li.add("KeyboardHandlerAccessor15");
+
+		//?} else {
+		/*
+		// LEGACY LOGIC:
+
+		//load certain mixins at runtime depending on whether certain classes are available
 		MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
 		boolean hasOptionClass = isClassPresent(resolver.mapClassName("intermediary", "net.minecraft.class_316"));
 		boolean hasCyclingButtonWidgetClass = isClassPresent(resolver.mapClassName("intermediary", "net.minecraft.class_5676"));
@@ -120,9 +145,15 @@ public class MixinPlugin implements IMixinConfigPlugin
 			li.add("MinecraftMixin13");
 			li.add("MouseHandlerMixin13");
 		}
+
+		*///?}
+
 		return li;
 	}
 
+	//? if <26.1 {
+	/*
+	// LEGACY LOGIC:
 	private static boolean isClassPresent(String className)
 	{
 		try
@@ -166,6 +197,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 			return false;
 		}
 	}
+	*///?}
 
 	@Override
 	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo)

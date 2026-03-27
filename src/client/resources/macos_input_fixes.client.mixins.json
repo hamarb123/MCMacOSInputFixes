@@ -15,5 +15,10 @@
 	"injectors":
 	{
 		"defaultRequire": 1
+	},
+	"depends":
+	{
+		"fabricloader": ">=0.18.5",
+		"minecraft": "${minecraft}"
 	}
 }
