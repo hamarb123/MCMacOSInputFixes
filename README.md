@@ -71,6 +71,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.21.9
 - 1.21.11
 - 26.1
+- 26.2
 
 ## Mixin Naming Scheme
 

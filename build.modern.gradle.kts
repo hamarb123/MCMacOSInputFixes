@@ -93,7 +93,7 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-	// Java 8 for compatibility with all versions.
+	// Java 25 for compatibility with all versions.
 	options.release.set(25)
 }
 

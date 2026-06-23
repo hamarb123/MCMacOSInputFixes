@@ -34,7 +34,7 @@
 			"file": "META-INF/jars/macos-input-fixes-${mod_version}+1.21.11.jar"
 		},
 		{
-			"file": "META-INF/jars/macos-input-fixes-${mod_version}+26.1.jar"
+			"file": "META-INF/jars/macos-input-fixes-${mod_version}+26.2.jar"
 		}
 	],
 	"depends":

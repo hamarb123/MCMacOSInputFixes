@@ -21,6 +21,7 @@ import net.minecraft.client.main.GameConfig;
 
 //? if >=26.1 {
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import com.hamarb123.macos_input_fixes.client.ModernFabricReflectionHelper;
 //?} else {
 /*
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper;
@@ -87,7 +88,12 @@ public class MinecraftMixin
 		}
 
 		//use ungrouped values if not scrolling on hotbar
+		//? if >=26.1 {
+		if (ModernFabricReflectionHelper.getOverlay((Minecraft)(Object)this) != null || ModernFabricReflectionHelper.getScreen((Minecraft)(Object)this) != null || ((Minecraft)(Object)this).player == null)
+		//?} else {
+		/*
 		if (((Minecraft)(Object)this).getOverlay() != null || ((Minecraft)(Object)this).screen != null || ((Minecraft)(Object)this).player == null)
+		*///?}
 		{
 			horizontal = horizontalUngrouped;
 			vertical = verticalUngrouped;

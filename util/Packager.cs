@@ -18,7 +18,7 @@ foreach (var line in optionsFile.EnumerateLines())
 	if (key.SequenceEqual("mod_version")) modVersion = value.ToString();
 }
 if (modVersion == null) throw new Exception("mod_version not found in gradle.properties");
-string[] mcVersions = ["1.21.11", "26.1"];
+string[] mcVersions = ["1.21.11", "26.2"];
 using var output = File.Open(Path.Combine(dir, "build", "libs", $"macos-input-fixes-{modVersion}.jar"), FileMode.Create);
 using (var zip = new ZipArchive(output, ZipArchiveMode.Create, leaveOpen: true))
 {

@@ -149,7 +149,15 @@ public class ModOptions
 
 		//? if >=26.1 {
 		TooltipSupplier<Double> tooltipParameter = createTooltip(true, tooltip, 1193);
-		return new OptionInstance<Double>(key, tooltipParameter, valueTextGetter, OptionInstance.UnitDouble.INSTANCE, defaultValue, changeCallback);
+		if (ModernFabricReflectionHelper.METHOD_OptionInstance_ctor_1.isPresent())
+		{
+			return ModernFabricReflectionHelper.METHOD_OptionInstance_ctor_1.invoke(key, tooltipParameter, valueTextGetter, OptionInstance.UnitDouble.INSTANCE, defaultValue, changeCallback);
+		}
+		else
+		{
+			Object changeCallbackConverted = ModernFabricReflectionHelper.CONVERTER_Consumer_TO_OptionInstance_ValueUpdateListener.convert(changeCallback);
+			return ModernFabricReflectionHelper.METHOD_OptionInstance_ctor_2.invoke(key, tooltipParameter, valueTextGetter, OptionInstance.UnitDouble.INSTANCE, defaultValue, changeCallbackConverted);
+		}
 		//?} else {
 		/*
 		if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)
@@ -271,7 +279,15 @@ public class ModOptions
 		Object returnValue;
 		//? if >=26.1 {
 		TooltipSupplier<Boolean> tooltipParameter = createTooltip(false, tooltip, 1193);
-		returnValue = OptionInstance.createBoolean(key, tooltipParameter, valueTextGetter, getter.get(), changeCallback);
+		if (ModernFabricReflectionHelper.METHOD_OptionInstance_createBoolean_1.isPresent())
+		{
+			returnValue = ModernFabricReflectionHelper.METHOD_OptionInstance_createBoolean_1.invoke(key, tooltipParameter, valueTextGetter, getter.get(), changeCallback);
+		}
+		else
+		{
+			Object changeCallbackConverted = ModernFabricReflectionHelper.CONVERTER_Consumer_TO_OptionInstance_ValueUpdateListener.convert(changeCallback);
+			returnValue = ModernFabricReflectionHelper.METHOD_OptionInstance_createBoolean_2.invoke(key, tooltipParameter, valueTextGetter, getter.get(), changeCallbackConverted);
+		}
 		//?} else {
 		/*
 		if (FabricReflectionHelper.Try_SimpleOption_TooltipFactoryGetter() != null)

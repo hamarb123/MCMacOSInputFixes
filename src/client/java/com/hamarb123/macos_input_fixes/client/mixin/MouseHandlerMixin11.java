@@ -7,6 +7,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.hamarb123.macos_input_fixes.client.ModOptions;
 
+//? if >=26.1 {
+import com.hamarb123.macos_input_fixes.client.ModernFabricReflectionHelper;
+//?}
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 
@@ -20,13 +24,28 @@ public class MouseHandlerMixin11
 	private double onMouseScroll1(double horizontal)
 	{
 		if (!ModOptions.reverseHotbarScrolling) return horizontal;
+		//? if >=26.1 {
+		if (ModernFabricReflectionHelper.getOverlay(this.minecraft) == null)
+		//?} else {
+		/*
 		if (this.minecraft.getOverlay() == null)
+		*///?}
 		{
+			//? if >=26.1 {
+			if (ModernFabricReflectionHelper.getScreen(this.minecraft) == null)
+			//?} else {
+			/*
 			if (this.minecraft.screen == null)
+			*///?}
 			{
 				if (this.minecraft.player != null)
 				{
+					//? if >=26.1 {
+					if (!this.minecraft.player.isSpectator() || ModernFabricReflectionHelper.getSpectatorGui(this.minecraft.gui).isMenuActive())
+					//?} else {
+					/*
 					if (!this.minecraft.player.isSpectator() || this.minecraft.gui.getSpectatorGui().isMenuActive())
+					*///?}
 					{
 						return -horizontal;
 					}
@@ -40,13 +59,28 @@ public class MouseHandlerMixin11
 	private double onMouseScroll2(double vertical)
 	{
 		if (!ModOptions.reverseHotbarScrolling) return vertical;
+		//? if >=26.1 {
+		if (ModernFabricReflectionHelper.getOverlay(this.minecraft) == null)
+		//?} else {
+		/*
 		if (this.minecraft.getOverlay() == null)
+		*///?}
 		{
+			//? if >=26.1 {
+			if (ModernFabricReflectionHelper.getScreen(this.minecraft) == null)
+			//?} else {
+			/*
 			if (this.minecraft.screen == null)
+			*///?}
 			{
 				if (this.minecraft.player != null)
 				{
+					//? if >=26.1 {
+					if (!this.minecraft.player.isSpectator() || ModernFabricReflectionHelper.getSpectatorGui(this.minecraft.gui).isMenuActive())
+					//?} else {
+					/*
 					if (!this.minecraft.player.isSpectator() || this.minecraft.gui.getSpectatorGui().isMenuActive())
+					*///?}
 					{
 						return -vertical;
 					}
