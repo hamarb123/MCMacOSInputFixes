@@ -22,8 +22,8 @@ stonecutter {
 	create(rootProject) {
 		// See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
 		versions("1.21.11").buildscript("build.legacy.gradle.kts")
-		version("26.1").buildscript("build.modern.gradle.kts")
-		vcsVersion = "26.1"
+		version("26.2").buildscript("build.modern.gradle.kts")
+		vcsVersion = "26.2"
 	}
 }
 
