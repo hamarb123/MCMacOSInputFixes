@@ -4,7 +4,7 @@ plugins {
 	id("net.fabricmc.fabric-loom-remap") apply false
 }
 
-stonecutter active "26.2"
+stonecutter active "26.1"
 
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
