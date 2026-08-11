@@ -41,7 +41,7 @@ public class MouseHandlerMixin
 		if (this.minecraft.player == null) return;
 
 		//cancel the scroll while the attack key is held down (default left click, follows any rebind of the attack key)
-		if (this.minecraft.options.keyAttack.isDown())
+		if (this.minecraft.options.keyAttack.isDown() || this.minecraft.options.keyUse.isDown())
 		{
 			info.cancel();
 		}

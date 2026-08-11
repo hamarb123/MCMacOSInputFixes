@@ -584,7 +584,7 @@ public class ModOptions
 
 			LOCK_SCROLL_WHILE_ATTACKING = booleanOption(
 				"options.macos_input_fixes.lock_scroll_while_attacking",
-				"Lock Scroll While Attacking",
+				"Lock Scroll While Attacking/Using",
 				() -> lockScrollWhileAttacking,
 				(value) -> lockScrollWhileAttacking = value,
 				"Ignores scrolling while the attack key is held down and you are in game (no screen open).\nUseful on a Magic Mouse or trackpad, where a small finger movement while mining\ncauses an accidental scroll that switches the selected hotbar item.\nDefault: OFF\nOFF: scrolling always works.\nON: scrolling is ignored while the attack key is held down.");
