@@ -6,6 +6,7 @@ import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import org.spongepowered.asm.service.MixinService;
 
 //? if <26.1 {
 /*
@@ -50,6 +51,8 @@ public class MixinPlugin implements IMixinConfigPlugin
 		//? if >=26.1 {
 		// MODERN LOGIC:
 
+		boolean hasSDLInitClass = isClassPresent("org.lwjgl.sdl.SDLInit");
+
 		li.add("gui.OptionInstanceMixin1");
 		li.add("gui.OptionsListMixin8");
 		li.add("gui.CycleButtonBuilderMixin16");
@@ -59,6 +62,11 @@ public class MixinPlugin implements IMixinConfigPlugin
 		li.add("MinecraftMixin13");
 		li.add("MouseHandlerMixin13");
 		li.add("KeyboardHandlerAccessor15");
+
+		if (hasSDLInitClass)
+		{
+			li.add("SDLInitMixin17");
+		}
 
 		//?} else {
 		/*
@@ -161,9 +169,6 @@ public class MixinPlugin implements IMixinConfigPlugin
 		return li;
 	}
 
-	//? if <26.1 {
-	/*
-	// LEGACY LOGIC:
 	private static boolean isClassPresent(String className)
 	{
 		try
@@ -184,6 +189,9 @@ public class MixinPlugin implements IMixinConfigPlugin
 		}
 	}
 
+	//? if <26.1 {
+	/*
+	// LEGACY LOGIC:
 	private static boolean isMethodPresent(String className, String methodName, String descriptor)
 	{
 		try

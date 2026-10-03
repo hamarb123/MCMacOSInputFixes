@@ -10,12 +10,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Consumer;
 
+import com.hamarb123.macos_input_fixes.client.ModernFabricReflectionHelper.MethodImpl;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.spectator.SpectatorGui;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputQuirks;
 
 public class ModernFabricReflectionHelper
 {
@@ -538,6 +543,7 @@ public class ModernFabricReflectionHelper
 			return this.tryGet() != null;
 		}
 
+		@SuppressWarnings("unchecked")
 		public TTo convert(TFrom instance)
 		{
 			MethodHandle mh = this.get();
@@ -565,7 +571,10 @@ public class ModernFabricReflectionHelper
 	public static final ClassImpl<String> CLASS_String = ClassImpl.of(String.class);
 
 	// Minecraft classes (not by reflection):
+	public static final ClassImpl<CharSequence> CLASS_CharSequence = ClassImpl.of(CharSequence.class);
 	public static final ClassImpl<Gui> CLASS_Gui = ClassImpl.of(Gui.class);
+	public static final ClassImpl<InputConstants> CLASS_InputConstants = ClassImpl.of(InputConstants.class);
+	public static final ClassImpl<InputQuirks> CLASS_InputQuirks = ClassImpl.of(InputQuirks.class);
 	public static final ClassImpl<Minecraft> CLASS_Minecraft = ClassImpl.of(Minecraft.class);
 	public static final ClassImpl<OptionInstance<?>> CLASS_OptionInstance = ClassImpl.of(OptionInstance.class).into();
 	public static final ClassImpl<OptionInstance.CaptionBasedToString<?>> CLASS_OptionInstance_CaptionBasedToString = ClassImpl.of(OptionInstance.CaptionBasedToString.class).into();
@@ -573,26 +582,38 @@ public class ModernFabricReflectionHelper
 	public static final ClassImpl<Overlay> CLASS_Overlay = ClassImpl.of(Overlay.class);
 	public static final ClassImpl<Screen> CLASS_Screen = ClassImpl.of(Screen.class);
 	public static final ClassImpl<SpectatorGui> CLASS_SpectatorGui = ClassImpl.of(SpectatorGui.class);
+	public static final ClassImpl<Window> CLASS_Window = ClassImpl.of(Window.class);
 
 	// Minecraft classes (by reflection):
+	public static final ClassImpl<?> CLASS_GLFWNativeCocoa = ClassImpl.of("<26.3", "org.lwjgl.glfw.GLFWNativeCocoa");
 	public static final ClassImpl<?> CLASS_Hud = ClassImpl.of("26.2+", "net.minecraft.client.gui.Hud");
 	public static final ClassImpl<?> CLASS_OptionInstance_ValueSet = ClassImpl.of("26.1+", "net.minecraft.client.OptionInstance$ValueSet");
 	public static final ClassImpl<?> CLASS_OptionInstance_ValueUpdateListener = ClassImpl.of("26.2+", "net.minecraft.client.OptionInstance$ValueUpdateListener");
+	public static final ClassImpl<?> CLASS_SDLProperties = ClassImpl.of("26.3+", "org.lwjgl.sdl.SDLProperties");
+	public static final ClassImpl<?> CLASS_SDLVideo = ClassImpl.of("26.3+", "org.lwjgl.sdl.SDLVideo");
 
 	// Minecraft constructors / methods (by reflection):
+	public static final MethodImpl<Long> METHOD_GLFWNativeCocoa_glfwGetCocoaWindow = MethodImpl.forMethod("<26.3", CLASS_GLFWNativeCocoa, "glfwGetCocoaWindow", true, false, TypeImpl.LONG, TypeImpl.LONG);
 	public static final MethodImpl<Overlay> METHOD_Gui_overlay = MethodImpl.forMethod("26.2+", CLASS_Gui, "overlay", false, false, CLASS_Overlay.asType().into());
 	public static final MethodImpl<Screen> METHOD_Gui_screen = MethodImpl.forMethod("26.2+", CLASS_Gui, "screen", false, false, CLASS_Screen.asType().into());
 	public static final MethodImpl<SpectatorGui> METHOD_Gui_getSpectatorGui = MethodImpl.forMethod("26.1.x", CLASS_Gui, "getSpectatorGui", false, false, CLASS_SpectatorGui.asType().into());
 	public static final MethodImpl<SpectatorGui> METHOD_Hud_getSpectatorGui = MethodImpl.forMethod("26.2+", CLASS_Hud, "getSpectatorGui", false, false, CLASS_SpectatorGui.asType().into());
+	public static final MethodImpl<Boolean> METHOD_InputConstants_isKeyDown_1 = MethodImpl.forMethod("26.3+", CLASS_InputConstants, "isKeyDown", true, false, TypeImpl.BOOLEAN, TypeImpl.INT);
+	public static final MethodImpl<Boolean> METHOD_InputConstants_isKeyDown_2 = MethodImpl.forMethod("<26.3", CLASS_InputConstants, "isKeyDown", true, false, TypeImpl.BOOLEAN, CLASS_Window.asType(), TypeImpl.INT);
 	public static final MethodImpl<Overlay> METHOD_Minecraft_getOverlay = MethodImpl.forMethod("26.1.x", CLASS_Minecraft, "getOverlay", false, false, CLASS_Overlay.asType().into());
 	public static final MethodImpl<OptionInstance<Boolean>> METHOD_OptionInstance_createBoolean_1 = MethodImpl.forMethod("26.1.x", CLASS_OptionInstance, "createBoolean", true, false, CLASS_OptionInstance.asType().into(), CLASS_String.asType(), CLASS_OptionInstance_TooltipSupplier.asType(), CLASS_OptionInstance_CaptionBasedToString.asType(), TypeImpl.BOOLEAN, CLASS_Consumer.asType());
 	public static final MethodImpl<OptionInstance<Boolean>> METHOD_OptionInstance_createBoolean_2 = MethodImpl.forMethod("26.2+", CLASS_OptionInstance, "createBoolean", true, false, CLASS_OptionInstance.asType().into(), CLASS_String.asType(), CLASS_OptionInstance_TooltipSupplier.asType(), CLASS_OptionInstance_CaptionBasedToString.asType(), TypeImpl.BOOLEAN, CLASS_OptionInstance_ValueUpdateListener.asType());
 	public static final MethodImpl<OptionInstance<Double>> METHOD_OptionInstance_ctor_1 = MethodImpl.forConstructor("26.1.x", CLASS_OptionInstance.into(), false, CLASS_String.asType(), CLASS_OptionInstance_TooltipSupplier.asType(), CLASS_OptionInstance_CaptionBasedToString.asType(), CLASS_OptionInstance_ValueSet.asType(), CLASS_Object.asType(), CLASS_Consumer.asType());
 	public static final MethodImpl<OptionInstance<Double>> METHOD_OptionInstance_ctor_2 = MethodImpl.forConstructor("26.2+", CLASS_OptionInstance.into(), false, CLASS_String.asType(), CLASS_OptionInstance_TooltipSupplier.asType(), CLASS_OptionInstance_CaptionBasedToString.asType(), CLASS_OptionInstance_ValueSet.asType(), CLASS_Object.asType(), CLASS_OptionInstance_ValueUpdateListener.asType());
+	public static final MethodImpl<Long> METHOD_SDLProperties_SDL_GetPointerProperty = MethodImpl.forMethod("26.3+", CLASS_SDLProperties, "SDL_GetPointerProperty", true, false, TypeImpl.LONG, TypeImpl.INT, CLASS_CharSequence.asType(), TypeImpl.LONG);
+	public static final MethodImpl<Integer> METHOD_SDLVideo_SDL_GetWindowProperties = MethodImpl.forMethod("26.3+", CLASS_SDLVideo, "SDL_GetWindowProperties", true, false, TypeImpl.INT, TypeImpl.LONG);
 
 	// Minecraft fields (by reflection):
 	public static final FieldImpl<Gui, ?> FIELD_Gui_hud = new FieldImpl<>("26.2+", CLASS_Gui, CLASS_Hud.asType(), "hud", false, false);
+	public static final FieldImpl<InputQuirks, Boolean> FIELD_InputQuirks_SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK = new FieldImpl<>("<26.3", CLASS_InputQuirks, TypeImpl.BOOLEAN, "SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK", true, false);
+	public static final FieldImpl<InputQuirks, Boolean> FIELD_InputQuirks_EMULATE_RIGHT_CLICK_WITH_CTRL_KEY = new FieldImpl<>("<26.3", CLASS_InputQuirks, TypeImpl.BOOLEAN, "EMULATE_RIGHT_CLICK_WITH_CTRL_KEY", true, false);
 	public static final FieldImpl<Minecraft, Screen> FIELD_Minecraft_screen = new FieldImpl<>("26.1.x", CLASS_Minecraft, CLASS_Screen.asType(), "screen", false, false);
+	public static final FieldImpl<?, String> FIELD_SDLVideo_SDL_PROP_WINDOW_COCOA_WINDOW_POINTER = new FieldImpl<>("26.3+", CLASS_SDLVideo, CLASS_String.asType(), "SDL_PROP_WINDOW_COCOA_WINDOW_POINTER", true, false);
 
 	// Lambda converters:
 	public static final LambdaConverterImpl<Consumer<?>, ?> CONVERTER_Consumer_TO_OptionInstance_ValueUpdateListener = new LambdaConverterImpl<>(CLASS_Consumer, "accept", TypeImpl.VOID, new TypeImpl[] { CLASS_Object.asType() }, CLASS_OptionInstance_ValueUpdateListener, "valueChanged", TypeImpl.VOID, new TypeImpl[] { CLASS_Object.asType() });

@@ -20,6 +20,7 @@ Specific fixes:
 - It also fixes (almost perfectly) scrolling being broken when shift is down, this issue only affects mice that use older input APIs and doesn't change anything on the trackpad. It converts scrolling with shift down which shows as horizontal scrolling to the correct vertical scroll, the only issue when you actually scroll horizontally and hold shift, this will show as vertical scrolling (which is imo acceptable since very few people would be scrolling Minecraft items with horizantal scrolling on a non-apple input device compared to people scrolling vertical on any mice; and they could, if they need, use vertical scrolling instead which would be completely consistent - and this also isn't an issue if the Minecraft item scroll direction for + vertical scrolling is treated the same as + horizontal scrolling). TL;DR - this project will work properly for both vertical and horizontal scrolling including when pressing shift.
 - When dropping an item, Minecraft checks for command + the key, since the default key is Q, this doesn't make sense, so this mod allows both control + key and command + key to work
 - Fixes control + tab and control + escape not being detected
+- Brings back inertial scrolling in intefaces on macOS
 
 Menu Options (under Mouse Settings Screen):
 - Option for trackpad scrolling sensitivity (macOS only)
@@ -72,6 +73,7 @@ If you make changes, you should test everything works properly on the following 
 - 1.21.11
 - 26.1
 - 26.2
+- 26.3
 
 ## Mixin Naming Scheme
 
@@ -92,6 +94,7 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 14. Before Minecraft 26.1 (1.14-1.21.11)
 15. From Minecraft 26.1 (26.1+)
 16. The `CyclingButtonWidget`/`CyclingOption` class is available and the ctor only takes two parameters (1.21.11+)
+17. The `SDLInit` class is available (26.3+)
 
 ## License
 

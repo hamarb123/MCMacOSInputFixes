@@ -1,6 +1,5 @@
 package com.hamarb123.macos_input_fixes.client.mixin;
 
-import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +24,7 @@ import com.hamarb123.macos_input_fixes.client.ModernFabricReflectionHelper;
 //?} else {
 /*
 import com.hamarb123.macos_input_fixes.client.FabricReflectionHelper;
+import org.lwjgl.glfw.GLFWNativeCocoa;
 *///?}
 
 @Mixin(Minecraft.class)
@@ -58,8 +58,22 @@ public class MinecraftMixin
 			if (!runOnce)
 			{
 				//register the native callback for scrolling
-				long glfwWindow = window.handle();
-				long cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(glfwWindow);
+				long windowHandle = window.handle();
+				long cocoaWindow;
+				//? if >=26.1 {
+				if (ModernFabricReflectionHelper.METHOD_GLFWNativeCocoa_glfwGetCocoaWindow.isPresent())
+				{
+					cocoaWindow = ModernFabricReflectionHelper.METHOD_GLFWNativeCocoa_glfwGetCocoaWindow.invoke(windowHandle);
+				}
+				else
+				{
+					int properties = ModernFabricReflectionHelper.METHOD_SDLVideo_SDL_GetWindowProperties.invoke(windowHandle);
+					cocoaWindow = ModernFabricReflectionHelper.METHOD_SDLProperties_SDL_GetPointerProperty.invoke(properties, ModernFabricReflectionHelper.FIELD_SDLVideo_SDL_PROP_WINDOW_COCOA_WINDOW_POINTER.getValue(null), 0L);
+				}
+				//?} else {
+				/*
+				cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(windowHandle);
+				*///?}
 				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, this::keyCallback, cocoaWindow);
 				runOnce = true;
 			}
