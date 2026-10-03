@@ -513,22 +513,24 @@ public class ModOptions
 		loadInterface(); //load the elements if they are not loaded yet
 		if (Common.IS_SYSTEM_MAC)
 		{
-			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix
-			Object[] arr = new Object[6];
+			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix, lock scroll while attacking
+			Object[] arr = new Object[7];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
 			arr[2] = TRACKPAD_SENSITIVITY;
 			arr[3] = MOMENTUM_SCROLLING;
 			arr[4] = INTERFACE_SMOOTH_SCROLL;
 			arr[5] = DISABLE_CTRL_CLICK_FIX;
+			arr[6] = LOCK_SCROLL_WHILE_ATTACKING;
 			return arr;
 		}
 		else
 		{
-			//otherwise show reverse scrolling, and reverse hotbar scrolling options only
-			Object[] arr = new Object[2];
+			//otherwise show reverse scrolling, reverse hotbar scrolling, and lock scroll while attacking options only
+			Object[] arr = new Object[3];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
+			arr[2] = LOCK_SCROLL_WHILE_ATTACKING;
 			return arr;
 		}
 	}
@@ -579,6 +581,13 @@ public class ModOptions
 				() -> reverseHotbarScrolling,
 				(value) -> reverseHotbarScrolling = value,
 				"Reverses the direction that scrolling goes for the hotbar when enabled.");
+
+			LOCK_SCROLL_WHILE_ATTACKING = booleanOption(
+				"options.macos_input_fixes.lock_scroll_while_attacking",
+				"Lock Scroll While Attacking/Using",
+				() -> lockScrollWhileAttacking,
+				(value) -> lockScrollWhileAttacking = value,
+				"Ignores scrolling while the attack key is held down and you are in game (no screen open).\nUseful on a Magic Mouse or trackpad, where a small finger movement while mining\ncauses an accidental scroll that switches the selected hotbar item.\nDefault: OFF\nOFF: scrolling always works.\nON: scrolling is ignored while the attack key is held down.");
 
 			REVERSE_SCROLLING = booleanOption(
 				"options.macos_input_fixes.reverse_scrolling",
@@ -748,6 +757,20 @@ public class ModOptions
 				}
 				disableCtrlClickFix = actualValue;
 			}
+			if (compoundTag.contains("lockScrollWhileAttacking")) //read lockScrollWhileAttacking option
+			{
+				boolean actualValue = false; //default value
+				try
+				{
+					Boolean value = Boolean.parseBoolean(getStringHelper(compoundTag, "lockScrollWhileAttacking"));
+					actualValue = value;
+				}
+				catch (Exception ex1)
+				{
+					ex1.printStackTrace(System.err); //failed to parse
+				}
+				lockScrollWhileAttacking = actualValue;
+			}
 
 			loadedInterface = false;
 		}
@@ -768,6 +791,7 @@ public class ModOptions
 			printWriter.println("momentumScrolling:" + momentumScrolling);
 			printWriter.println("interfaceSmoothScroll:" + interfaceSmoothScroll);
 			printWriter.println("disableCtrlClickFix:" + disableCtrlClickFix);
+			printWriter.println("lockScrollWhileAttacking:" + lockScrollWhileAttacking);
 		}
 		catch (Exception ex2)
 		{
@@ -828,4 +852,12 @@ public class ModOptions
 
 	public static boolean disableCtrlClickFix = false;
 	public static Object DISABLE_CTRL_CLICK_FIX;
+
+	//lock scroll while attacking option code:
+	//when enabled, scroll events are ignored while the attack key is held down and we're in game (no screen open)
+	//this stops a small finger movement on a Magic Mouse / trackpad from changing the selected hotbar slot while mining
+	//this option works on all platforms
+
+	public static boolean lockScrollWhileAttacking = false;
+	public static Object LOCK_SCROLL_WHILE_ATTACKING;
 }
