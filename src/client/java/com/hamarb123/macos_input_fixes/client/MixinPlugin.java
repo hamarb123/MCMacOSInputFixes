@@ -52,6 +52,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 		// MODERN LOGIC:
 
 		boolean hasSDLInitClass = isClassPresent("org.lwjgl.sdl.SDLInit");
+		boolean hasVulkanVK10Class = isClassPresent("org.lwjgl.vulkan.VK10");
 
 		li.add("gui.OptionInstanceMixin1");
 		li.add("gui.OptionsListMixin8");
@@ -66,6 +67,11 @@ public class MixinPlugin implements IMixinConfigPlugin
 		if (hasSDLInitClass)
 		{
 			li.add("SDLInitMixin17");
+		}
+
+		if (hasVulkanVK10Class)
+		{
+			li.add("VulkanGpuSurfaceMixin18");
 		}
 
 		//?} else {
