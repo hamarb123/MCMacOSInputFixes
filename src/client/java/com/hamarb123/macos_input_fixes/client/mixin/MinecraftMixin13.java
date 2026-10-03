@@ -30,11 +30,11 @@ public class MinecraftMixin13
 			//? if >=26.1 {
 			if (ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_1.isPresent())
 			{
-				result = ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_1.invoke(null, 341) || ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_1.invoke(null, 345);
+				result = ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_1.invoke(341) || ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_1.invoke(345);
 			}
 			else
 			{
-				result = ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_2.invoke(null, window, 341) || ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_2.invoke(null, window, 345);
+				result = ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_2.invoke(window, 341) || ModernFabricReflectionHelper.METHOD_InputConstants_isKeyDown_2.invoke(window, 345);
 			}
 			//?} else {
 			/*
