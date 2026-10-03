@@ -29,6 +29,7 @@ Menu Options (under Mouse Settings Screen):
 - Option to reverse scrolling of the whole game
 - Option to reverse scrolling of the hotbar
 - Option to disable the fix for the ctrl + left click becomes right click bug (macOS only)
+- Option to lock scroll while attacking / using (useful for magic trackpad/mouse)
 
 On platforms other than macOS, the mod does nothing (except the aformentioned menu options), so it can be safely included in any modpack.
 
