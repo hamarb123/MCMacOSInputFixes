@@ -514,14 +514,19 @@ public class ModOptions
 		if (Common.IS_SYSTEM_MAC)
 		{
 			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix, lock scroll while attacking
-			Object[] arr = new Object[7];
-			arr[0] = REVERSE_SCROLLING;
-			arr[1] = REVERSE_HOTBAR_SCROLLING;
-			arr[2] = TRACKPAD_SENSITIVITY;
-			arr[3] = MOMENTUM_SCROLLING;
-			arr[4] = INTERFACE_SMOOTH_SCROLL;
-			arr[5] = DISABLE_CTRL_CLICK_FIX;
-			arr[6] = LOCK_SCROLL_WHILE_ATTACKING;
+			boolean showCtrlClickFix = true;
+			//? if >=26.1 {
+			showCtrlClickFix = ModernFabricReflectionHelper.FIELD_InputQuirks_SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK.isPresent();
+			//?}
+			Object[] arr = new Object[showCtrlClickFix ? 7 : 6];
+			int i = 0;
+			arr[i++] = REVERSE_SCROLLING;
+			arr[i++] = REVERSE_HOTBAR_SCROLLING;
+			arr[i++] = TRACKPAD_SENSITIVITY;
+			arr[i++] = MOMENTUM_SCROLLING;
+			arr[i++] = INTERFACE_SMOOTH_SCROLL;
+			if (showCtrlClickFix) arr[i++] = DISABLE_CTRL_CLICK_FIX;
+			arr[i++] = LOCK_SCROLL_WHILE_ATTACKING;
 			return arr;
 		}
 		else

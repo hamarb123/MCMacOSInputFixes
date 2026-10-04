@@ -611,7 +611,6 @@ public class ModernFabricReflectionHelper
 	// Minecraft fields (by reflection):
 	public static final FieldImpl<Gui, ?> FIELD_Gui_hud = new FieldImpl<>("26.2+", CLASS_Gui, CLASS_Hud.asType(), "hud", false, false);
 	public static final FieldImpl<InputQuirks, Boolean> FIELD_InputQuirks_SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK = new FieldImpl<>("<26.3", CLASS_InputQuirks, TypeImpl.BOOLEAN, "SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK", true, false);
-	public static final FieldImpl<InputQuirks, Boolean> FIELD_InputQuirks_EMULATE_RIGHT_CLICK_WITH_CTRL_KEY = new FieldImpl<>("<26.3", CLASS_InputQuirks, TypeImpl.BOOLEAN, "EMULATE_RIGHT_CLICK_WITH_CTRL_KEY", true, false);
 	public static final FieldImpl<Minecraft, Screen> FIELD_Minecraft_screen = new FieldImpl<>("26.1.x", CLASS_Minecraft, CLASS_Screen.asType(), "screen", false, false);
 	public static final FieldImpl<?, String> FIELD_SDLVideo_SDL_PROP_WINDOW_COCOA_WINDOW_POINTER = new FieldImpl<>("26.3+", CLASS_SDLVideo, CLASS_String.asType(), "SDL_PROP_WINDOW_COCOA_WINDOW_POINTER", true, false);
 
