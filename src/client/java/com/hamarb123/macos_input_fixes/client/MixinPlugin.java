@@ -71,6 +71,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 
 		if (hasVulkanVK10Class)
 		{
+			li.add("gui.OptionsListMixin18");
 			li.add("VulkanGpuSurfaceMixin18");
 		}
 

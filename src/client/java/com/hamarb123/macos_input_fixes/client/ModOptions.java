@@ -513,8 +513,8 @@ public class ModOptions
 		loadInterface(); //load the elements if they are not loaded yet
 		if (Common.IS_SYSTEM_MAC)
 		{
-			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix, lock scroll while attacking, use P3 color space
-			Object[] arr = new Object[8];
+			//on macOS show reverse scrolling, reverse hotbar scrolling, trackpad sensitivity, momentum scrolling, interface smooth scroll options, disable ctrl+click fix, lock scroll while attacking
+			Object[] arr = new Object[7];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
 			arr[2] = TRACKPAD_SENSITIVITY;
@@ -522,7 +522,6 @@ public class ModOptions
 			arr[4] = INTERFACE_SMOOTH_SCROLL;
 			arr[5] = DISABLE_CTRL_CLICK_FIX;
 			arr[6] = LOCK_SCROLL_WHILE_ATTACKING;
-			arr[7] = USE_P3_COLOR_SPACE;
 			return arr;
 		}
 		else
@@ -537,7 +536,7 @@ public class ModOptions
 	}
 
 	private static boolean loadedInterface = false;
-	private static void loadInterface()
+	public static void loadInterface()
 	{
 		//load the option instances if they are not already loaded
 		if (loadedInterface) return;

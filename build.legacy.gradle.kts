@@ -35,6 +35,7 @@ loom {
 sourceSets {
 	named("client") {
 		java {
+			exclude("com/hamarb123/macos_input_fixes/client/mixin/gui/OptionsListMixin18.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/KeyboardHandlerAccessor15.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/SDLInitMixin17.java")
 			exclude("com/hamarb123/macos_input_fixes/client/mixin/VulkanGpuSurfaceMixin18.java")
