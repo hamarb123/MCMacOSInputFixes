@@ -63,7 +63,7 @@ public class MinecraftMixin
 				long cocoaWindow;
 				KeyCallback keyCallback = this::keyCallback;
 				//? if >=26.1 {
-				if (ModernFabricReflectionHelper.METHOD_GLFWNativeCocoa_glfwGetCocoaWindow.isPresent())
+				if (ModernFabricReflectionHelper.CLASS_GLFW.isPresent())
 				{
 					cocoaWindow = ModernFabricReflectionHelper.METHOD_GLFWNativeCocoa_glfwGetCocoaWindow.invoke(windowHandle);
 				}

@@ -92,11 +92,11 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 10. Has `PlayerInventory.scrollInHotbar(double)` (1.14-1.21.1)
 11. Doesn't have `PlayerInventory.scrollInHotbar(double)` (1.21.2+)
 12. Has `Screen.hasControlDown()` /  doesn't have `KeyInput` (1.14-1.21.8)
-13. Doesn't have `Screen.hasControlDown()` / has `KeyInput` / doesn't have `SDLInit` (1.21.9-26.2.x)
+13. Doesn't have `Screen.hasControlDown()` / has `KeyInput` / has `GLFW` (1.21.9-26.2.x)
 14. Before Minecraft 26.1 (1.14-1.21.11)
 15. From Minecraft 26.1 (26.1+)
 16. The `CyclingButtonWidget`/`CyclingOption` class is available and the ctor only takes two parameters (1.21.11+)
-17. The `SDLInit` class is available (26.3+)
+17. The `GLFW` class is not available (26.3+)
 18. The vulkan renderer is available (26.2+)
 
 ## License

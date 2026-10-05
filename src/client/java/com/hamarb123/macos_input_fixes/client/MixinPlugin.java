@@ -51,7 +51,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 		//? if >=26.1 {
 		// MODERN LOGIC:
 
-		boolean hasSDLInitClass = isClassPresent("org.lwjgl.sdl.SDLInit");
+		boolean hasGLFWClass = isClassPresent("org.lwjgl.glfw.GLFW");
 		boolean hasVulkanVK10Class = isClassPresent("org.lwjgl.vulkan.VK10");
 
 		li.add("gui.OptionInstanceMixin1");
@@ -60,16 +60,16 @@ public class MixinPlugin implements IMixinConfigPlugin
 		li.add("MouseHandlerMixin11");
 		li.add("KeyboardHandlerAccessor15");
 
-		if (hasSDLInitClass)
-		{
-			li.add("SDLInitMixin17");
-		}
-		else
+		if (hasGLFWClass)
 		{
 			li.add("AbstractContainerScreenMixin13");
 			li.add("KeyboardHandlerMixin13");
 			li.add("MinecraftMixin13");
 			li.add("MouseHandlerMixin13");
+		}
+		else
+		{
+			li.add("SDLInitMixin17");
 		}
 
 		if (hasVulkanVK10Class)

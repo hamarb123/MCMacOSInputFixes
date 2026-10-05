@@ -564,6 +564,7 @@ public class ModernFabricReflectionHelper
 		}
 	}
 
+	// NOTE!!!: WE MUST USE GLFW CLASS TO DETECT GLFW VS SDL (<26.3 vs 26.3+).
 
 	// System classes:
 	public static final ClassImpl<Consumer<?>> CLASS_Consumer = ClassImpl.of(Consumer.class).into();
@@ -585,6 +586,7 @@ public class ModernFabricReflectionHelper
 	public static final ClassImpl<Window> CLASS_Window = ClassImpl.of(Window.class);
 
 	// Minecraft classes (by reflection):
+	public static final ClassImpl<?> CLASS_GLFW = ClassImpl.of("<26.3", "org.lwjgl.glfw.GLFW");
 	public static final ClassImpl<?> CLASS_GLFWNativeCocoa = ClassImpl.of("<26.3", "org.lwjgl.glfw.GLFWNativeCocoa");
 	public static final ClassImpl<?> CLASS_Hud = ClassImpl.of("26.2+", "net.minecraft.client.gui.Hud");
 	public static final ClassImpl<?> CLASS_OptionInstance_ValueSet = ClassImpl.of("26.1+", "net.minecraft.client.OptionInstance$ValueSet");

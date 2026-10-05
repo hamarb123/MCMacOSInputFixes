@@ -20,8 +20,7 @@ import net.minecraft.client.input.InputQuirks;
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin13
 {
-	// Only needed up to 26.2.x, since 26.3+ adds a proper built-in option to MC itself.
-	@Redirect(method = "simulateRightClick(Lnet/minecraft/client/input/MouseButtonInfo;Z)Lnet/minecraft/client/input/MouseButtonInfo;", require = 0, at = @At(value = "FIELD", target = "Lnet/minecraft/client/input/InputQuirks;SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK:Z", opcode = Opcodes.GETSTATIC))
+	@Redirect(method = "simulateRightClick(Lnet/minecraft/client/input/MouseButtonInfo;Z)Lnet/minecraft/client/input/MouseButtonInfo;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/input/InputQuirks;SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK:Z", opcode = Opcodes.GETSTATIC))
 	private static boolean modifyMouseInput_USE_LONG_LEFT_PRESS_Adjustment()
 	{
 		// Ensure control + left click doesn't get converted into right click if we don't want to do that
