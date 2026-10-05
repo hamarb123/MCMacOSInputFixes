@@ -97,7 +97,7 @@ Some mixins are in a folder called `gui`, these mixins are to do with the option
 15. From Minecraft 26.1 (26.1+)
 16. The `CyclingButtonWidget`/`CyclingOption` class is available and the ctor only takes two parameters (1.21.11+)
 17. The `GLFW` class is not available (26.3+)
-18. The vulkan renderer is available (26.2+)
+18. The vulkan renderer is available and no `vulkanmod` (26.2+)
 
 ## License
 

@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.service.MixinService;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 //? if <26.1 {
 /*
 // LEGACY LOGIC:
@@ -52,7 +54,7 @@ public class MixinPlugin implements IMixinConfigPlugin
 		// MODERN LOGIC:
 
 		boolean hasGLFWClass = isClassPresent("org.lwjgl.glfw.GLFW");
-		boolean hasVulkanVK10Class = isClassPresent("org.lwjgl.vulkan.VK10");
+		boolean hasVulkanVK10Class = isClassPresent("org.lwjgl.vulkan.VK10") && !FabricLoader.getInstance().isModLoaded("vulkanmod");
 
 		li.add("gui.OptionInstanceMixin1");
 		li.add("gui.OptionsListMixin8");
