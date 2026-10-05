@@ -58,15 +58,18 @@ public class MixinPlugin implements IMixinConfigPlugin
 		li.add("gui.OptionsListMixin8");
 		li.add("gui.CycleButtonBuilderMixin16");
 		li.add("MouseHandlerMixin11");
-		li.add("AbstractContainerScreenMixin13");
-		li.add("KeyboardHandlerMixin13");
-		li.add("MinecraftMixin13");
-		li.add("MouseHandlerMixin13");
 		li.add("KeyboardHandlerAccessor15");
 
 		if (hasSDLInitClass)
 		{
 			li.add("SDLInitMixin17");
+		}
+		else
+		{
+			li.add("AbstractContainerScreenMixin13");
+			li.add("KeyboardHandlerMixin13");
+			li.add("MinecraftMixin13");
+			li.add("MouseHandlerMixin13");
 		}
 
 		if (hasVulkanVK10Class)

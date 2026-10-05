@@ -22,7 +22,7 @@ public class KeyboardHandlerMixin13
 			//disable built-in callback for tab and escape
 			// - these are the keys which don't get registered properly when control is pressed in some configurations
 			// - space can seemingly ONLY be fixed by changing macOS settings
-			if (((InputWithModifiers)Common.asObject(input)).input() == 258 /*GLFW.GLFW_KEY_TAB or InputConstants.KEY_TAB*/ || ((InputWithModifiers)Common.asObject(input)).input() == 256 /*GLFW.GLFW_KEY_ESCAPE or InputConstants.KEY_ESCAPE*/)
+			if (((InputWithModifiers)Common.asObject(input)).input() == 258 /*GLFW.GLFW_KEY_TAB*/ || ((InputWithModifiers)Common.asObject(input)).input() == 256 /*GLFW.GLFW_KEY_ESCAPE*/)
 			{
 				if (!Common.allowInputOSX2())
 				{
