@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.hamarb123.macos_input_fixes.client.Common;
+import com.hamarb123.macos_input_fixes.client.KeyCallback;
 import com.hamarb123.macos_input_fixes.client.MacOSInputFixesClientMod;
 import com.mojang.blaze3d.platform.Window;
 
@@ -60,6 +61,7 @@ public class MinecraftMixin
 				//register the native callback for scrolling
 				long windowHandle = window.handle();
 				long cocoaWindow;
+				KeyCallback keyCallback = this::keyCallback;
 				//? if >=26.1 {
 				if (ModernFabricReflectionHelper.METHOD_GLFWNativeCocoa_glfwGetCocoaWindow.isPresent())
 				{
@@ -69,12 +71,13 @@ public class MinecraftMixin
 				{
 					int properties = ModernFabricReflectionHelper.METHOD_SDLVideo_SDL_GetWindowProperties.invoke(windowHandle);
 					cocoaWindow = ModernFabricReflectionHelper.METHOD_SDLProperties_SDL_GetPointerProperty.invoke(properties, ModernFabricReflectionHelper.FIELD_SDLVideo_SDL_PROP_WINDOW_COCOA_WINDOW_POINTER.getValue(null), 0L);
+					keyCallback = null;
 				}
 				//?} else {
 				/*
 				cocoaWindow = GLFWNativeCocoa.glfwGetCocoaWindow(windowHandle);
 				*///?}
-				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, this::keyCallback, cocoaWindow);
+				MacOSInputFixesClientMod.registerCallbacks(this::scrollCallback, keyCallback, cocoaWindow);
 				runOnce = true;
 			}
 		}
