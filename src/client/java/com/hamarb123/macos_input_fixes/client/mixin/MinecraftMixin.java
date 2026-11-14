@@ -87,6 +87,11 @@ public class MinecraftMixin
 	{
 		//recieve the native scrolling callback & convert it into a scroll event
 
+		//? if >=26.1 {
+		//SDL can deliver scroll events while Minecraft is still constructing, before gui is set
+		if (((Minecraft)(Object)this).gui == null) return;
+		//?}
+
 		//determine if discrete scroll is enabled
 		//? if >=26.1 {
 		boolean discreteScroll = options.discreteMouseScroll().get();
