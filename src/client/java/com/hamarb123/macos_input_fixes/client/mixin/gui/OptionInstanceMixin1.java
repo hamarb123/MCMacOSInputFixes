@@ -18,8 +18,7 @@ public class OptionInstanceMixin1 implements OptionMixinHelper
 
 	@Inject(
 		method = {
-			// Intermediary, Mojmap
-			// Mojmap name doesn't work on Neoforge with Connector.
+			//Intermediary, Mojmap
 			"method_18520(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;",
 			"createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;"
 		},
