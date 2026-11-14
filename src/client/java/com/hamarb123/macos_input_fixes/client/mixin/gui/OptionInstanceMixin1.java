@@ -16,7 +16,14 @@ public class OptionInstanceMixin1 implements OptionMixinHelper
 {
 	private boolean omitBuilderKeyText = false;
 
-	@Inject(method = "createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;", at = @At("HEAD"))
+	@Inject(
+		method = {
+			//Intermediary, Mojmap
+			"method_18520(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;",
+			"createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;"
+		},
+		at = @At("HEAD")
+	)
 	private void before_createWidget(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
@@ -26,7 +33,13 @@ public class OptionInstanceMixin1 implements OptionMixinHelper
 		}
 	}
 
-	@Inject(method = "createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;", at = @At("RETURN"))
+	@Inject(
+		method = {
+			"method_18520(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;",
+			"createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;"
+	 	},
+		at = @At("RETURN")
+	)
 	private void after_createWidget(Options options, int x, int y, int width, CallbackInfoReturnable<?> info)
 	{
 		if (omitBuilderKeyText)
