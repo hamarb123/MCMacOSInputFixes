@@ -27,6 +27,8 @@ public class OptionsListMixin18
 
 		//combine the game options and mod options
 		ModOptions.loadInterface();
+		//the option is only created on macOS
+		if (ModOptions.USE_P3_COLOR_SPACE == null) return options;
 		OptionInstance<?>[] newOptions = new OptionInstance<?>[options.length + 1];
 		for (int i = 0; i < options.length; i++) newOptions[i] = options[i];
 		newOptions[options.length] = (OptionInstance<?>)ModOptions.USE_P3_COLOR_SPACE;
