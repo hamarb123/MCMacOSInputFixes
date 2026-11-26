@@ -518,7 +518,7 @@ public class ModOptions
 			//? if >=26.1 {
 			showCtrlClickFix = ModernFabricReflectionHelper.FIELD_InputQuirks_SIMULATE_RIGHT_CLICK_WITH_LONG_LEFT_CLICK.isPresent();
 			//?}
-			Object[] arr = new Object[showCtrlClickFix ? 7 : 6];
+			Object[] arr = new Object[showCtrlClickFix ? 8 : 7];
 			int i = 0;
 			arr[i++] = REVERSE_SCROLLING;
 			arr[i++] = REVERSE_HOTBAR_SCROLLING;
@@ -527,15 +527,17 @@ public class ModOptions
 			arr[i++] = INTERFACE_SMOOTH_SCROLL;
 			if (showCtrlClickFix) arr[i++] = DISABLE_CTRL_CLICK_FIX;
 			arr[i++] = LOCK_SCROLL_WHILE_ATTACKING;
+			arr[i++] = GROUP_DISCRETE_SCROLLS;
 			return arr;
 		}
 		else
 		{
 			//otherwise show reverse scrolling, reverse hotbar scrolling, and lock scroll while attacking options only
-			Object[] arr = new Object[3];
+			Object[] arr = new Object[4];
 			arr[0] = REVERSE_SCROLLING;
 			arr[1] = REVERSE_HOTBAR_SCROLLING;
 			arr[2] = LOCK_SCROLL_WHILE_ATTACKING;
+			arr[3] = GROUP_DISCRETE_SCROLLS;
 			return arr;
 		}
 	}
@@ -607,6 +609,13 @@ public class ModOptions
 				() -> reverseScrolling,
 				(value) -> reverseScrolling = value,
 				"Reverses the direction of all scrolling when enabled.\nDefault: OFF");
+
+			GROUP_DISCRETE_SCROLLS = booleanOption(
+				"options.macos_input_fixes.group_discrete_scrolls",
+				"Group Discrete Scrolls",
+				() -> groupDiscreteScrolls,
+				(value) -> groupDiscreteScrolls = value,
+				"Groups discrete scroll events together in 100ms increments to make scrolling speed more reasonable on devices where multiple scroll events can occur in quick succession.\nDefault: OFF");
 
 			loadedInterface = true;
 		}
@@ -797,6 +806,20 @@ public class ModOptions
 				}
 				useP3ColorSpace = actualValue;
 			}
+			if (compoundTag.contains("groupDiscreteScrolls")) //read groupDiscreteScrolls option
+			{
+				boolean actualValue = false; //default value
+				try
+				{
+					Boolean value = Boolean.parseBoolean(getStringHelper(compoundTag, "groupDiscreteScrolls"));
+					actualValue = value;
+				}
+				catch (Exception ex1)
+				{
+					ex1.printStackTrace(System.err); //failed to parse
+				}
+				groupDiscreteScrolls = actualValue;
+			}
 
 			loadedInterface = false;
 		}
@@ -819,6 +842,7 @@ public class ModOptions
 			printWriter.println("disableCtrlClickFix:" + disableCtrlClickFix);
 			printWriter.println("lockScrollWhileAttacking:" + lockScrollWhileAttacking);
 			printWriter.println("useP3ColorSpace:" + useP3ColorSpace);
+			printWriter.println("groupDiscreteScrolls:" + groupDiscreteScrolls);
 		}
 		catch (Exception ex2)
 		{
@@ -890,4 +914,7 @@ public class ModOptions
 
 	public static boolean useP3ColorSpace = false;
 	public static Object USE_P3_COLOR_SPACE;
+
+	public static boolean groupDiscreteScrolls = false;
+	public static Object GROUP_DISCRETE_SCROLLS;
 }

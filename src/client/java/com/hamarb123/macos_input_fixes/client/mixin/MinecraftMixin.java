@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.hamarb123.macos_input_fixes.client.Common;
 import com.hamarb123.macos_input_fixes.client.KeyCallback;
 import com.hamarb123.macos_input_fixes.client.MacOSInputFixesClientMod;
+import com.hamarb123.macos_input_fixes.client.ModOptions;
 import com.mojang.blaze3d.platform.Window;
 
 import net.minecraft.client.KeyboardHandler;
@@ -83,6 +84,16 @@ public class MinecraftMixin
 		}
 	}
 
+	private static final long SCROLL_GROUPING_TIME_NS = 100_000_000; //100ms in nanoseconds
+	private static long lastIncreasingDiscreteHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastIncreasingDiscreteVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastDecreasingDiscreteHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastDecreasingDiscreteVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastIncreasingHotbarHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastDecreasingHotbarHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastIncreasingHotbarVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+	private static long lastDecreasingHotbarVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+
 	private void scrollCallback(double horizontal, double vertical, double horizontalWithMomentum, double verticalWithMomentum, double horizontalUngrouped, double verticalUngrouped)
 	{
 		//recieve the native scrolling callback & convert it into a scroll event
@@ -117,6 +128,60 @@ public class MinecraftMixin
 		if (((Minecraft)(Object)this).getOverlay() != null || ((Minecraft)(Object)this).screen != null || ((Minecraft)(Object)this).player == null)
 		*///?}
 		{
+			//apply discrete grouping if enabled:
+			if (ModOptions.groupDiscreteScrolls && discreteScroll)
+			{
+				if (horizontalUngrouped > 0)
+				{
+					if (System.nanoTime() - lastIncreasingDiscreteHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastIncreasingDiscreteHorizontalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						horizontalUngrouped = 0;
+					}
+					lastDecreasingDiscreteHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+				else if (horizontalUngrouped < 0)
+				{
+					if (System.nanoTime() - lastDecreasingDiscreteHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastDecreasingDiscreteHorizontalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						horizontalUngrouped = 0;
+					}
+					lastIncreasingDiscreteHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+
+				if (verticalUngrouped > 0)
+				{
+					if (System.nanoTime() - lastIncreasingDiscreteVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastIncreasingDiscreteVerticalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						verticalUngrouped = 0;
+					}
+					lastDecreasingDiscreteVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+				else if (verticalUngrouped < 0)
+				{
+					if (System.nanoTime() - lastDecreasingDiscreteVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastDecreasingDiscreteVerticalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						verticalUngrouped = 0;
+					}
+					lastIncreasingDiscreteVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+			}
+
 			horizontal = horizontalUngrouped;
 			vertical = verticalUngrouped;
 		}
@@ -124,6 +189,60 @@ public class MinecraftMixin
 		//combine vertical & horizontal here since it's harder to do in the actual method (when scrolling for hotbar)
 		else
 		{
+			//apply discrete grouping if enabled:
+			if (ModOptions.groupDiscreteScrolls)
+			{
+				if (horizontal > 0)
+				{
+					if (System.nanoTime() - lastIncreasingHotbarHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastIncreasingHotbarHorizontalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						horizontal = 0;
+					}
+					lastDecreasingHotbarHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+				else if (horizontal < 0)
+				{
+					if (System.nanoTime() - lastDecreasingHotbarHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastDecreasingHotbarHorizontalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						horizontal = 0;
+					}
+					lastIncreasingHotbarHorizontalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+
+				if (vertical > 0)
+				{
+					if (System.nanoTime() - lastIncreasingHotbarVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastIncreasingHotbarVerticalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						vertical = 0;
+					}
+					lastDecreasingHotbarVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+				else if (vertical < 0)
+				{
+					if (System.nanoTime() - lastDecreasingHotbarVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					{
+						lastDecreasingHotbarVerticalScrollTime = System.nanoTime();
+					}
+					else
+					{
+						vertical = 0;
+					}
+					lastIncreasingHotbarVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
+				}
+			}
+
 			vertical += horizontal;
 			horizontal = 0;
 		}
