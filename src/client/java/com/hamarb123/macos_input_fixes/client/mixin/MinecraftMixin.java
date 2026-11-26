@@ -133,7 +133,7 @@ public class MinecraftMixin
 			{
 				if (horizontalUngrouped > 0)
 				{
-					if (System.nanoTime() - lastIncreasingDiscreteHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastIncreasingDiscreteHorizontalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastIncreasingDiscreteHorizontalScrollTime = System.nanoTime();
 					}
@@ -145,7 +145,7 @@ public class MinecraftMixin
 				}
 				else if (horizontalUngrouped < 0)
 				{
-					if (System.nanoTime() - lastDecreasingDiscreteHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastDecreasingDiscreteHorizontalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastDecreasingDiscreteHorizontalScrollTime = System.nanoTime();
 					}
@@ -158,7 +158,7 @@ public class MinecraftMixin
 
 				if (verticalUngrouped > 0)
 				{
-					if (System.nanoTime() - lastIncreasingDiscreteVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastIncreasingDiscreteVerticalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastIncreasingDiscreteVerticalScrollTime = System.nanoTime();
 					}
@@ -170,7 +170,7 @@ public class MinecraftMixin
 				}
 				else if (verticalUngrouped < 0)
 				{
-					if (System.nanoTime() - lastDecreasingDiscreteVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastDecreasingDiscreteVerticalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastDecreasingDiscreteVerticalScrollTime = System.nanoTime();
 					}
@@ -194,7 +194,7 @@ public class MinecraftMixin
 			{
 				if (horizontal > 0)
 				{
-					if (System.nanoTime() - lastIncreasingHotbarHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastIncreasingHotbarHorizontalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastIncreasingHotbarHorizontalScrollTime = System.nanoTime();
 					}
@@ -206,7 +206,7 @@ public class MinecraftMixin
 				}
 				else if (horizontal < 0)
 				{
-					if (System.nanoTime() - lastDecreasingHotbarHorizontalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastDecreasingHotbarHorizontalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastDecreasingHotbarHorizontalScrollTime = System.nanoTime();
 					}
@@ -219,7 +219,7 @@ public class MinecraftMixin
 
 				if (vertical > 0)
 				{
-					if (System.nanoTime() - lastIncreasingHotbarVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastIncreasingHotbarVerticalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastIncreasingHotbarVerticalScrollTime = System.nanoTime();
 					}
@@ -231,7 +231,7 @@ public class MinecraftMixin
 				}
 				else if (vertical < 0)
 				{
-					if (System.nanoTime() - lastDecreasingHotbarVerticalScrollTime > SCROLL_GROUPING_TIME_NS)
+					if (System.nanoTime() - lastDecreasingHotbarVerticalScrollTime >= SCROLL_GROUPING_TIME_NS)
 					{
 						lastDecreasingHotbarVerticalScrollTime = System.nanoTime();
 					}
@@ -241,6 +241,10 @@ public class MinecraftMixin
 					}
 					lastIncreasingHotbarVerticalScrollTime = System.nanoTime() - SCROLL_GROUPING_TIME_NS;
 				}
+
+				//since we're dropping events effectively randomly, let's just always make it discrete here also:
+				horizontal = Math.signum(horizontal);
+				vertical = Math.signum(vertical);
 			}
 
 			vertical += horizontal;
